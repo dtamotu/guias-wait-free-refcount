@@ -1,0 +1,27 @@
+<section id="anderson" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;gap:16px;align-items:center"><div style="width:24px;height:24px;background:#2A78D6;border-radius:6px"></div><p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 4 · Los rivales · familia 2</p></div>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Anderson: un cartel en tu mesa y una caja de pendientes</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Antes de ir al libro, escribes «42» en tu cartelito: un <b>hazard pointer</b>. Quien libera mete la libreta en una caja y, cada <b>2 000</b> retiradas, revisa todas las mesas.</p>
+<h3 style="font-size:40px;font-weight:600;font-family:'JetBrains Mono', 'Courier New', monospace">load</h3>
+<ol style="font-size:30px;line-height:1.45;color:#14213D;padding:0 0 0 40px">
+<li>Leer el tablón y copiarlo en mi cartelito</li>
+<li>Releer el tablón; si cambió, repetir</li>
+<li>Sumar 1 si el contador no es 0; si lo es, repetir</li>
+<li>Borrar mi cartelito</li>
+</ol>
+</div>
+<div style="width:600px;display:flex;flex-direction:column;gap:14px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Garantía</p><p style="font-size:30px">Lock-free</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Memoria extra</p><p style="font-size:30px;line-height:1.35">Sí: bloques de control pendientes</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">A favor</p><p style="font-size:30px;line-height:1.35"><b>Leer no escribe en el tablón</b></p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">En contra</p><p style="font-size:30px;line-height:1.35">Memoria retenida y picos de latencia al vaciar la caja</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 3.5 · Anderson, Blelloch y Wei, PLDI 2021 y 2022 · Michael, hazard pointers, IEEE TPDS 2004</p>
+<aside>Dos minutos. Anderson es la familia 2: retrasar la trituradora. Su código es ParlayLib, que viene dentro del propio artefacto del paper.
+La idea: antes de ir al libro, pones un cartel en tu mesa diciendo cuál usas; y quien quiera destruir algo, antes revisa todas las mesas. Ese cartelito es un hazard pointer, una técnica de Maged Michael de 2004. Cuando un bibliotecario va a tirar algo, no lo tira: lo mete en una caja de pendientes, y cada 2 000 cosas en la caja recorre todas las mesas y solo destruye lo que no aparezca en ningún cartelito.
+Un detalle muy fino que comprobamos en el código y en la prueba: el objeto se destruye al instante; lo que espera en la caja es solo el bloque de control, la libreta. La libreta debe sobrevivir porque un lector despistado podría intentar sumarle 1, y necesita una respuesta segura: «este libro ya no existe». Por eso esa suma usa un contador que, una vez en 0, ya no sube.
+Y el punto que explica muchos resultados: en Anderson, leer no escribe en el tablón. En Autores, Folly y Williams, sí. Así que cuando hay muchas escrituras sobre una sola pila, el CAS de Anderson no falla por culpa de los lectores. Por eso, en esos escenarios, gana.</aside>
+</section>

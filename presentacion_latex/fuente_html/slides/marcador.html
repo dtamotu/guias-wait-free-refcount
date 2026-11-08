@@ -1,0 +1,21 @@
+<section id="marcador" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 8 · Rendimiento</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">El marcador con toda la máquina: coincide en 4 de 6</h2>
+<table style="width:1664px;font-size:26px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:19%;text-align:left">Escenario</th><th style="width:23%;text-align:left">En palabras</th><th style="width:19%;text-align:left">Paper (144 hilos)</th><th style="width:22%;text-align:left">Réplica (24 hilos)</th><th style="width:17%;text-align:left">¿Coincide?</th></tr>
+<tr><td>n = 1, u = 1 %</td><td>Una pila, casi todo leer</td><td>Anderson 1,70×</td><td>Autores, por poco (Anderson 0,94×)</td><td style="color:#9C3A0A">No</td></tr>
+<tr><td>n = 1, u = 10 %</td><td>Una pila, algo de escribir</td><td>Anderson 1,66×</td><td>Anderson 1,99×</td><td style="color:#1F5FAE">Sí</td></tr>
+<tr><td>n = 1, u = 50 %</td><td>Una pila, mucho escribir</td><td>Anderson 1,82×</td><td>Anderson 1,87×</td><td style="color:#1F5FAE">Sí</td></tr>
+<tr><td>n = 10, u = 1 %</td><td>10 pilas, casi todo leer</td><td>Autores (Anderson 0,66×)</td><td>Autores (Anderson 0,61×)</td><td style="color:#1F5FAE">Sí, casi exacto</td></tr>
+<tr><td>n = 10, u = 10 %</td><td>10 pilas, algo de escribir</td><td>Anderson 1,54×</td><td>Anderson 1,13×</td><td style="color:#1F5FAE">Sí, por menos</td></tr>
+<tr><td>n = 10⁶, u = 50 %</td><td>Un millón de pilas</td><td>Autores</td><td>Empate a cuatro, unos 55 Mop/s</td><td style="color:#9C3A0A">No</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">τ de Kendall entre el orden del paper y el nuestro: <span style="font-family:'JetBrains Mono', 'Courier New', monospace">+0,60 +0,60 +0,40 +0,80 +0,80 +0,20</span>. Siempre positiva.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.1 · tablas.md, «Rendimiento: paper (144 hilos) frente a réplica (24 hilos)» · figura fig5_paper_frente_a_replica.png</p>
+<aside>Dos minutos y medio. Este es el marcador con toda la máquina en marcha: 144 hilos en el paper, 24 aquí. En cada escenario, quién gana y por cuánto respecto a Autores.
+Con una pila y 1 % de escrituras, en el paper gana Anderson con 1,70 veces; aquí gana Autores, por poco: Anderson rinde 0,94. No coincide, pero ojo con el matiz: en el paper Anderson solo adelanta a Autores a partir de 54 hilos. Con 18 hilos rinde 0,72 y con 36, 0,89. Aquí, con 18 hilos, rinde 0,94. A igual número de hilos no están tan lejos: esta máquina no llega a la zona del cruce. Es una diferencia de alcance más que una contradicción.
+Con una pila y más escrituras, 10 % y 50 %, gana Anderson en los dos sitios, con proporciones muy parecidas: 1,66 frente a 1,99, y 1,82 frente a 1,87.
+Con 10 pilas y casi todo lecturas, gana Autores en los dos, y Anderson rinde 0,66 allí y 0,61 aquí: casi exacto. Con 10 pilas y 10 % de escrituras, Anderson gana en los dos, aunque aquí por menos.
+Con un millón de pilas, en el paper gana Autores y aquí hay un empate a cuatro. Lo explicamos enseguida.
+Coincide en 4 de 6. Y la τ de Kendall, que mide si dos listas están en el mismo orden, de menos 1 a más 1, es siempre positiva. En los cinco primeros escenarios casi todo el desacuerdo viene de Folly; el +0,20 del último es el empate, donde el orden entre iguales no significa nada.</aside>
+</section>

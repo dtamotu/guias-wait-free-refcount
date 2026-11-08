@@ -1,0 +1,23 @@
+<section id="ejemplo-vales" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 5 · La solución del paper</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Un ejemplo con números pequeños: C = 10, P = 3</h2>
+<table style="width:1664px;font-size:26px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:8%;text-align:center">Paso</th><th style="width:11%;text-align:left">Quién</th><th style="width:39%;text-align:left">Acción</th><th style="width:12%;text-align:center">Tablón</th><th style="width:15%;text-align:center">Libreta de A</th><th style="width:15%;text-align:center">Libreta de B</th></tr>
+<tr><td style="text-align:center">0</td><td></td><td>Situación inicial</td><td style="text-align:center">(A, 10)</td><td style="text-align:center">10</td><td style="text-align:center"></td></tr>
+<tr><td style="text-align:center">1</td><td>Marta</td><td>load: fetch_sub del peso</td><td style="text-align:center">(A, 9)</td><td style="text-align:center">10</td><td style="text-align:center"></td></tr>
+<tr><td style="text-align:center">2</td><td>Luis</td><td>load: fetch_sub del peso</td><td style="text-align:center">(A, 8)</td><td style="text-align:center">10</td><td style="text-align:center"></td></tr>
+<tr><td style="text-align:center">3</td><td>Beto</td><td>Prepara B: suma C a su libreta</td><td style="text-align:center">(A, 8)</td><td style="text-align:center">10</td><td style="text-align:center">10</td></tr>
+<tr><td style="text-align:center">4</td><td>Beto</td><td>exchange: pone B, se lleva (A, 8)</td><td style="text-align:center">(B, 10)</td><td style="text-align:center">10</td><td style="text-align:center">10</td></tr>
+<tr><td style="text-align:center">5</td><td>Beto</td><td>Resta a A los 8 vales sobrantes</td><td style="text-align:center">(B, 10)</td><td style="text-align:center">2</td><td style="text-align:center">10</td></tr>
+<tr><td style="text-align:center">6</td><td>Marta</td><td>Termina: resta 1</td><td style="text-align:center">(B, 10)</td><td style="text-align:center">1</td><td style="text-align:center">10</td></tr>
+<tr style="background:#F6E3CF"><td style="text-align:center">7</td><td>Luis</td><td>Termina: resta 1</td><td style="text-align:center">(B, 10)</td><td style="text-align:center">0: se destruye</td><td style="text-align:center">10</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Paso 2: 8 en el taco + 2 en mano = 10. Paso 5: 0 en el taco + 2 en mano = 2. La regla de oro se cumple siempre.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 3.6 · cumple la regla C ≥ 2P que se explica más adelante</p>
+<aside>Dos minutos. Ahora con números de verdad, pequeños para poder seguirlos: como mucho 10 vales y como mucho 3 hilos.
+Paso 0: el tablón apunta a A con 10 vales, y la libreta de A dice 10. Paso 1: Marta hace load, un fetch_sub del peso: el tablón queda en (A, 9) y la libreta no se toca. Paso 2: Luis hace lo mismo: (A, 8).
+Paso 3: Beto quiere poner B. Antes de nada, prepara la libreta de B sumándole C, 10. Paso 4: con un exchange pone (B, 10) y se queda en la mano con lo que había, (A, 8). Paso 5: resta a la libreta de A los 8 vales que nadie usará: queda en 2.
+Paso 6: Marta termina y resta 1: queda en 1. Paso 7: Luis termina y resta 1: queda en 0, y A se destruye en ese mismo instante.
+Comprueben la regla de oro en dos momentos. En el paso 2: 8 en el taco más 2 en mano, 10, que es lo que dice la libreta. En el paso 5: 0 en el taco, porque el taco de A ya no está en el tablón, más 2 en mano, 2. Nunca falla.
+Y comparen con la tabla de la carrera: A se destruye solo cuando el último que lo usaba termina. Nadie llega tarde.</aside>
+</section>

@@ -1,0 +1,28 @@
+<section id="folly-misterio" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;gap:16px;align-items:center"><div style="width:24px;height:24px;background:#12907F;border-radius:6px"></div><p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 8 · Rendimiento · lo que no se repite</p></div>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Folly rinde muchísimo mejor aquí que en el paper</h2>
+<div style="display:flex;gap:32px;align-items:stretch">
+<div style="width:520px;display:flex;flex-direction:column;justify-content:center;gap:12px;background:#14213D;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">Con contención, frente a Autores</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;color:#C9D3E3">Paper 0,05×–0,07×</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#F7F4EC">Aquí 0,37×–1,37×</p>
+<p style="font-size:24px;line-height:1.4;color:#C9D3E3">Con n = 1 y u = 50 %, Folly gana: 1,47 frente a 1,07 Mop/s, sin que los rangos se toquen.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<h3 style="font-size:40px;font-weight:600">¿Error nuestro? Lo comprobamos</h3>
+<div style="display:flex;gap:20px;align-items:start"><x-icon name="Check" style="width:40px;height:40px;color:#1F5FAE"></x-icon><p style="flex:1;font-size:30px;line-height:1.4"><b>Es su Folly:</b> el del artefacto, con MD5 comprobado</p></div>
+<div style="display:flex;gap:20px;align-items:start"><x-icon name="Check" style="width:40px;height:40px;color:#1F5FAE"></x-icon><p style="flex:1;font-size:30px;line-height:1.4"><b>Sin Docker</b>, igual: 0,37×–1,40×</p></div>
+<div style="display:flex;gap:20px;align-items:start"><x-icon name="Check" style="width:40px;height:40px;color:#1F5FAE"></x-icon><p style="flex:1;font-size:30px;line-height:1.4"><b>Con la receta exacta</b> (7 × 10 s): 0,36×–1,26×</p></div>
+<div style="display:flex;gap:20px;align-items:start"><x-icon name="Check" style="width:40px;height:40px;color:#1F5FAE"></x-icon><p style="flex:1;font-size:30px;line-height:1.4"><b>Compilado de dos formas</b>, mediana 1,00×</p></div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.1 · DEFENSA.md, cargo 4 · tablas «Validación de los recortes» y «Docker frente a nativo (binarios oficiales)»</p>
+<aside>Dos minutos. La primera cosa que no se repite, y la más grande.
+En el paper, con contención, Folly rinde entre 0,05 y 0,07 veces lo de Autores: veinte veces menos. Aquí, entre 0,37 y 1,37 veces. Y con una pila y 50 % de escrituras, Folly le gana: 1,47 frente a 1,07 Mop/s, sin que los rangos de las rondas se toquen.
+La primera sospecha, la que tendría cualquiera, es que lo hicimos mal. Lo comprobamos de cuatro formas.
+Uno: es su Folly. Sale del artefacto oficial de los autores, con MD5 comprobado, compilado con su propio guion dentro de Docker.
+Dos: sin Docker, con los mismos programas, sale casi igual: entre 0,37 y 1,40. Y vuelve a ganar con n = 1 y u = 50 %.
+Tres: no es el recorte. Con la receta exacta del paper, 7 ejecuciones de 10 segundos, también: entre 0,36 y 1,26.
+Cuatro: compilado de dos formas, dentro de Docker con getdeps.py y fuera con CMake directo, sale lo mismo, mediana 1,00.
+Es decir, ni el envoltorio ni el recorte explican la diferencia. La tentación es decir «claro, el paper tiene 4 sockets y aquí hay uno». Esa explicación no se sostiene, y la razón es la siguiente diapositiva.</aside>
+</section>

@@ -1,0 +1,29 @@
+<section id="el-tablon" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 2 · El problema</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">El tablón: un puntero que varios hilos leen y cambian a la vez</h2>
+<div style="display:flex;gap:32px;align-items:center">
+<div style="width:520px;display:flex;flex-direction:column;gap:8px;background:#14213D;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">Tablón del vestíbulo</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;color:#F7F4EC">estante 42</p>
+</div>
+<x-shape kind="arrow-right" style="width:120px;height:60px;background:#D9620B"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Libro 42</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px">libreta = 1</p>
+</div>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<h3 style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#1F5FAE">load</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Leer el tablón y quedarte con una referencia al libro.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<h3 style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#1F5FAE">store</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Cambiar el tablón para que señale otro libro.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 1.3 · En el paper: atomic shared pointer</p>
+<aside>Un minuto. Ahora añadimos la pieza clave. En el vestíbulo de la biblioteca hay un tablón que dice cuál es «el libro del día»: estante 42. Cualquiera puede leerlo, y un bibliotecario puede cambiarlo.
+En el paper, ese tablón se llama atomic shared pointer: una variable compartida, que varios hilos leen y escriben a la vez, y que apunta a un objeto con contador de referencias. Tiene dos operaciones, y las vamos a nombrar en inglés porque así aparecen en todas las gráficas. Load, cargar: leer el tablón y quedarte con una referencia al libro, es decir, sumar 1 en su libreta. Store, guardar: cambiar el tablón para que señale otro libro, y soltar la referencia que el tablón tenía al viejo.
+Fíjense en la flecha: el tablón y la libreta son dos sitios distintos. El tablón está en el vestíbulo y la libreta está pegada al libro, en su estante. Esa distancia es todo el problema.</aside>
+</section>

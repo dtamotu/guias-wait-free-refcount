@@ -1,0 +1,30 @@
+<section id="miniatura" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 10 · Distancia</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">¿Se simularon los 4 Xeon? Solo en parte</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#1F5FAE">Se parece</p>
+<h3 style="font-size:40px;font-weight:600">n = 10, u = 1 %</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Autores encabeza en los dos a partir del 25 % de la máquina.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#8A5A00">La forma se parece</p>
+<h3 style="font-size:40px;font-weight:600">n = 10⁶, u = 50 %</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Rectas que suben en los dos, aunque cambia el orden de las de arriba.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#9C3A0A">No se parece</p>
+<h3 style="font-size:40px;font-weight:600">n = 1, u = 1 %</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">En el paper, Anderson sube y adelanta a Autores. Aquí se queda plano.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#14213D;border-radius:16px;padding:36px 40px">
+<p style="font-size:30px;line-height:1.45;color:#F7F4EC">Un <b>simulador de vuelo de juguete</b>: la física es real y medida, pero el castigo es más suave (1,35× frente a unas 3×), no hay NUMA y hay 16 núcleos E, no 72.</p>
+<p style="font-size:30px;line-height:1.45;color:#F4A259">Sirve para ver qué algoritmos son sensibles a la distancia, no para predecir los números del paper.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.4 · figura miniatura_frente_a_paper.png (paper y réplica según el porcentaje de núcleos en uso)</p>
+<aside>Un minuto y medio. Última prueba de la simulación: dibujar el paper y la réplica según el porcentaje de máquina ocupada, para compararlos a la misma escala relativa.
+Con 10 pilas y 1 %: se parece. Autores encabeza en ambos a partir del 25 % de la máquina. Con un millón de pilas: la forma se parece, rectas que suben en los dos, aunque el orden entre las de arriba cambia. Con una pila y 1 %: no se parece. En el paper, Anderson sube y adelanta a Autores; aquí se queda plano.
+Entonces, ¿se simularon los 4 Xeon? Solo en parte, y conviene decirlo claro. Es como un simulador de vuelo de juguete: enseña de verdad qué pasa al alejar los hilos, y esa física es real, medida con hardware real. Pero el castigo es mucho más suave, 1,35 veces frente a unas 3, no hay memoria repartida entre chips y hay 16 núcleos E, no 72.
+Sirve para ver qué algoritmos son sensibles a la distancia. No sirve para predecir los números de la máquina del paper. Si el jurado pregunta «¿simularon 4 Xeon?», la respuesta corta es: «simulamos la distancia entre sockets, de forma más suave; NUMA no».</aside>
+</section>

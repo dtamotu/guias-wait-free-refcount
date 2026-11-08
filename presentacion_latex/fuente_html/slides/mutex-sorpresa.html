@@ -1,0 +1,22 @@
+<section id="mutex-sorpresa" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<div style="display:flex;gap:16px;align-items:center"><div style="width:24px;height:24px;background:#7D8590;border-radius:6px"></div><p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 12 · Sin Docker · bench.cpp</p></div>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">La sorpresa del Mutex: el candado simple gana con muchas escrituras</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Rendimiento · n = 1, u = 50 %, 24 hilos</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600">Mutex 1,86 · Autores 1,15</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Gana de 3 a 36 hilos. Alineado, igual: 1,99 frente a 1,17. Quien espera <b>duerme</b>, así que el cuaderno casi no viaja.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Latencia · load, p = 24</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600">mediana 117 ns</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Engaña: 1 de cada 4 operaciones pasa de 5,8 µs, y su p99 llega a 25 µs, frente a 4 µs de Autores.</p>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#14213D"><b>Wait-free no significa «el más rápido»; significa «nadie se queda atascado».</b> Si quien tiene el candado se detiene, en el Mutex se paran todos.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.6 · solo con bench.cpp; el Mutex no está en el paper · la explicación del sueño es razonable, pero no se comprobó</p>
+<aside>Dos minutos. El candado más simple, que ni siquiera está en el paper, gana a Autores con una pila y 50 % de escrituras, desde 3 hilos hasta 36. Con 24 hilos: 1,86 frente a 1,15 Mop/s. Con las pilas alineadas, igual: 1,99 frente a 1,17.
+¿Cómo puede ganar algo tan simple? Recuerden la ficha del Mutex: quien espera se duerme. Si hay 24 hilos pero 22 duermen, el cuaderno casi no viaja. En Autores, todos siguen despiertos y los CAS de los escritores fallan una y otra vez. Es una explicación razonable, pero no se comprobó.
+Y en la latencia, el Mutex parece el mejor: mediana de 117 ns en el load con p = 24. Pero su mediana engaña. Una de cada cuatro operaciones pasa de 5,8 microsegundos, y su p99 llega a 25 microsegundos, frente a 4 de Autores. Es como un banco donde casi siempre te atienden al instante, porque la mayoría de los clientes se ha quedado dormida en la sala de espera. La persona típica va rápido, pero la que espera, espera mucho.
+Esto no le quita valor al paper, y conviene decirlo con esta frase: wait-free no significa «el más rápido»; significa «nadie se queda atascado». Si el hilo que tiene el candado se detiene, por ejemplo porque el sistema le quita la CPU, en el Mutex se paran todos. En Autores, no. Es la diferencia entre la parte 3 y esta.</aside>
+</section>

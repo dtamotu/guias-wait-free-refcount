@@ -1,0 +1,28 @@
+<section id="mutex" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;gap:16px;align-items:center"><div style="width:24px;height:24px;background:#7D8590;border-radius:6px"></div><p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 4 · Los rivales · referencia del equipo</p></div>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Mutex: una sala con una sola llave</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">El tablón está en una sala cerrada. Si la llave está ocupada, <b>te sientas a dormir</b> y te despiertan cuando quede libre.</p>
+<h3 style="font-size:40px;font-weight:600;font-family:'JetBrains Mono', 'Courier New', monospace">load</h3>
+<ol style="font-size:30px;line-height:1.45;color:#14213D;padding:0 0 0 40px">
+<li>Pedir la llave; si no está libre, el sistema te duerme</li>
+<li>Leer el puntero</li>
+<li>Sumar 1 al contador: estás solo</li>
+<li>Devolver la llave</li>
+</ol>
+</div>
+<div style="width:600px;display:flex;flex-direction:column;gap:14px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Garantía</p><p style="font-size:30px">Bloqueante</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Memoria extra</p><p style="font-size:30px">Ninguna; libera al instante</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">A favor</p><p style="font-size:30px;line-height:1.35">Muy simple y correcta; dormir no gasta CPU</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">En contra</p><p style="font-size:30px;line-height:1.35">Colas; dormir y despertar es lento, y su p99 es malísimo</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 3.1 · solo en bench.cpp del equipo; no está en el paper</p>
+<aside>Un minuto y medio. El Mutex no está en el paper: lo añadió el equipo como referencia, porque es lo que haría cualquier programador sin pensarlo mucho.
+La idea en una frase: una sala con una sola llave, solo entra uno. El tablón está en una sala cerrada; para mirarlo o cambiarlo pides la llave, y si está ocupada te sientas a dormir y te despiertan cuando quede libre.
+La lectura: pedir la llave, leer el puntero, sumar 1 al contador, que es seguro porque nadie puede cambiar nada mientras estás dentro, y devolver la llave. La escritura es igual, y suelta el objeto viejo ya fuera de la sala para no retener a nadie.
+La ficha: bloqueante; ninguna memoria extra, porque libera al instante. A favor: muy simple, correcta, y dormir evita gastar CPU. En contra: se forman colas, y si quien tiene la llave se para, todos esperan. Además, dormir y despertar es lento, y por eso su p99 es malísimo.
+Guarden un detalle: que quien espera duerma tiene una consecuencia curiosa. En la parte 12 veremos que, en un escenario concreto con muchas escrituras, este candado tan simple gana al algoritmo del paper en velocidad.</aside>
+</section>

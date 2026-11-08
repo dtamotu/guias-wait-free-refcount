@@ -1,0 +1,22 @@
+<section id="cache-contencion" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 3 · Vocabulario</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Compartir es caro: el cuaderno que viaja de mano en mano</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Cada núcleo tiene una <b>caché</b>: memoria pequeña y rapidísima. Los datos viajan en <b>líneas de 64 bytes</b>.</p>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Para escribir en una línea, un núcleo debe tenerla <b>en exclusiva</b>: hay que quitársela al que la tenía.</p>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Si todos escriben en la misma variable, añadir hilos no acelera nada. Eso es la <b>contención</b>.</p>
+</div>
+<div style="width:640px;display:flex;flex-direction:column;justify-content:center;gap:20px;background:#14213D;border-radius:16px;padding:48px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">La analogía</p>
+<p style="font-size:30px;line-height:1.5;color:#F7F4EC">Veinte personas deben escribir en <b>un único cuaderno</b>, que no se puede fotocopiar.</p>
+<p style="font-size:30px;line-height:1.5;color:#C9D3E3">Escribir dura un instante. Lo que consume el tiempo es <span style="color:#F4A259">pasarse el cuaderno</span>.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 2.3</p>
+<aside>Dos minutos. Este es el concepto que explica casi todas las gráficas, así que vale la pena detenerse.
+Cada núcleo tiene pegada una memoria pequeña y rapidísima: la caché. Los datos no se mueven de uno en uno, sino en bloques de 64 bytes llamados líneas de caché. Y aquí está la regla: para escribir en una línea, un núcleo debe tenerla en exclusiva. Si otro núcleo la tiene, hay que quitársela.
+La analogía: todos deben escribir en un único cuaderno. No se puede fotocopiar; para escribir hay que tenerlo en la mano. Si 20 personas quieren escribir, el cuaderno viaja de mano en mano. El trabajo real, escribir, dura un instante. Lo que consume el tiempo es pasarse el cuaderno.
+Por eso, cuando todos los hilos escriben en la misma variable, añadir hilos no acelera nada: el cuaderno sigue siendo uno. Eso se llama contención. En la parte 8 van a ver que con una sola pila el rendimiento cae de golpe al pasar de 1 a 3 hilos. No es un error: es el cuaderno viajando.
+Y un detalle clave para el paper: en el algoritmo de los Autores, leer también escribe en el tablón, porque arranca un vale. Así que leer también hace viajar el cuaderno.</aside>
+</section>

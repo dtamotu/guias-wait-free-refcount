@@ -1,0 +1,28 @@
+<section id="leer-numeros" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 3 · Vocabulario</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Rendimiento y latencia no son lo mismo</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#1F5FAE">Mop/s</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Millones de operaciones por segundo: el <b>rendimiento</b>. Más es mejor.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#1F5FAE">ns · µs</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Cuánto tarda una operación: la <b>latencia</b>. Menos es mejor. 1 µs = 1 000 ns.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#B04A06">p50</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">La mediana: la mitad fue más rápida. Es la operación <b>típica</b>.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#B04A06">p99</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">El 99 % fue más rápido: lo <b>malo</b> que puede ponerse. Mediana buena y p99 horrible es ir a tirones.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 2.4</p>
+<aside>Un minuto y medio. Última parada del vocabulario: cómo leer los números.
+Mop/s son millones de operaciones por segundo. Miden el rendimiento, cuánto trabajo total sale. Más es mejor. Es lo que mide la figura 5 del paper.
+Nanosegundos y microsegundos miden la latencia: cuánto tarda una operación concreta. Menos es mejor. Es lo que mide la figura 6.
+De la latencia daremos dos cifras. La mediana, p50: la mitad de las medidas fue más rápida y la otra mitad más lenta; es la operación típica. Y el p99: el 99 % fue más rápido que esto; es lo malo que puede ponerse. Si la mediana es buena y el p99 horrible, la experiencia es a tirones.
+Rendimiento y latencia no son lo mismo. Una autopista puede mover muchos coches por hora aunque cada uno tarde bastante. Por eso el paper mide las dos cosas, y por eso un algoritmo puede ganar en una y perder en la otra. Con esto ya podemos conocer a los rivales.</aside>
+</section>

@@ -1,0 +1,21 @@
+<section id="sockets-falsa" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 3 · Vocabulario</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Dos trampas más: la distancia y la compartición falsa</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<h3 style="font-size:40px;font-weight:600">La distancia</h3>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Pasar el cuaderno al compañero de mesa es rápido; mandarlo a otro edificio, lento.</p>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Con varios <b>sockets</b> (varios chips en una placa), mandar una línea a otro chip es varias veces más lento. El paper usa <b>4</b>.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<h3 style="font-size:40px;font-weight:600">Compartición falsa</h3>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Dos datos <b>distintos</b> que caen en la misma línea se estorban, aunque nadie los comparta.</p>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Es escribir en renglones distintos de la misma hoja. En esta réplica costó hasta <b>3,65 veces</b> de rendimiento.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Partes 2.3 y 2.4 · la compartición falsa se cuenta entera en la parte 12</p>
+<aside>Un minuto y medio. Dos trampas más, y las dos van a reaparecer.
+La distancia. Pasar el cuaderno a tu compañero de mesa es rápido. Enviarlo a otro edificio es lento. En un ordenador con varios sockets, es decir, varios chips en la misma placa, mandar una línea de caché a otro socket es varias veces más lento que dentro del mismo chip. La máquina del paper tiene 4 sockets, así que allí importa mucho dónde cae cada hilo. Nuestro PC tiene uno solo, y la parte 7 explica cómo simulamos esa distancia.
+La compartición falsa, false sharing en inglés. Como lo que viaja es la línea entera, dos datos distintos que caen en la misma línea se estorban aunque nadie los comparta. Es como dos personas que escriben en renglones distintos de la misma hoja: no comparten nada, pero tienen que pasarse la hoja cada vez.
+Les adelanto que esto no es teoría: el programa de pruebas de nuestro propio equipo tenía compartición falsa, y frenaba al algoritmo del paper hasta 3,65 veces. Lo descubrimos midiendo, y es una de las historias de la parte 12.</aside>
+</section>

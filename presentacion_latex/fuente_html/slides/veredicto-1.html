@@ -1,0 +1,24 @@
+<section id="veredicto-1" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 13 · Veredicto · rendimiento y latencia de lectura</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Afirmaciones 1 a 8</h2>
+<table style="width:1664px;font-size:26px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:4%;text-align:right">#</th><th style="width:36%;text-align:left">Lo que dice el paper</th><th style="width:39%;text-align:left">Resultado aquí</th><th style="width:21%;text-align:left">Veredicto</th></tr>
+<tr><td style="text-align:right">1</td><td>Mucho más rápido que Libstdc++</td><td>Gana con contención; empata con n = 10⁶</td><td style="color:#1F5FAE">Se reproduce</td></tr>
+<tr><td style="text-align:right">2</td><td>Mucho más rápido que Williams</td><td>Gana en los 6 escenarios, 0,24×–0,73×</td><td style="color:#1F5FAE">Se reproduce</td></tr>
+<tr style="background:#F4D9CF"><td style="text-align:right">3</td><td>Mucho más rápido que Folly</td><td>Gana 3, empata 2 y pierde 1</td><td style="color:#9C3A0A">No se reproduce</td></tr>
+<tr><td style="text-align:right">4</td><td>Con u pequeño, supera a Anderson</td><td>+6 % con n = 1 y +65 % con n = 10</td><td style="color:#1F5FAE">Se reproduce</td></tr>
+<tr style="background:#F4D9CF"><td style="text-align:right">5</td><td>Con n grande, supera a Anderson</td><td>Pierde hasta 18 hilos; empata desde 24</td><td style="color:#9C3A0A">No, en este PC</td></tr>
+<tr><td style="text-align:right">6</td><td>Con mucha contención, gana Anderson</td><td>Anderson 1,87×–1,99× con n = 1</td><td style="color:#1F5FAE">Se reproduce</td></tr>
+<tr><td style="text-align:right">7</td><td>load: siempre la menor latencia</td><td>La más baja en los 3 casos; por poco</td><td style="color:#1F5FAE">Sí, poco margen</td></tr>
+<tr style="background:#F4D9CF"><td style="text-align:right">8</td><td>store: segundo con p = 1, tras Anderson</td><td>Cuarto de cinco, por 5 ns</td><td style="color:#9C3A0A">No se reproduce</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Cifras con Docker; sin Docker, las mismas conclusiones · Fuente: EXPLICACION.md, Parte 7 · DEFENSA.md, sección 4</p>
+<aside>Dos minutos y medio. Las primeras ocho afirmaciones, con el veredicto escrito en cada fila; las filas en rojo claro son las que no se reproducen.
+Una y dos: Autores es mucho más rápido que Libstdc++ y que Williams. Se reproducen, con y sin Docker. Libstdc++ rinde entre 0,06 y 0,16 veces con contención y empata con un millón de pilas; Williams queda por debajo en los 6 escenarios.
+Tres: mucho más rápido que Folly. No se reproduce: gana en 3 escenarios, empata en 2 y pierde en 1, con y sin Docker. La brecha ya existe con un hilo, y no se debe ni a Docker ni al recorte.
+Cuatro: con pocas escrituras, Autores supera a Anderson. Se reproduce: un 6 % con una pila y un 65 % con 10 pilas.
+Cinco: con un millón de pilas, Autores supera a Anderson. No se reproduce en este PC: pierde hasta 18 hilos y empata a partir de 24. Probablemente por la RAM de un solo módulo.
+Seis: con mucha contención, Anderson gana. Se reproduce: 1,87 a 1,99 veces.
+Siete: el load de Autores es siempre el de menor latencia. Se reproduce, con poco margen.
+Ocho: el store de Autores es el segundo sin contención. No se reproduce: es el cuarto de cinco, por 5 nanosegundos, y sin contención las medidas son estables, así que no es ruido.</aside>
+</section>

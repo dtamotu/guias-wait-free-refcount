@@ -1,0 +1,101 @@
+% Réplica de «A Fast Wait-Free Solution to Read-Reclaim Races in Reference Counting» (Euro-Par 2024)
+% Presentación en Beamer. Compilar con: latexmk -pdf presentacion.tex
+% La versión con notas del orador es presentacion_con_notas.tex.
+% Las diapositivas están en diapositivas.tex, generado por herramientas/html_a_beamer.py.
+\providecommand\connotas{0}
+\documentclass[aspectratio=169,10pt,xcolor={table}]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands,es-nolists]{babel}
+\usepackage{lmodern}
+\usepackage[scaled=0.92]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{textcomp,amssymb}
+\usepackage{array,graphicx,tikz,tcolorbox}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% Caracteres que inputenc no conoce por sí solo
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{00F7}{\ensuremath{\div}}
+\DeclareUnicodeCharacter{03C4}{\ensuremath{\tau}}
+\DeclareUnicodeCharacter{2075}{\textsuperscript{5}}
+\DeclareUnicodeCharacter{2076}{\textsuperscript{6}}
+\DeclareUnicodeCharacter{2079}{\textsuperscript{9}}
+\DeclareUnicodeCharacter{2190}{\ensuremath{\leftarrow}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{2194}{\ensuremath{\leftrightarrow}}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+
+\input{colores}
+
+% Página Beamer 16:9 = 160 × 90 mm. Las diapositivas originales miden 1920 × 1080 px,
+% con márgenes de 128 px a los lados y arriba y de 160 px abajo.
+\newcommand\anchodisponible{394.54pt}
+\newcommand\altodisponible{187.79pt}
+\setbeamersize{text margin left=30.35pt,text margin right=30.35pt}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\textbullet}
+\setbeamercolor{itemize item}{fg=cB04A06}
+\setbeamertemplate{enumerate item}{\insertenumlabel.}
+\setbeamercolor{enumerate item}{fg=c14213D}
+\setbeamerfont{itemize/enumerate body}{}
+\hypersetup{
+  pdftitle={Réplica de «A Fast Wait-Free Solution to Read-Reclaim Races in Reference Counting»},
+  pdfauthor={David Tamo Turpo, Jheremy Manuel Alvarez Astete, Diego Quispe Candelario},
+  pdfsubject={Euro-Par 2024}}
+
+% Datos de cada diapositiva, que diapositivas.tex redefine antes de cada frame
+\newcommand\piediapo{}
+\newcommand\titulonota{}
+\newcommand\colorpie{c5F6B7A}
+\newcommand\fondo[1]{\setbeamercolor{background canvas}{bg=#1}}
+
+% \colocar{t|c|s}{contenido}: coloca el contenido arriba (t), centrado en vertical (c)
+% o repartido en todo el alto con \vfill (s); lo reduce si no cabe y dibuja el pie
+% con la fuente de los datos y el número de página.
+\newsavebox\cajadiapo
+\newlength\altocaja
+\newcommand\colocar[2]{%
+  \if s#1\relax
+    \sbox\cajadiapo{\begin{minipage}[t][\altodisponible][s]{\anchodisponible}#2\end{minipage}}%
+  \else
+    \sbox\cajadiapo{\begin{minipage}[t]{\anchodisponible}#2\end{minipage}}%
+  \fi
+  \setlength\altocaja{\dimexpr\ht\cajadiapo+\dp\cajadiapo\relax}%
+  \ifdim\altocaja>\dimexpr\altodisponible+0.5pt\relax
+    \typeout{AJUSTE: diapositiva \arabic{framenumber} reducida (\the\altocaja)}%
+    \sbox\cajadiapo{\resizebox*{!}{\altodisponible}{\usebox\cajadiapo}}%
+  \fi
+  \begin{tikzpicture}[remember picture,overlay]
+    \if c#1\relax
+      \node[anchor=west,inner sep=0pt] at ([xshift=30.35pt,yshift=-124.24pt]current page.north west) {\usebox\cajadiapo};
+    \else
+      \node[anchor=north west,inner sep=0pt] at ([xshift=30.35pt,yshift=-30.35pt]current page.north west) {\usebox\cajadiapo};
+    \fi
+    % La letra va en las opciones del nodo: así align=left mide los espacios con ella
+    \node[anchor=south west,inner sep=0pt,text width=\anchodisponible,align=left,
+          font=\fontsize{5.69}{7.1}\selectfont,text=\colorpie]
+      at ([xshift=30.35pt,yshift=15.17pt]current page.south west) {\piediapo};
+    \node[anchor=south east,inner sep=0pt,font=\fontsize{5.69}{7.1}\selectfont,text=\colorpie]
+      at ([xshift=-10pt,yshift=15.17pt]current page.south east) {\insertframenumber};
+  \end{tikzpicture}}
+
+% Páginas de notas del orador (solo en presentacion_con_notas.pdf)
+\setbeamercolor{note page}{bg=cFDFBF6,fg=c14213D}
+\setbeamertemplate{note page}{%
+  \vspace*{2pt}%
+  {\fontsize{9}{11}\selectfont\bfseries\color{cB04A06}Diapositiva \insertframenumber\quad\titulonota\par}%
+  \vspace{6pt}%
+  {\fontsize{8.2}{10.6}\selectfont\color{c14213D}\setlength{\parskip}{3.5pt}\insertnote\par}}
+\ifnum\connotas=1
+  \setbeameroption{show notes}
+\fi
+
+\begin{document}
+\input{diapositivas}
+\end{document}

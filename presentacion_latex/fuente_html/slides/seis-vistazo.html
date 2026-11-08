@@ -1,0 +1,21 @@
+<section id="seis-vistazo" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 4 · Los rivales</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Los seis, de un vistazo</h2>
+<table style="width:1664px;font-size:28px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:15%;text-align:left">Algoritmo</th><th style="width:25%;text-align:left">Atómicas por lectura</th><th style="width:18%;text-align:left">¿Reintenta?</th><th style="width:15%;text-align:left">Garantía</th><th style="width:14%;text-align:left">Liberación</th><th style="width:13%;text-align:left">¿Leer escribe?</th></tr>
+<tr><td>Mutex</td><td>Candado + desbloqueo</td><td>Espera dormido</td><td>Bloqueante</td><td>Inmediata</td><td>Sí</td></tr>
+<tr><td>Libstdc++</td><td>CAS + fetch_sub</td><td>Sí, dando vueltas</td><td>Bloqueante</td><td>Inmediata</td><td>Sí</td></tr>
+<tr><td>Williams</td><td>2 bucles de DWCAS</td><td>Sí</td><td>Lock-free</td><td>Inmediata</td><td>Sí</td></tr>
+<tr><td>Folly</td><td>1 bucle de CAS</td><td>Sí</td><td>Lock-free</td><td>Inmediata</td><td>Sí</td></tr>
+<tr><td>Anderson</td><td>Ninguna en el tablón</td><td>Sí, pocas veces</td><td>Lock-free</td><td style="color:#1F5FAE">Diferida</td><td style="color:#1F5FAE">No</td></tr>
+<tr style="background:#F6E3CF"><td>Autores</td><td>1 fetch_sub</td><td>No (salvo recarga, ≤ P)</td><td style="color:#B04A06">Wait-free</td><td>Inmediata</td><td>Sí</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">En Autores, con una sola pila, hay <b>dos</b> líneas calientes: el tablón y la libreta. En Anderson, solo la libreta.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 3.7 · «atómicas por lectura» se refiere a la zona disputada, el tablón</p>
+<aside>Dos minutos. Esta tabla resume la parte 4 y conviene tenerla a mano durante los resultados. Léanla por columnas.
+Atómicas por lectura en la zona disputada: el Mutex usa candado y desbloqueo; Libstdc++, un CAS y un fetch_sub; Williams, dos bucles de DWCAS; Folly, un bucle de CAS; Anderson, ninguna sobre el tablón, porque solo lo lee; y Autores, un único fetch_sub.
+¿Puede reintentar al leer? Todos menos Autores, que solo reintenta en la recarga y como mucho P veces. Esa es la propiedad wait-free.
+La liberación: inmediata en todos salvo Anderson, que la difiere.
+Y la última columna, la que explica por qué Anderson gana con muchas escrituras: ¿leer escribe en el tablón? Todos sí, menos Anderson.
+La frase de abajo añade un matiz: en Autores, al terminar de usar el objeto se resta 1 en la libreta, así que con una sola pila y muchos lectores hay dos líneas calientes, el tablón y la libreta. En Anderson solo una. Es una explicación razonable de por qué Anderson acaba ganando sobre una sola pila. Ojo: con u = 1 %, en el paper eso solo ocurre a partir de unos 54 hilos, y esta máquina no llega ahí.</aside>
+</section>

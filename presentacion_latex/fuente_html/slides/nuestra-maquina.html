@@ -1,0 +1,20 @@
+<section id="nuestra-maquina" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 6 · Cómo se hizo</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">La máquina del paper frente a la nuestra</h2>
+<table style="width:1664px;font-size:30px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:24%;text-align:left"></th><th style="width:36%;text-align:left">Paper, figura 5</th><th style="width:40%;text-align:left">Réplica</th></tr>
+<tr><td>Procesador</td><td>4 × Intel Xeon E7-8867</td><td>1 × Intel Core Ultra 9 285</td></tr>
+<tr><td>Núcleos</td><td>72</td><td>24: 8 P (rápidos) + 16 E (eficientes)</td></tr>
+<tr><td>Hilos de hardware</td><td>144 (con SMT)</td><td>24 (sin SMT)</td></tr>
+<tr><td>Sockets y NUMA</td><td>4 sockets, 4 nodos</td><td>1 socket, 1 nodo</td></tr>
+<tr><td>RAM</td><td>Repartida entre 4 chips</td><td>Un módulo de 32 GB DDR5-5600</td></tr>
+<tr><td>Caché L3</td><td>—</td><td>36 MB</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Esta CPU es casi diez años más moderna. Por eso no se comparan Mop/s absolutos: se comparan <b>órdenes y proporciones</b>.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Partes 5.2, 6 y 8 · DEFENSA.md, chuleta de cifras</p>
+<aside>Un minuto y medio. Las dos máquinas, lado a lado, para que se vea qué tenemos y qué no.
+El paper usa 4 Xeon E7-8867: 72 núcleos y 144 hilos, porque cada núcleo ejecuta dos hilos con SMT. Tiene 4 sockets y 4 nodos NUMA: cada chip con su memoria.
+Nosotros tenemos un Intel Core Ultra 9 285 de escritorio: 24 núcleos, 8 rápidos, que Intel llama P, y 16 eficientes, llamados E. Sin SMT, así que 24 hilos de hardware. Un socket, un nodo NUMA, y un detalle que luego será clave: un solo módulo de RAM de 32 GB DDR5-5600, con la otra ranura vacía. Eso significa un solo canal de memoria. La caché L3 es de 36 MB; también la usaremos.
+La frase de abajo es la primera regla para leer resultados: esta CPU es casi diez años más moderna, así que los millones de operaciones por segundo absolutos salen distintos y eso no significa nada. Lo que importa es el orden y la proporción: si un algoritmo era el doble de rápido que otro allí, ¿lo es también aquí?
+La celda de la L3 del paper está vacía a propósito: no la usamos y no queremos inventarla.</aside>
+</section>

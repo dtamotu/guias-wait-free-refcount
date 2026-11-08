@@ -1,0 +1,19 @@
+<section id="carrera-tabla" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 2 · El problema</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">La misma carrera, instante por instante</h2>
+<table style="width:1664px;font-size:30px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:12%;text-align:center">Instante</th><th style="width:28%;text-align:left">Marta (lee)</th><th style="width:26%;text-align:left">Beto (escribe)</th><th style="width:12%;text-align:center">Tablón</th><th style="width:22%;text-align:left">Libreta del 42</th></tr>
+<tr><td style="text-align:center">0</td><td></td><td></td><td style="text-align:center">42</td><td>1</td></tr>
+<tr><td style="text-align:center">1</td><td>lee «42»</td><td></td><td style="text-align:center">42</td><td>1</td></tr>
+<tr><td style="text-align:center">2</td><td></td><td>pone «77»</td><td style="text-align:center">77</td><td>1</td></tr>
+<tr><td style="text-align:center">3</td><td></td><td>resta 1</td><td style="text-align:center">77</td><td>0</td></tr>
+<tr><td style="text-align:center">4</td><td></td><td>tritura el libro</td><td style="text-align:center">77</td><td>destruida</td></tr>
+<tr style="background:#F4D9CF"><td style="text-align:center">5</td><td>suma 1: use-after-free</td><td></td><td style="text-align:center">77</td><td>destruida</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">El peligro está entre los instantes 1 y 5: Marta ya sabe dónde está el libro, pero todavía no lo ha reservado.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 1.5</p>
+<aside>Un minuto. La misma historia, ahora como tabla, porque en la tabla se ve dónde está el hueco.
+Recorran la columna de la libreta: 1, 1, 1, 0, destruida, destruida. Y la de Marta: lee en el instante 1 y no vuelve a actuar hasta el 5. Todo lo que pasa entre medias, en la columna de Beto, le ocurre a sus espaldas.
+La frase de abajo es la clave de todo el paper: el peligro está entre el momento en que Marta sabe dónde está el libro y el momento en que lo reserva. Si consiguiéramos que esas dos cosas ocurrieran a la vez, en un único gesto, no habría hueco. Vamos a ver que cada algoritmo del paper es una forma distinta de cerrar ese hueco o de hacerlo inofensivo.
+Pregunta que a veces hace el jurado aquí: ¿y esto pasa de verdad, o es teórico? Pasa: en la parte 11 lo provocamos a propósito con una versión ingenua y el detector de errores AddressSanitizer lo atrapa enseguida.</aside>
+</section>

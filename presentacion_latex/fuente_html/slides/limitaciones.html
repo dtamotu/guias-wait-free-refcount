@@ -1,0 +1,43 @@
+<section id="limitaciones" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 13 · Limitaciones, dicho sin rodeos</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Lo que esta réplica no puede decir</h2>
+<div style="display:flex;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">La máquina</h3>
+<ul style="font-size:24px;line-height:1.45;color:#3D4A5C;padding:0 0 0 28px">
+<li>Sin 4 sockets: castigo 1,35× frente a unas 3×</li>
+<li>Sin NUMA: numactl aquí no hace nada</li>
+<li>Sin SMT; 24 núcleos, no 72</li>
+<li>Un solo módulo de RAM</li>
+<li>CPU híbrida: núcleos P y E</li>
+<li>Frecuencia sin fijar; máximo 99 °C</li>
+</ul>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">El método</h3>
+<ul style="font-size:24px;line-height:1.45;color:#3D4A5C;padding:0 0 0 28px">
+<li>Recortes: hasta 19-21 %, con sesgo</li>
+<li>Valores del paper sacados de sus gráficos</li>
+<li>Williams en latencia, con binario aparte</li>
+<li>Dos intentos descartados por errores nuestros</li>
+<li>PC de escritorio, no aislado</li>
+<li>La primera medición de RAM casi nos engaña</li>
+</ul>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">Las conclusiones</h3>
+<ul style="font-size:24px;line-height:1.45;color:#3D4A5C;padding:0 0 0 28px">
+<li>Cuatro preguntas siguen abiertas</li>
+<li>El techo de la RAM, reforzado, no demostrado</li>
+<li>La latencia con contención es ruidosa</li>
+<li>bench_basura y su límite son nuestros</li>
+<li>TSan no se pasó a Folly ni a Anderson</li>
+</ul>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">90 °C o más: 5 de 3 720 ejecuciones con Docker y 26 de 9 796 sin Docker, repartidas y conservadas · Fuente: EXPLICACION.md, Parte 8 · DEFENSA.md, cargos 1, 5, 9 y 12</p>
+<aside>Dos minutos y medio. Un jurado se fía más de quien reconoce un límite que de quien lo esconde, así que aquí van todos, en tres grupos.
+La máquina. No hay 4 sockets: la simulación castiga 1,35 veces, frente a unas 3 en máquinas parecidas a la del paper. No hay NUMA: numactl aquí no hace nada. No hay SMT, y son 24 núcleos, no 72, así que la zona de más de 54 hilos del paper queda fuera de alcance. Un solo módulo de RAM. La CPU es híbrida, y Linux reparte los hilos entre núcleos de potencia distinta. Y la frecuencia no se fijó: llegaron a 90 grados o más 5 de 3 720 ejecuciones con Docker y 26 de 9 796 sin Docker, repartidas, y no se descartaron.
+El método. Los recortes mueven hasta un 19-21 %, y con un sesgo. Los valores del paper salen de la posición de sus marcadores, muy precisos pero no son sus datos crudos. Williams en latencia se midió después y con un binario aparte. Dos intentos de esa latencia se descartaron, los dos por errores nuestros. El PC es de escritorio, no aislado. Y la primera medición de RAM casi nos engaña: miraba los últimos segundos, cuando el programa ya liberaba memoria, y dio lo contrario de la buena.
+Las conclusiones. Cuatro preguntas siguen abiertas, las vemos ahora. El techo de la RAM está reforzado pero no demostrado. La latencia con contención es ruidosa. bench_basura y su límite son nuestros. Y TSan no se pasó a Folly ni a Anderson.</aside>
+</section>

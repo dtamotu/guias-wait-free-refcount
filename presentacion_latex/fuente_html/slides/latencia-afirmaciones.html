@@ -1,0 +1,33 @@
+<section id="latencia-afirmaciones" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 9 · Latencia</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Lo que dice el paper, operación por operación</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#1F5FAE">Se reproduce, con poco margen</p>
+<h3 style="font-size:40px;font-weight:600">load, siempre el más rápido</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Sí en los tres casos. Con contención, por un 8-12 %, y empate con Anderson con p = 56.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#9C3A0A">No se reproduce</p>
+<h3 style="font-size:40px;font-weight:600">store, segundo con p = 1</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Aquí es el cuarto de cinco. Son 5 ns, un puñado de ciclos, pero el orden es otro.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#8A5A00">En parte</p>
+<h3 style="font-size:40px;font-weight:600">store, el mejor con contención</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Empate con Anderson: 507 frente a 483 ns, y 1 516 frente a 1 498.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#1F5FAE">Se reproduce</p>
+<h3 style="font-size:40px;font-weight:600">store &amp; reclaim, más lento con p = 1</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">En los cinco algoritmos, con y sin Docker: destruir cuesta.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.2 y Parte 7, filas 7 a 10</p>
+<aside>Dos minutos. Las cuatro frases del paper sobre latencia, cada una con su veredicto escrito, no solo con color.
+Uno: el load de Autores es siempre el de menor latencia. Se reproduce: tiene la mediana más baja en los tres casos. Pero con contención el margen es pequeño, un 8 a 12 % frente a Folly y Anderson con p = 24, y un empate con Anderson con p = 56.
+Dos: el store de Autores es el segundo con p = 1, tras Anderson. No se reproduce: aquí queda por detrás de Folly, Anderson y Libstdc++. Son 5 nanosegundos de diferencia, un puñado de ciclos, pero el orden es otro, y sin contención las medidas son muy estables, así que no es ruido.
+Tres: el store de Autores es el mejor con contención. En parte: empata con Anderson, 507 frente a 483 y 1 516 frente a 1 498, y los dos quedan por delante del resto.
+Cuatro: store and reclaim es más lento que store con p = 1. Se reproduce en los cinco, con y sin Docker: destruir el objeto cuesta.
+Falta una quinta frase, la de que con contención algunos van más rápido en store and reclaim. Esa la dejamos para después de ver el ruido, porque es justo la que el ruido se lleva por delante.</aside>
+</section>

@@ -1,0 +1,25 @@
+<section id="colas" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 9 · Latencia</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Las colas cuentan dos historias que la mediana no ve</h2>
+<table style="width:1664px;font-size:28px;color:#14213D;font-variant-numeric:tabular-nums">
+<tr style="background:#EAE4D3"><th style="width:30%;text-align:left">ns</th><th style="width:14%;text-align:right">Autores</th><th style="width:14%;text-align:right">Anderson</th><th style="width:14%;text-align:right">Folly</th><th style="width:14%;text-align:right">Williams</th><th style="width:14%;text-align:right">Libstdc++</th></tr>
+<tr><td>store &amp; reclaim, p = 1: p99</td><td style="text-align:right">29</td><td style="text-align:right">32</td><td style="text-align:right">26</td><td style="text-align:right">49</td><td style="text-align:right">27</td></tr>
+<tr><td>store &amp; reclaim, p = 1: p99,95</td><td style="text-align:right">30</td><td style="text-align:right;color:#1F5FAE">7 895</td><td style="text-align:right">36</td><td style="text-align:right">52</td><td style="text-align:right">34</td></tr>
+<tr><td>load, p = 24: p99,95</td><td style="text-align:right;color:#B04A06">1 634</td><td style="text-align:right">1 408</td><td style="text-align:right">5 566</td><td style="text-align:right;color:#5143B8">10 019</td><td style="text-align:right">65 230</td></tr>
+</table>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">La caja de Anderson</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Vacía su caja cada 2 000 retiradas: 1 de cada 2 000 es el 0,05 %, justo lo que mira el p99,95. De 32 a casi 8 000 ns.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">Lock-free frente a wait-free</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Con 23 escritores, 1 lectura de cada 2 000 de Williams tarda 10 µs; la de Autores, 1,6 µs: unas 6 veces menos.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: tablas.md, «Colas de latencia en ns: p50 / p99 / p99,95» · EXPLICACION.md, Parte 6.2 · p99,95 = solo 1 operación de cada 2 000 lo supera</p>
+<aside>Dos minutos y medio. La mediana es la operación típica; la cola es lo malo que puede ponerse. El percentil 99,95 es el valor que solo supera 1 operación de cada 2 000. Y aquí aparecen dos historias que la mediana no cuenta.
+Historia 1: la caja de pendientes de Anderson. Sin contención, Anderson va tan fino como los demás: p99 de 32 nanosegundos. Hasta el p99,95, donde salta a casi 8 000. ¿Por qué justo ahí? Porque Anderson vacía su caja cada 2 000 retiradas, y una de cada 2 000 es el 0,05 %, precisamente lo que mira el p99,95. Una operación de cada 2 000 tiene que recorrer las mesas de todos. La coincidencia es demasiado exacta para ser casualidad, aunque no se midió directamente. Con contención este salto no se distingue, porque el atasco lo tapa.
+Historia 2: lo que significa de verdad lock-free. Con 23 escritores cambiando el tablón sin parar, el load de Williams necesita ganar dos bucles de DWCAS, y cada cambio le hace perder y volver a empezar. El sistema avanza, porque los escritores sí terminan, pero el lector se queda atrás: 1 lectura de cada 2 000 tarda 10 microsegundos; la de Autores, 1,6, unas 6 veces menos. Es la puerta giratoria a empujones frente al torniquete propio de la parte 3, medida con cronómetro.
+Y Libstdc++, 65 microsegundos: el candado otra vez.</aside>
+</section>

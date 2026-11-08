@@ -1,0 +1,29 @@
+<section id="memoria-retenida" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 10 · Memoria</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Anderson retiene un poco; Autores, nada</h2>
+<div style="display:flex;gap:40px;align-items:start">
+<table style="width:1000px;font-size:26px;color:#14213D;font-variant-numeric:tabular-nums">
+<tr style="background:#EAE4D3"><th style="width:12%;text-align:right">Hilos</th><th style="width:13%;text-align:right">Límite</th><th style="width:15%;text-align:right">Autores</th><th style="width:15%;text-align:right">Anderson</th><th style="width:15%;text-align:right">Folly</th><th style="width:15%;text-align:right">Williams</th><th style="width:15%;text-align:right">Libstdc++</th></tr>
+<tr><td style="text-align:right">2</td><td style="text-align:right">12</td><td style="text-align:right">9</td><td style="text-align:right;color:#1F5FAE">4 013</td><td style="text-align:right">9</td><td style="text-align:right">9</td><td style="text-align:right">9</td></tr>
+<tr><td style="text-align:right">4</td><td style="text-align:right">22</td><td style="text-align:right">13</td><td style="text-align:right;color:#1F5FAE">6 808</td><td style="text-align:right">14</td><td style="text-align:right">15</td><td style="text-align:right">13</td></tr>
+<tr><td style="text-align:right">8</td><td style="text-align:right">42</td><td style="text-align:right">21</td><td style="text-align:right;color:#1F5FAE">9 910</td><td style="text-align:right">23</td><td style="text-align:right">25</td><td style="text-align:right">21</td></tr>
+<tr><td style="text-align:right">16</td><td style="text-align:right">82</td><td style="text-align:right">36</td><td style="text-align:right;color:#1F5FAE">17 079</td><td style="text-align:right">39</td><td style="text-align:right">43</td><td style="text-align:right">36</td></tr>
+<tr><td style="text-align:right">24</td><td style="text-align:right">122</td><td style="text-align:right">52</td><td style="text-align:right;color:#1F5FAE">19 960</td><td style="text-align:right">53</td><td style="text-align:right">59</td><td style="text-align:right">53</td></tr>
+</table>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#14213D;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">Con 24 hilos</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:72px;font-weight:600;line-height:1.1;color:#F7F4EC">469 KB</p>
+<p style="font-size:30px;line-height:1.4;color:#C9D3E3">de Anderson, frente a 2,3 KB de Autores</p>
+</div>
+</div>
+<div style="display:flex;gap:24px">
+<p style="flex:1;font-size:24px;line-height:1.4;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:20px 24px"><b>Solo espera la libreta:</b> el objeto muere al instante; su pico de objetos vivos es 14, como los demás.</p>
+<p style="flex:1;font-size:24px;line-height:1.4;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:20px 24px"><b>En bytes es poco:</b> unas 200 veces más que Autores, pero menos de medio mega.</p>
+<p style="flex:1;font-size:24px;line-height:1.4;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:20px 24px"><b>Sin Docker, igual:</b> 20 256 bloques, unos 476 KB.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Pico de bloques de memoria vivos · herramientas/bench_basura.cpp; su «límite» es una fórmula nuestra, no del paper · tablas.md, «Memoria retenida» · figura memoria_retenida.png</p>
+<aside>Dos minutos. Esta prueba no está en el paper: es bench_basura.cpp, del equipo. La mitad de los hilos escribe y la otra mitad lee, sin parar, y se cuentan los bloques de memoria vivos en cada instante. El «límite» es el máximo posible si todo se liberara en el acto; es una fórmula nuestra.
+Cuatro algoritmos quedan siempre bajo el límite: Autores, Folly, Williams y Libstdc++. Liberan en el mismo instante en que el último usuario termina. Anderson, en cambio, tiene unas 380 veces más bloques con 24 hilos: 19 960. Es su caja de pendientes.
+Antes de condenar a Anderson, tres matices. Uno: lo que espera en la caja es solo el bloque de control, la libreta. El objeto muere en el acto: su pico de objetos vivos es 14, igual que los demás y bajo el límite. Lo vimos en el código, y esta prueba lo confirma. Dos: en bytes es poco. Esos bloques de más son 469 KB, frente a 2,3 KB de Autores: 200 veces más, pero menos de medio mega. Por eso la memoria total del proceso no lo delata: con un millón de pilas, Anderson usa 910 MB y Autores 1 074, porque ahí lo que pesa son los datos. Tres: sin Docker sale lo mismo, 20 256 bloques.
+El paper dice que Anderson tiene un «pequeño sobrecoste de espacio», y es exacto: pequeño sí, cero no. Autores sí consigue el cero. En una frase: Anderson compra velocidad con una caja de pendientes pequeña; Autores no necesita caja.</aside>
+</section>

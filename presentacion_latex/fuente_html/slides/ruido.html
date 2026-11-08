@@ -1,0 +1,21 @@
+<section id="ruido" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 9 · Latencia</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">¿Cuánto fiarse? Sin contención, mucho; con contención, poco</h2>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Ronda más alta ÷ ronda más baja del mismo punto, caso típico (y peor caso)</p>
+<table style="width:1664px;font-size:28px;color:#14213D;font-variant-numeric:tabular-nums">
+<tr style="background:#EAE4D3"><th style="width:22%;text-align:left">Hilos y medida</th><th style="width:26%;text-align:right">Docker, oficiales, 5 rondas</th><th style="width:26%;text-align:right">Sin Docker, oficiales, 15</th><th style="width:26%;text-align:right">Sin Docker, bench.cpp, 5</th></tr>
+<tr><td>p = 1, mediana</td><td style="text-align:right;color:#1F5FAE">1,00×</td><td style="text-align:right;color:#1F5FAE">1,00×</td><td style="text-align:right">1,11×</td></tr>
+<tr><td>p = 1, p99</td><td style="text-align:right;color:#1F5FAE">1,00×</td><td style="text-align:right">1,03×</td><td style="text-align:right">1,16×</td></tr>
+<tr><td>p = 24, mediana</td><td style="text-align:right">3,40× (13,6×)</td><td style="text-align:right;color:#9C3A0A">5,75× (36,9×)</td><td style="text-align:right">1,84× (10,4×)</td></tr>
+<tr><td>p = 24, p99</td><td style="text-align:right">3,33× (28,1×)</td><td style="text-align:right;color:#9C3A0A">6,19× (127,3×)</td><td style="text-align:right">1,50× (36,0×)</td></tr>
+<tr><td>p = 56, mediana</td><td style="text-align:right">1,81× (4,6×)</td><td style="text-align:right;color:#9C3A0A">7,54× (34,1×)</td><td style="text-align:right">4,32× (30,3×)</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Si dos algoritmos difieren un 20 % con p = 24, no significa nada: el mismo cambia más que eso de una ronda a otra.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.2 · tablas.md, «Variabilidad de la latencia entre rondas» · 1,00× = el cronómetro siempre marca lo mismo</p>
+<aside>Dos minutos. Esta diapositiva es la que nos protege de presumir de más.
+Comparamos, punto a punto, la ronda más alta con la más baja. Es como cronometrar varias veces al mismo corredor: 1,00 veces significa que el cronómetro siempre marca lo mismo, y 3 veces, que la misma carrera puede dar 10 segundos o 30.
+Con un hilo, p = 1, las medidas son estables: 1,00 veces en el caso típico. Por eso el resultado del store con p = 1, el de los 5 nanosegundos, es claro.
+Con contención, en cambio, el mismo punto cambia de 3 a 7 veces de una ronda a otra, y en el peor caso decenas de veces. Dicho de otra forma: si dos algoritmos se diferencian en un 20 % con p = 24, esa diferencia no significa nada, porque un mismo algoritmo cambia más que eso de una ronda a otra. Solo valen las diferencias enormes, como la de Libstdc++ con los demás.
+¿Por qué la columna de 15 rondas sale peor que la de 5? Porque compara la ronda más alta con la más baja, y con más rondas hay más ocasiones de pillar una muy buena y una muy mala. Es como tirar un dado: en 15 tiradas es más fácil que salgan un 1 y un 6 que en 5. Más rondas no hacen más estable cada ronda; lo que hacen es que la mediana dependa menos de una ronda con mala suerte.
+Una pista del origen: con p = 24, sin fijar los hilos, el load de Autores sale en dos grupos, unos 420 ns y unos 1 450. Con los hilos fijados, el segundo grupo no apareció. Es un indicio, no una prueba.</aside>
+</section>

@@ -1,0 +1,24 @@
+<section id="escalon-l2" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 10 · Distancia</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Importa compartir caché, no los nanosegundos</h2>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Dos hilos de Autores, n = 1, u = 50 %, según dónde caen · Mop/s, mediana por clase</p>
+<div style="display:flex;gap:56px;align-items:center">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:center;gap:24px"><p style="width:320px;font-size:30px;text-align:right">Mismo clúster · 35 ns</p><div style="width:621px;height:56px;background:#D9620B;border-radius:0 8px 8px 0"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px">6,21</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="width:320px;font-size:30px;text-align:right">Otro clúster · 47 ns</p><div style="width:341px;height:56px;background:#D9620B;border-radius:0 8px 8px 0"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px">3,41 · −45 %</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="width:320px;font-size:30px;text-align:right">Dos núcleos P · 86 ns</p><div style="width:329px;height:56px;background:#D9620B;border-radius:0 8px 8px 0"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px">3,29</p></div>
+</div>
+<div style="width:520px;display:flex;flex-direction:column;gap:16px;background:#14213D;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">No es una rampa</p>
+<p style="font-size:40px;font-weight:600;line-height:1.2;color:#F7F4EC">Es un escalón</p>
+<p style="font-size:30px;line-height:1.4;color:#C9D3E3">En cuanto te levantas de la mesa, da casi igual ir a la sala de al lado o a la del fondo.</p>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">El mismo escalón con el programa oficial sin Docker (−44 %) y con bench.cpp (−50 %). Al Mutex le da igual: 3,91 en los dos casos.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.4 · tablas.md, «Dos hilos en distintos pares de núcleos» · 14 pares de 4 clases, 3 rondas con Docker y 10 sin Docker</p>
+<aside>Dos minutos. Para ver la distancia con más finura, pusimos solo 2 hilos en 14 pares de núcleos distintos, de 4 clases, y medimos.
+Autores, con una pila y 50 % de escrituras. Si los dos hilos están en el mismo clúster, donde el viaje es de 35 ns, 6,21 Mop/s. En clústeres distintos, 47 ns, 3,41: un 45 % menos. En dos núcleos P, 86 ns, el viaje más largo de la máquina: 3,29. Casi lo mismo que entre clústeres.
+Esa es la lección: lo que importa es compartir la caché L2, no los nanosegundos. Según el mapa de latencias, ir entre clústeres cuesta 47 ns y entre núcleos P, 86. Pero Autores rinde casi lo mismo en los dos casos. El salto grande está antes, al dejar de compartir caché. No es una rampa, es un escalón. Es como trabajar en la misma mesa: en cuanto tienes que levantarte, da casi igual si vas a la sala de al lado o a la del fondo.
+El escalón se repite con el programa oficial sin Docker, menos 44 %, y con bench.cpp del equipo, menos 50 %. Dos programas y dos entornos, la misma forma.
+Y un detalle curioso: al Mutex esta prueba le da igual, 3,91 en los dos casos. Una explicación posible es que los hilos que esperan duermen, así que el cuaderno viaja mucho menos. Lo retomamos en la parte 12. Pero en esta misma tabla había algo muy raro con Williams, y eso merece su propia diapositiva.</aside>
+</section>

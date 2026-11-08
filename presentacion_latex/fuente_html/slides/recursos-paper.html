@@ -1,0 +1,22 @@
+<section id="recursos-paper" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 15 · Recursos · el paper y los algoritmos</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Referencias: el paper, su artefacto y los rivales</h2>
+<div style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:6px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:24px 32px">
+<p style="font-size:24px;line-height:1.4">de Wolff, I. G.; Anderson, D.; Keller, G. K.; Seletskiy, A. <b>A Fast Wait-Free Solution to Read-Reclaim Races in Reference Counting.</b> Euro-Par 2024, LNCS 14803.</p>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">Artefacto: <a href="https://doi.org/10.5281/zenodo.11775182">doi.org/10.5281/zenodo.11775182</a> · MD5 e7e03425dfd426385a769788e5460fcd</p>
+</div>
+<table style="width:1664px;font-size:24px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:14%;text-align:left">Algoritmo</th><th style="width:86%;text-align:left">Fuente</th></tr>
+<tr><td>Autores</td><td><a href="https://github.com/ivogabe/wait-free-atomic-shared-pointer">github.com/ivogabe/wait-free-atomic-shared-pointer</a></td></tr>
+<tr><td>Libstdc++</td><td>std::atomic&lt;std::shared_ptr&gt; de GCC, C++20 (bits/shared_ptr_atomic.h)</td></tr>
+<tr><td>Williams</td><td>Williams, A. C++ Concurrency in Action. Manning, 2012 · <a href="https://github.com/anthonywilliams/atomic_shared_ptr">github.com/anthonywilliams/atomic_shared_ptr</a></td></tr>
+<tr><td>Folly</td><td><a href="https://github.com/facebook/folly">github.com/facebook/folly</a> · commit 8a9b2220d5946e5db8c8e0188332df4990e80b08</td></tr>
+<tr><td>Anderson</td><td>Anderson, Blelloch y Wei, PLDI 2021 y PLDI 2022 · Anderson, CppCon 2023 · código ParlayLib, en el artefacto</td></tr>
+</table>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, «Referencias y fuentes» · el binario oficial usa la versión de Autores del artefacto, anterior a la del repositorio</p>
+<aside>Un minuto. Las referencias principales. El paper, de de Wolff, Anderson, Keller y Seletskiy, en Euro-Par 2024, volumen 14803 de Lecture Notes in Computer Science. Su artefacto, en Zenodo, con el DOI y la suma MD5 que comprobamos.
+Las fuentes de cada algoritmo: el repositorio de los autores, ivogabe/wait-free-atomic-shared-pointer, que es también un submódulo del repositorio del equipo; recuerden que el binario oficial usa una versión anterior, la del artefacto. Libstdc++, la biblioteca estándar de GCC. Williams, su libro C++ Concurrency in Action y su repositorio; ojo, el artefacto usa una copia con boost::atomic. Folly, con el commit exacto que fija el paper. Y Anderson, con sus dos artículos de PLDI, 2021 y 2022, y su charla de CppCon 2023; su código es ParlayLib, que viene dentro del artefacto.
+Todos los enlaces de esta diapositiva se pueden pulsar en la versión web de la presentación.</aside>
+</section>
