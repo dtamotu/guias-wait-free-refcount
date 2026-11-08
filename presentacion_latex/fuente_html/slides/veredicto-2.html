@@ -1,0 +1,24 @@
+<section id="veredicto-2" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 13 · Veredicto · escritura, memoria y corrección</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Afirmaciones 9 a 15</h2>
+<table style="width:1664px;font-size:26px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:4%;text-align:right">#</th><th style="width:36%;text-align:left">Lo que dice el paper</th><th style="width:39%;text-align:left">Resultado aquí</th><th style="width:21%;text-align:left">Veredicto</th></tr>
+<tr style="background:#F6EAD2"><td style="text-align:right">9</td><td>store: el mejor con contención</td><td>Empate con Anderson</td><td style="color:#8A5A00">En parte</td></tr>
+<tr><td style="text-align:right">10</td><td>store &amp; reclaim, más lento con p = 1</td><td>En los cinco, con y sin Docker</td><td style="color:#1F5FAE">Se reproduce</td></tr>
+<tr style="background:#E4E1D8"><td style="text-align:right">11</td><td>store &amp; reclaim, a veces más rápido</td><td>Con 15 rondas, solo un 1-4 %: ruido</td><td style="color:#4A4F57">No se confirma</td></tr>
+<tr style="background:#F6EAD2"><td style="text-align:right">12</td><td>Williams, casi siempre más lento</td><td>Sin contención, sí; con contención, no siempre</td><td style="color:#8A5A00">En parte</td></tr>
+<tr><td style="text-align:right">13</td><td>Anderson retiene algo; Autores, nada</td><td>19 960 bloques (469 KB) frente a 52</td><td style="color:#1F5FAE">Se reproduce</td></tr>
+<tr><td style="text-align:right">14</td><td>La recarga reintenta ≤ P veces</td><td>Máximo 8 con P = 32</td><td style="color:#1F5FAE">Se reproduce</td></tr>
+<tr><td style="text-align:right">15</td><td>No hay use-after-free</td><td>0 errores con ASan y TSan</td><td style="color:#1F5FAE">Sí, en lo probado</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">La fila 11 pasó de «se reproduce» a «no se confirma» con los datos de 15 rondas. Si el equipo prefiere «dudoso», es cambiar una palabra.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 7 · la causa que propone el paper para la fila 11 tampoco se comprobó</p>
+<aside>Dos minutos. Las siete restantes.
+Nueve: el store de Autores es el mejor con contención. En parte: empata con Anderson, con y sin Docker.
+Diez: store and reclaim es más lento que store sin contención. Se reproduce en los cinco.
+Once: con contención, algunos van más rápido en store and reclaim. No se confirma. Con Docker y 5 rondas lo parecía; sin Docker y con 15 rondas, la mejora se queda en un 1 a 4 %, dentro del ruido. Esta fila cambió durante la réplica, y conviene contarlo así: cuando los datos lo pidieron, la bajamos. Es una decisión pendiente del equipo dejarla en «no se confirma» o pasarla a «dudoso».
+Doce: la latencia de Williams es casi siempre mayor. En parte: sin contención es la mayor en las tres operaciones; con contención supera a Libstdc++ y a veces a Folly. Y recuerden que casi lo medimos con un candado escondido.
+Trece: Anderson tiene un pequeño sobrecoste de memoria y Autores ninguno. Se reproduce: 19 960 bloques frente a 52.
+Catorce: la recarga reintenta como mucho P veces. Se reproduce: máximo 8 con una cota de 32.
+Quince: no hay use-after-free. Se reproduce en lo probado. Esa coletilla, «en lo probado», es la formulación correcta, y conviene decirla siempre.</aside>
+</section>

@@ -1,0 +1,28 @@
+<section id="williams" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;gap:16px;align-items:center"><div style="width:24px;height:24px;background:#6250D6;border-radius:6px"></div><p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 4 · Los rivales · familia 3</p></div>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Williams: apuntarse en el tablón antes de ir al libro</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">El tablón tiene dos columnas: la ficha del libro y una rayita por cada persona que <b>va de camino</b>. Contador partido: una parte junto al puntero y otra en la libreta. Son <b>16 bytes</b>, con DWCAS.</p>
+<h3 style="font-size:40px;font-weight:600;font-family:'JetBrains Mono', 'Courier New', monospace">load</h3>
+<ol style="font-size:30px;line-height:1.45;color:#14213D;padding:0 0 0 40px">
+<li>Bucle de DWCAS: hacer mi rayita</li>
+<li>Sumar 1 en la libreta: la rayita me protege</li>
+<li>Bucle de DWCAS: borrar mi rayita</li>
+<li>Si el puntero cambió, avisar en la libreta</li>
+</ol>
+</div>
+<div style="width:600px;display:flex;flex-direction:column;gap:14px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Garantía</p><p style="font-size:30px">Lock-free</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Memoria extra</p><p style="font-size:30px">Ninguna; libera al instante</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">A favor</p><p style="font-size:30px;line-height:1.35">Sin candados: nadie bloquea a nadie</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">En contra</p><p style="font-size:30px;line-height:1.35">Cada lectura toca el tablón dos veces, con DWCAS</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 3.3 · Williams, «C++ Concurrency in Action», 2012 · split reference count</p>
+<aside>Dos minutos. Williams es el primero de la familia 3: pagar en el propio tablón. La idea: apuntarse en el tablón antes de ir a la libreta, para que nadie tire el libro mientras vas de camino.
+La analogía: el tablón tiene dos columnas, la ficha del libro y una rayita por cada persona que va de camino. Antes de ir, haces tu rayita. Cuando ya sumaste 1 en la libreta, borras tu rayita. Si Beto cambia el tablón, ve las rayitas, sabe cuánta gente viene en camino y las pasa a la libreta para que el libro no se destruya. A esto se le llama contador partido, split reference count: una parte de la cuenta, la local, vive junto al puntero, y la otra, la global, en la libreta.
+Físicamente son 16 bytes: 8 de puntero y 8 de contadores, que se cambian de golpe con DWCAS, la instrucción cmpxchg16b.
+Lo importante: cada lectura toca el tablón dos veces, con dos bucles de DWCAS, además de la libreta. Mucho trabajo por operación. Los Autores lo tocan una sola vez.
+Y una nota que nos costó cara: esa instrucción solo se usa si se compila con la bandera -mcx16. Sin ella, boost::atomic mete un candado por dentro sin avisar. Nos pasó en la latencia; lo contamos en la parte 9.</aside>
+</section>

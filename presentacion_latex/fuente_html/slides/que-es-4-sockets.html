@@ -1,0 +1,27 @@
+<section id="que-es-4-sockets" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 7 · Simular 4 Xeon</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Qué significa de verdad tener 4 sockets</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#1F5FAE">1</p>
+<h3 style="font-size:40px;font-weight:600;line-height:1.2">Distancia entre núcleos</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Pasar una línea de caché a otro chip es varias veces más lento. <b>Esto sí se puede imitar.</b></p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#5F6B7A">2</p>
+<h3 style="font-size:40px;font-weight:600;line-height:1.2">Distancia a la memoria</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">NUMA: cada chip tiene su RAM y la del vecino está más lejos. <b>Esto no.</b></p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#14213D;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">Descartado</p>
+<h3 style="font-size:40px;font-weight:600;line-height:1.2;color:#F7F4EC">Una máquina virtual</h3>
+<p style="font-size:30px;line-height:1.4;color:#C9D3E3">Le dice al sistema que hay 4 nodos, pero ningún viaje tarda más. Sería un decorado.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 5.1</p>
+<aside>Un minuto y medio. Una máquina de 4 sockets es distinta de la nuestra por dos motivos.
+Uno, la distancia entre núcleos: pasar una línea de caché a otro chip es varias veces más lento que dentro del mismo. Esto es lo que más importa en este paper, porque lo que viaja es el tablón, la línea caliente.
+Dos, la distancia a la memoria, lo que se llama NUMA: cada chip tiene su propia RAM, y la del vecino está más lejos.
+La solución fácil sería una máquina virtual configurada con 4 nodos NUMA. La descartamos, y conviene explicar por qué: una máquina virtual engaña al sistema operativo, le dice que hay 4 nodos, pero ningún viaje tarda más de verdad. Sería un decorado de teatro: parece una casa, pero detrás no hay nada.
+Así que nos quedamos con lo primero, la línea caliente que viaja. Y eso sí se puede imitar con hardware real, si esta CPU tiene distancias reales que aprovechar. Lo segundo, NUMA, lo declaramos como límite: no lo podemos imitar. La pregunta entonces es: ¿hay distancias dentro de nuestro chip? Hay que medirlo antes de suponerlo.</aside>
+</section>

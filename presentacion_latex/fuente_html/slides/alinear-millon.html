@@ -1,0 +1,29 @@
+<section id="alinear-millon" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 12 · Sin Docker · una sorpresa, medida</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Con un millón de pilas, alinear frena</h2>
+<div style="display:flex;gap:40px;align-items:start">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px">
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Bytes de RAM por operación, n = 10⁶, 24 hilos, u = 50 % · clara = sin alinear; oscura = alineado</p>
+<div style="display:flex;align-items:center;gap:20px"><p style="width:180px;font-size:30px;text-align:right">Autores</p><div style="display:flex;flex-direction:column;gap:4px"><div style="width:432px;height:26px;background:#F1C9A8;border:2px solid #D9620B"></div><div style="width:618px;height:26px;background:#D9620B"></div></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">480 → 687</p></div>
+<div style="display:flex;align-items:center;gap:20px"><p style="width:180px;font-size:30px;text-align:right">Libstdc++</p><div style="display:flex;flex-direction:column;gap:4px"><div style="width:461px;height:26px;background:#F0D3E0;border:2px solid #C2477D"></div><div style="width:680px;height:26px;background:#C2477D"></div></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">512 → 756</p></div>
+<div style="display:flex;align-items:center;gap:20px"><p style="width:180px;font-size:30px;text-align:right">Williams</p><div style="display:flex;flex-direction:column;gap:4px"><div style="width:579px;height:26px;background:#D9D4F5;border:2px solid #6250D6"></div><div style="width:817px;height:26px;background:#6250D6"></div></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">643 → 908</p></div>
+<div style="display:flex;align-items:center;gap:20px"><p style="width:180px;font-size:30px;text-align:right">Mutex</p><div style="display:flex;flex-direction:column;gap:4px"><div style="width:606px;height:26px;background:#DADDE1;border:2px solid #7D8590"></div><div style="width:631px;height:26px;background:#7D8590"></div></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">673 → 701</p></div>
+</div>
+</div>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#14213D;border-radius:16px;padding:28px 32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">Por qué</p>
+<p style="font-size:24px;line-height:1.4;color:#F7F4EC">Cada pila pasa de 8-16 bytes a 128. Un millón: de 8-16 MB, que caben en la L3 de 36 MB, a 128 MB, que no. El fichero ya no cabe en el cajón y hay que ir al almacén.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:28px 32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#1F5FAE">Dos predicciones, cumplidas</p>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">n = 10⁶: +207 a +265 B por operación y −24 a −27 % de rendimiento. n = 10⁵ (12,8 MB, sí cabe): 0,94× a 1,02×.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Medido alternando, 3 rondas, 7 de noviembre de 2026 · Fuente: tablas.md, «Por qué alinear frena con n = 10⁶» · herramientas/alinear_memoria.py · nativo_alineado/memoria_alineado.csv</p>
+<aside>Dos minutos y medio. La batería alineada trajo una sorpresa: con un millón de pilas, alinear frena. Autores, Williams y Libstdc++ pierden entre un 24 y un 27 %; el Mutex, solo un 3 %. No se esperaba.
+La sospecha era el tamaño. Sin alinear, cada pila ocupa 8 bytes en Autores, 16 en Libstdc++ y Williams y 56 en el Mutex. Con alignas(128), todas ocupan 128. Un millón de pilas pasan así de 8 a 16 MB, que caben en los 36 MB de caché L3 de este PC, a 128 MB, que no caben. El Mutex ya ocupaba 56 MB sin alinear: no cabía ni antes, y por eso casi no cambia.
+La analogía: piensen en un fichero con un millón de fichas. Si cada ficha es una tarjeta pequeña, el fichero entero cabe en el cajón de tu mesa, la L3, y casi nunca tienes que levantarte. Si metes cada ficha en una carpeta grande, ya no cabe, y muchas consultas te obligan a ir al almacén, la RAM. Con cien mil fichas, en cambio, las carpetas todavía caben en el cajón.
+Eso da dos predicciones que se pueden comprobar. Una: con un millón, la versión alineada debe sacar más bytes de la RAM por operación. Las barras lo enseñan: entre 207 y 265 bytes más, un 41 a 48 % más, y el rendimiento baja casi en la misma proporción. En el Mutex, solo 28 bytes más. Dos: con cien mil pilas, que ocupan 12,8 MB alineadas y todavía caben, alinear no debe frenar. Y no frena: 0,94 a 1,02.
+Las dos versiones se midieron seguidas y en orden al azar, así que las compara el mismo estado de la máquina. Una hipótesis, dos predicciones, dos comprobaciones.</aside>
+</section>

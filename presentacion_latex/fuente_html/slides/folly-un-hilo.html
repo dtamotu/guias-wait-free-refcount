@@ -1,0 +1,44 @@
+<section id="folly-un-hilo" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;gap:16px;align-items:center"><div style="width:24px;height:24px;background:#12907F;border-radius:6px"></div><p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 8 · Rendimiento · el argumento clave</p></div>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Con un solo hilo, la brecha de Folly ya está ahí</h2>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Rendimiento frente a Autores con 1 hilo: sin pelea entre hilos y sin viajes entre núcleos. Barra clara = paper; oscura = réplica.</p>
+<div style="display:grid;grid-template-columns:260px 1fr 1fr;gap:20px 32px;align-items:center">
+<p style="font-size:24px;font-weight:600;color:#5F6B7A"></p>
+<p style="font-size:30px;font-weight:600;color:#0E7366">Folly</p>
+<p style="font-size:30px;font-weight:600;color:#5143B8">Williams</p>
+<p style="font-size:30px;font-weight:600">n = 1, u = 1 %</p>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:88px;height:30px;background:#BFE3DE;border:2px solid #12907F"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">0,20×</p></div>
+<div style="display:flex;gap:12px;align-items:center"><div style="width:378px;height:30px;background:#12907F"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600">0,86×</p></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:158px;height:30px;background:#D9D4F5;border:2px solid #6250D6"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">0,36×</p></div>
+<div style="display:flex;gap:12px;align-items:center"><div style="width:132px;height:30px;background:#6250D6"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600">0,30×</p></div>
+</div>
+<p style="font-size:30px;font-weight:600">n = 10, u = 10 %</p>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:92px;height:30px;background:#BFE3DE;border:2px solid #12907F"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">0,21×</p></div>
+<div style="display:flex;gap:12px;align-items:center"><div style="width:458px;height:30px;background:#12907F"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600">1,04×</p></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:167px;height:30px;background:#D9D4F5;border:2px solid #6250D6"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">0,38×</p></div>
+<div style="display:flex;gap:12px;align-items:center"><div style="width:158px;height:30px;background:#6250D6"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600">0,36×</p></div>
+</div>
+<p style="font-size:30px;font-weight:600">n = 10⁶, u = 50 %</p>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:202px;height:30px;background:#BFE3DE;border:2px solid #12907F"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">0,46×</p></div>
+<div style="display:flex;gap:12px;align-items:center"><div style="width:568px;height:30px;background:#12907F"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600">1,29×</p></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:299px;height:30px;background:#D9D4F5;border:2px solid #6250D6"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">0,68×</p></div>
+<div style="display:flex;gap:12px;align-items:center"><div style="width:308px;height:30px;background:#6250D6"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600">0,70×</p></div>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#14213D">Williams coincide; Folly no. La causa no es la pelea entre hilos: es algo de la máquina del paper que aquí no se puede reproducir.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: tablas.md, «Relación con Autores con UN solo hilo» · sin Docker, Folly da 0,88×, 1,04× y 1,24× · 1,00× = rinde igual que Autores</p>
+<aside>Dos minutos y medio. Este es, según nuestro propio tribunal simulado, el mejor argumento de toda la réplica. Si el jurado solo recuerda una diapositiva técnica, que sea esta.
+La idea: si la brecha de Folly se debiera a tener 4 sockets, a la pelea entre hilos o a que las líneas viajan lejos, tendría que desaparecer con un solo hilo, porque con un hilo no hay pelea ni nada viaja entre núcleos.
+Miren las barras. Las claras son el paper; las oscuras, la réplica. Todo frente a Autores, también con un solo hilo. Folly, con una pila: 0,20 en el paper, 0,86 aquí. Con 10 pilas: 0,21 frente a 1,04. Con un millón: 0,46 frente a 1,29. La brecha ya está ahí con un hilo.
+Ahora Williams, el control: 0,36 frente a 0,30; 0,38 frente a 0,36; 0,68 frente a 0,70. Coincide bastante. Así que nuestro programa de pruebas mide bien: lo distinto es Folly en la máquina del paper.
+Y una pista del propio paper: en su figura 6, medida en otra máquina más moderna, el load de Folly sin contención tarda 24 nanosegundos, casi lo mismo que Autores, 23. Folly no es lento de nacimiento. Algo de la máquina de la figura 5, o de cómo se midió allí, le penaliza. Podría ser la generación del chip o que la memoria estaba repartida entre los 4 sockets incluso con un hilo. Con este PC no se puede saber. Queda como pregunta abierta, y la mejora más barata para cerrarla es escribir a los autores.</aside>
+</section>

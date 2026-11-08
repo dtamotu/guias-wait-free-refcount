@@ -1,0 +1,12 @@
+# Archivos auxiliares de LaTeX: se regeneran al compilar
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+__pycache__/

@@ -1,0 +1,26 @@
+<section id="conceptos-base" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 2 · El problema</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Cuatro ideas antes de empezar</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<h3 style="font-size:40px;font-weight:600">Memoria</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Cada dato vive en una dirección, como cada libro en un estante numerado.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<h3 style="font-size:40px;font-weight:600">Puntero</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Un número que dice dónde está algo: una ficha que pone «estante 42».</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<h3 style="font-size:40px;font-weight:600">Hilo</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Una tarea que corre en un núcleo. Varios hilos son varias personas trabajando a la vez sin verse.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<h3 style="font-size:40px;font-weight:600;color:#B04A06">Use-after-free</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Liberar demasiado pronto: alguien va al estante y encuentra otra cosa, o nada.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 1.1 · El paper cita el use-after-free como causa habitual de agujeros de seguridad (Chen et al., RAID 2023)</p>
+<aside>Un minuto y medio. Cuatro palabras y estamos listos.
+La memoria es una biblioteca enorme: cada dato vive en una dirección, igual que cada libro vive en un estante numerado. Un puntero es solo un número que dice dónde está algo: una ficha que pone «estante 42». Un hilo es una tarea que corre en un núcleo del procesador; tener varios hilos es como tener varias personas trabajando a la vez en el mismo edificio, cada una a lo suyo, sin ver lo que hace la otra hasta que mira.
+Y la cuarta, la importante. Cuando un dato ya no hace falta hay que liberarlo, devolver su sitio para que se reutilice. Si no se libera, la memoria se llena. Si se libera demasiado pronto, alguien puede ir a buscarlo y encontrarse otra cosa, o nada. Ese error se llama use-after-free, «usar después de liberar», y el paper lo cita como una causa habitual de agujeros de seguridad. Todo el paper existe para evitar exactamente esto sin pagar demasiado en velocidad.</aside>
+</section>

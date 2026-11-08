@@ -1,0 +1,28 @@
+<section id="libstdcxx" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;gap:16px;align-items:center"><div style="width:24px;height:24px;background:#C2477D;border-radius:6px"></div><p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 4 · Los rivales · familia 1</p></div>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Libstdc++: un pestillo dentro del propio puntero</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Los objetos están alineados, así que el último bit del puntero siempre vale 0. GCC lo usa de pestillo: <b>0 libre, 1 ocupado</b>. Quien no entra se queda de pie, dando vueltas.</p>
+<h3 style="font-size:40px;font-weight:600;font-family:'JetBrains Mono', 'Courier New', monospace">load</h3>
+<ol style="font-size:30px;line-height:1.45;color:#14213D;padding:0 0 0 40px">
+<li>Mirar el bit; si está a 1, esperar dando vueltas</li>
+<li>Ponerlo a 1 con un CAS; si otro se adelantó, volver a 1</li>
+<li>Leer el puntero y sumar 1 al contador</li>
+<li>Restar 1 a la palabra para apagar el bit</li>
+</ol>
+</div>
+<div style="width:600px;display:flex;flex-direction:column;gap:14px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Garantía</p><p style="font-size:30px">Bloqueante</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Memoria extra</p><p style="font-size:30px">Ninguna; libera al instante</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">A favor</p><p style="font-size:30px;line-height:1.35">Viene con el compilador; sin contención es muy ágil</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">En contra</p><p style="font-size:30px;line-height:1.35">Cada lectura escribe dos veces en la línea más disputada</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 3.2 · std::atomic&lt;std::shared_ptr&gt; de GCC, C++20 (bits/shared_ptr_atomic.h)</p>
+<aside>Un minuto y medio. Libstdc++ es la implementación de std::atomic de shared_ptr que viene con GCC desde C++20. La idea: un pestillo diminuto dentro del propio puntero, y quien no entra se queda dando vueltas a la puerta.
+El truco técnico es bonito. Los objetos están alineados en memoria, así que el último bit de un puntero siempre vale 0. GCC aprovecha ese bit como pestillo: 0 libre, 1 ocupado. Es como el Mutex, pero sin sala de espera: quien quiere entrar se queda de pie mirando el puntito hasta que se apaga.
+La lectura: mirar el bit y esperar si está encendido; encenderlo con un CAS, y si otro se adelantó, volver a empezar; leer el puntero y sumar 1 al contador; y restar 1 a la palabra para apagar el bit.
+A favor: viene con el compilador y, sin contención, es muy ágil. En contra: cada lectura escribe dos veces en la línea más disputada, encender y apagar el bit. Y si quien tiene el bit pierde su turno de CPU, todos dan vueltas en vano.
+Por eso, con un hilo es rápido, pero en cuanto hay contención se hunde: en el paper pasa de 7 Mop/s con un hilo a 0,1 con 144. Lo veremos repetirse aquí.</aside>
+</section>

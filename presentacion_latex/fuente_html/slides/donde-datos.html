@@ -1,0 +1,28 @@
+<section id="donde-datos" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 15 · Recursos</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Dónde está cada dato</h2>
+<div style="display:flex;gap:32px;align-items:start">
+<table style="width:1000px;font-size:24px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:42%;text-align:left">resultados/david-ultra9-285/</th><th style="width:58%;text-align:left">Qué contiene</th></tr>
+<tr><td>docker/</td><td>Binarios oficiales con Docker</td></tr>
+<tr><td>nativo_oficial/</td><td>Binarios oficiales sin Docker y receta exacta</td></tr>
+<tr><td>nativo/</td><td>bench.cpp del equipo sin Docker</td></tr>
+<tr><td>nativo_alineado/</td><td>bench.cpp alineado y su tráfico de RAM</td></tr>
+<tr><td>memoria_ram.csv</td><td>Tráfico real de RAM y techo de la máquina</td></tr>
+<tr><td>correccion/</td><td>ASan, TSan, boceto y cota de CAS</td></tr>
+<tr><td>topologia/</td><td>Latencia entre cada par de núcleos</td></tr>
+<tr><td>tablas.md · figuras/</td><td>Todas las tablas y las 20 gráficas</td></tr>
+</table>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#14213D;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">Para leer, en este orden</p>
+<p style="font-size:24px;line-height:1.4;color:#F7F4EC"><b>EXPLICACION.md</b>: todo, desde cero; Partes 0, 7 y 8 para empezar</p>
+<p style="font-size:24px;line-height:1.4;color:#F7F4EC"><b>DEFENSA.md</b>: el tribunal, la chuleta de cifras y las 20 preguntas</p>
+<p style="font-size:24px;line-height:1.4;color:#F7F4EC"><b>README.md</b>: qué hace cada archivo y cuánto tarda</p>
+<p style="font-size:24px;line-height:1.4;color:#F7F4EC"><b>LEEME.md</b>: cada CSV y cada columna</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Las tres primeras están en replica/completa/ y LEEME.md en replica/resultados/david-ultra9-285/ · artefacto/, artefacto_docker/ y bin/ no se versionan</p>
+<aside>Un minuto. Si alguien del jurado pide ver un dato crudo, este es el camino. Todos los resultados están en replica/resultados/david-ultra9-285. La carpeta docker tiene las medidas con los binarios oficiales en Docker; nativo_oficial, las de fuera de Docker, incluida la receta exacta; nativo y nativo_alineado, las de bench.cpp sin alinear y alineado. memoria_ram.csv, el tráfico real de RAM. correccion, los detectores, el boceto y la cota de CAS. topologia, el mapa de latencias. Y tablas.md con figuras, todo lo que se ha enseñado hoy: cada cifra de esta presentación sale de ahí.
+Para leer, en este orden: EXPLICACION.md, el documento principal, que lo explica todo desde cero; para una primera lectura, sus Partes 0, 7 y 8. DEFENSA.md, con el tribunal, la chuleta de cifras y las 20 preguntas. El README de replica/completa, con qué hace cada archivo y cuánto tarda. Y el LEEME de resultados, que explica cada CSV y cada columna.
+Las carpetas artefacto, artefacto_docker y bin no se versionan, porque contienen código de terceros y lo compilado; se regeneran con las órdenes de la diapositiva anterior.</aside>
+</section>

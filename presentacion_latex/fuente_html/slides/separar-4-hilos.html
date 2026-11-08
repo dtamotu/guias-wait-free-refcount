@@ -1,0 +1,23 @@
+<section id="separar-4-hilos" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 10 · Distancia</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Separar 4 hilos cuesta mucho, pero solo donde hay contención</h2>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Cambio de rendimiento al pasar de un clúster (35 ns) a cuatro (47 ns), solo núcleos E</p>
+<table style="width:1664px;font-size:28px;color:#14213D;font-variant-numeric:tabular-nums">
+<tr style="background:#EAE4D3"><th style="width:20%;text-align:left">Escenario</th><th style="width:16%;text-align:right">Autores</th><th style="width:16%;text-align:right">Anderson</th><th style="width:16%;text-align:right">Folly</th><th style="width:16%;text-align:right">Williams</th><th style="width:16%;text-align:right">Libstdc++</th></tr>
+<tr><td>n = 1, u = 1 %</td><td style="text-align:right;color:#1F5FAE">−32 %</td><td style="text-align:right">≈ 0 %</td><td style="text-align:right;color:#B04A06">+48 %</td><td style="text-align:right;color:#B04A06">+25 %</td><td style="text-align:right;color:#1F5FAE">−43 %</td></tr>
+<tr><td>n = 1, u = 10 %</td><td style="text-align:right;color:#1F5FAE">−49 %</td><td style="text-align:right;color:#1F5FAE">−33 %</td><td style="text-align:right;color:#B04A06">+11 %</td><td style="text-align:right;color:#1F5FAE">−12 %</td><td style="text-align:right;color:#1F5FAE">−41 %</td></tr>
+<tr><td>n = 1, u = 50 %</td><td style="text-align:right;color:#1F5FAE">−48 %</td><td style="text-align:right;color:#1F5FAE">−50 %</td><td style="text-align:right;color:#1F5FAE">−9 %</td><td style="text-align:right;color:#1F5FAE">−37 %</td><td style="text-align:right">≈ −12 %</td></tr>
+<tr><td>n = 10, u = 1 %</td><td style="text-align:right;color:#1F5FAE">−54 %</td><td style="text-align:right;color:#1F5FAE">−31 %</td><td style="text-align:right;color:#1F5FAE">−49 %</td><td style="text-align:right;color:#1F5FAE">−34 %</td><td style="text-align:right;color:#1F5FAE">−55 %</td></tr>
+<tr><td>n = 10, u = 10 %</td><td style="text-align:right;color:#1F5FAE">−50 %</td><td style="text-align:right;color:#1F5FAE">−39 %</td><td style="text-align:right;color:#1F5FAE">−44 %</td><td style="text-align:right;color:#1F5FAE">−34 %</td><td style="text-align:right;color:#1F5FAE">−50 %</td></tr>
+<tr style="background:#E4EEF8"><td>n = 10⁶, u = 50 %</td><td style="text-align:right">≈ +2 %</td><td style="text-align:right">+2 %</td><td style="text-align:right">+2 %</td><td style="text-align:right">+2 %</td><td style="text-align:right">≈ −2 %</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">La última fila es el <b>control</b>: sin cuaderno compartido, la distancia da igual. Si el castigo apareciera ahí, el montaje estaría mal.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Docker, programas oficiales, 3 rondas · «≈» = rangos solapados · Fuente: tablas.md, «Efecto de separar los hilos entre "sockets"» · figuras afinidad_mapa_4hilos.png y afinidad_dosis_respuesta.png</p>
+<aside>Dos minutos y medio. El experimento de dosis-respuesta, con 4 hilos y solo núcleos E, para que lo único que cambie sea la distancia: de un mismo clúster, 35 ns por viaje, a uno en cada clúster, 47 ns. En azul con signo menos, lo que pierde al separar; en naranja con signo más, lo que gana.
+Uno: separar cuesta mucho donde hay contención. Autores pierde entre un 32 y un 54 %; Libstdc++, entre un 12 y un 55 %. Con solo 4 hilos.
+Dos: donde no hay contención, no cuesta nada. Con un millón de pilas todo se mueve un 2 %, y sin Docker como mucho un 3 %. Esa fila es el control del experimento: si el castigo apareciera también ahí, sospecharíamos del montaje. Sin cuaderno compartido, la distancia da igual.
+Tres: el castigo es mayor que la distancia. El viaje es 1,35 veces más largo, pero se pierde hasta la mitad del rendimiento. Probablemente porque, dentro de un clúster, la línea caliente ni siquiera sale de la L2 compartida. No es una regla de tres.
+Cuatro: Anderson aguanta mejor con pocas escrituras: 0 % con una pila y 1 %, frente al −32 % de Autores.
+Cinco: hay excepciones que van al revés. Folly gana un 48 % y Williams un 25 % al separar, con una pila y 1 %. Los dos dependen de bucles de CAS. La sospecha es que, más lejos, chocan menos entre sí. No está demostrado.
+Sin Docker sale casi calcado. Y con 8 hilos o más el efecto se apaga, porque incluso la colocación compacta ya ocupa dos clústeres.</aside>
+</section>

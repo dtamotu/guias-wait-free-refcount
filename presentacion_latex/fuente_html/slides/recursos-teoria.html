@@ -1,0 +1,33 @@
+<section id="recursos-teoria" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 15 · Recursos · teoría, hardware y herramientas</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Para profundizar</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:600">Teoría</h3>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">Herlihy, «Wait-free synchronization», ACM TOPLAS, 1991</p>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">Michael, «Hazard pointers», IEEE TPDS, 2004</p>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">Sutter, «Atomic smart pointers», WG21 N4058, 2014</p>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">Chen et al., use-after-free, RAID 2023</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:600">Hardware (dato indirecto)</h3>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C"><a href="https://community.intel.com/t5/Intel-Moderncode-for-Parallel/Core-to-Core-Communication-Latency-in-Skylake-Kaby-Lake/m-p/1061670">Intel Community</a>: 40-45 ns dentro del socket</p>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C"><a href="https://chipsandcheese.com/p/core-to-core-latency-data-on-large-systems">Chips and Cheese</a>: 130-140 ns entre sockets</p>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C"><a href="https://technical.city/en/cpu/Xeon-E7-8867-v4">Technical City</a>: ficha del Xeon E7-8867</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:600">Reproducibilidad</h3>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C"><a href="https://www.acm.org/publications/policies/artifact-review-and-badging-current">ACM, Artifact Review and Badging</a>: repetición, reproducción y réplica</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:600">Herramientas</h3>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C"><a href="https://clang.llvm.org/docs/AddressSanitizer.html">AddressSanitizer</a> · <a href="https://clang.llvm.org/docs/ThreadSanitizer.html">ThreadSanitizer</a> · <a href="https://github.com/jemalloc/jemalloc">jemalloc</a> · <a href="https://github.com/google/benchmark">Google Benchmark</a> v1.8.3 · <a href="https://github.com/MPI-SWS/genmc">GenMC</a></p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, «Referencias y fuentes» · DEFENSA.md, sección 2 · los números entre corchetes del paper siguen su bibliografía</p>
+<aside>Un minuto. Para quien quiera profundizar, cuatro grupos de referencias.
+Teoría: Herlihy, 1991, es el origen de la jerarquía bloqueante, lock-free y wait-free que vimos en la parte 3. Michael, 2004, es la técnica de hazard pointers en la que se apoya Anderson. Sutter, 2014, es la propuesta del puntero compartido atómico para C++. Y Chen y coautores, en RAID 2023, es la cita del paper para el use-after-free como problema de seguridad.
+Hardware: los tiempos de transferencia entre núcleos de la parte 7 no salen de la máquina del paper, sino de CPU parecidas: Intel Community, unos 40 a 45 ns dentro del socket, y Chips and Cheese, unos 130 a 140 entre sockets. Por eso decimos que el «3 veces» es un dato indirecto.
+Reproducibilidad: la política de la ACM que distingue repetición, reproducción y réplica.
+Herramientas: los detectores AddressSanitizer y ThreadSanitizer, el gestor de memoria jemalloc que usa el paper, Google Benchmark en la versión fijada por la réplica, y GenMC, la herramienta de comprobación de modelos que proponemos como mejora futura.</aside>
+</section>

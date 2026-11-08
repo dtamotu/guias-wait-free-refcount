@@ -1,0 +1,20 @@
+<section id="conteo-referencias" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 2 · El problema</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">El conteo de referencias: una libreta pegada a cada libro</h2>
+<div style="display:flex;gap:48px;align-items:start">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;gap:24px;align-items:center"><p style="width:72px;height:72px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;text-align:center;line-height:1.8;background:#14213D;color:#F7F4EC;border-radius:36px">+1</p><p style="flex:1;font-size:30px;line-height:1.4">Quien empieza a usar el libro suma 1 en su libreta.</p></div>
+<div style="display:flex;gap:24px;align-items:center"><p style="width:72px;height:72px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;text-align:center;line-height:1.8;background:#14213D;color:#F7F4EC;border-radius:36px">−1</p><p style="flex:1;font-size:30px;line-height:1.4">Quien termina resta 1.</p></div>
+<div style="display:flex;gap:24px;align-items:center"><p style="width:72px;height:72px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;text-align:center;line-height:1.8;background:#D9620B;color:#14213D;border-radius:36px">0</p><p style="flex:1;font-size:30px;line-height:1.4">Quien la deja en 0 era el último: tira el libro a la trituradora.</p></div>
+</div>
+<div style="width:620px;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">En los lenguajes</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;line-height:1.6">C++ · std::shared_ptr<br>Rust · Arc</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Con un solo hilo funciona perfecto. El lío empieza cuando hay varios.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 1.2</p>
+<aside>Un minuto. La forma más sencilla de saber cuándo liberar algo es llevar la cuenta de cuánta gente lo está usando. Imaginen que cada libro lleva pegada una libreta con un número. Quien empieza a usarlo suma 1. Quien termina resta 1. Y quien deja la libreta en 0 sabe que era el último, así que tira el libro a la trituradora.
+Eso es el conteo de referencias. En C++ se llama shared_ptr; en Rust, Arc. Con un solo hilo funciona perfecto: nadie puede meterse entre la consulta y la suma.
+Guarden la palabra «libreta», porque la vamos a usar toda la tarde. En el código real se llama bloque de control: es la memoria donde vive el contador del objeto. Cuando digamos «libreta», piensen en el contador del objeto, que vive en un sitio distinto del puntero.</aside>
+</section>

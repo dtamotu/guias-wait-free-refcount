@@ -1,0 +1,26 @@
+<section id="autores-pocos-hilos" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 8 · Rendimiento · un detalle incómodo</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Por debajo del techo, con pocos hilos, Autores va por detrás</h2>
+<table style="width:1664px;font-size:30px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:34%;text-align:left">n = 10⁶, u = 50 %, frente a Autores</th><th style="width:22%;text-align:right">Paper, 1 hilo</th><th style="width:22%;text-align:right">Aquí, 1 hilo</th><th style="width:22%;text-align:right">Aquí, 12 hilos</th></tr>
+<tr><td>Anderson</td><td style="text-align:right">1,03×</td><td style="text-align:right">1,46×</td><td style="text-align:right">1,24×</td></tr>
+<tr><td>Libstdc++</td><td style="text-align:right">0,87×</td><td style="text-align:right">1,44×</td><td style="text-align:right">1,24×</td></tr>
+</table>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<h3 style="font-size:40px;font-weight:600">Los bytes no lo explican</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Con 6 hilos, Libstdc++ mueve <b>más</b> bytes que Autores (666 frente a 617 por operación) y aun así va 1,38× más rápido.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<h3 style="font-size:40px;font-weight:600">No es Docker</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Sin Docker se repite: 1,33× y 1,40× con 1 hilo, 1,19× los dos con 12. <b>La causa sigue abierta.</b></p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.1 · tablas.md, «Relación con Autores con UN solo hilo»</p>
+<aside>Un minuto y medio. Un detalle incómodo, y lo contamos precisamente porque es incómodo.
+Por debajo del techo de la RAM, con pocos hilos y un millón de pilas, Autores va por detrás. Con un hilo, Anderson rinde 1,46 veces lo de Autores y Libstdc++, 1,44. Con 12 hilos, 1,24 los dos. En el paper, con un hilo, Anderson iba 1,03 y Libstdc++ 0,87. Aquí la diferencia es mucho mayor.
+¿Será que Autores mueve más bytes? No. Con 6 hilos, Autores mueve 617 bytes por operación, Anderson 572 y Libstdc++ 666. Libstdc++ mueve más que Autores y aun así va 1,38 veces más rápido.
+¿Será Docker? Tampoco. Sin Docker, con los mismos programas, se repite: con un hilo, Anderson rinde 1,33 y Libstdc++ 1,40; con 12 hilos, 1,19 los dos.
+Así que la causa sigue sin aclararse. Lo dejamos como pregunta abierta, junto a la de Folly. Y es justo la clase de pregunta que se respondería con contadores de hardware, perf, que este kernel no trae.
+Con esto termina el rendimiento. Pasamos a la latencia, que tiene una de las mejores historias de la réplica: un candado que nadie vio poner.</aside>
+</section>

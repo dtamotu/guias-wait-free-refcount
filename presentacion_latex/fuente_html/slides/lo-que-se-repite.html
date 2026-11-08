@@ -1,0 +1,27 @@
+<section id="lo-que-se-repite" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 8 · Rendimiento</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Lo que se repite</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:24px;height:24px;background:#C2477D;border-radius:6px"></div><h3 style="font-size:40px;font-weight:600">Libstdc++ se hunde</h3></div>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Con n = 1 y u = 1 %, de 58,5 a 1,2 Mop/s: unas <b>49 veces</b> menos. En el paper, de 7 a 0,11: unas 64.</p>
+<p style="font-size:24px;color:#5F6B7A">Es lo que hace un candado: formar cola.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:24px;height:24px;background:#6250D6;border-radius:6px"></div><h3 style="font-size:40px;font-weight:600">Williams, siempre debajo</h3></div>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Por debajo de Autores en los <b>6 escenarios</b>, entre 0,24× y 0,73×.</p>
+<p style="font-size:24px;color:#5F6B7A">Dos bucles de DWCAS por lectura se pagan siempre.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:24px;height:24px;background:#2A78D6;border-radius:6px"></div><h3 style="font-size:40px;font-weight:600">Anderson, con escrituras</h3></div>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Con una pila y u ≥ 10 %, rinde <b>1,87× a 1,99×</b> lo de Autores.</p>
+<p style="font-size:24px;color:#5F6B7A">Leer no toca su tablón, así que los lectores no hacen fallar los CAS de quien escribe.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.1 · docker/rendimiento.csv</p>
+<aside>Dos minutos. Tres cosas que el paper dice y que salen igual aquí.
+Uno: Libstdc++ se hunde al crecer los hilos. Con una pila y 1 % de escrituras pasa de 58,5 Mop/s con un hilo a 1,2 con 24: unas 49 veces menos. En el paper, de 7 a 0,11: unas 64 veces menos. La misma forma. Es lo que hace un candado: formar una cola.
+Dos: Williams queda por debajo de Autores en los 6 escenarios, entre 0,24 y 0,73 veces. Recuerden su ficha: dos bucles de DWCAS por cada lectura, más la libreta. Ese trabajo se paga siempre, con o sin contención.
+Tres: Anderson gana cuando hay escrituras sobre pocas pilas. Con una pila y 10 % o 50 % de escrituras rinde entre 1,87 y 1,99 veces lo de Autores. Es justo lo que explica el propio paper: en Autores, cada lectura modifica el tablón, porque arranca un vale, y eso hace fallar los CAS de quien quiere escribir. En Anderson, leer no toca el tablón, así que sus escritores no pierden por culpa de los lectores.
+Estas tres cosas son las que sostienen las filas 1, 2 y 6 del veredicto. Ahora, lo que no se repite.</aside>
+</section>

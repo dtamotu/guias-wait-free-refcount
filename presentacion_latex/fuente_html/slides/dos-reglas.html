@@ -1,0 +1,24 @@
+<section id="dos-reglas" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 5 · La solución del paper</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Dos reglas para que nunca se acaben los vales</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#14213D;border-radius:16px;padding:40px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#F4A259">R-1 · C ≥ 2P</p>
+<p style="font-size:30px;line-height:1.4;color:#C9D3E3">El taco completo tiene al menos el doble de vales que hilos.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#14213D;border-radius:16px;padding:40px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#9CC2F0">R-2</p>
+<p style="font-size:30px;line-height:1.4;color:#C9D3E3">El peso solo cambia bajando de 1 en 1 o saltando a un valor mayor que P.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Dicho con personas</p>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Cada hilo solo puede arrancar <b>un vale de más</b> antes de ponerse a recargar. Con P hilos, el peso baja como mucho P por debajo del umbral P: <b>P − P = 0</b>. Nunca es negativo.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 3.6 · en la parte 11 se rompe R-1 a propósito: 42 348 errores</p>
+<aside>Un minuto y medio. Último paso de la solución: por qué nunca se acaban los vales. Hay dos reglas.
+R-1: C mayor o igual que 2P. El taco completo tiene al menos el doble de vales que hilos.
+R-2: el peso solo cambia de dos formas: bajando de 1 en 1, cuando alguien arranca un vale, o saltando a un valor mayor que P, cuando alguien recarga.
+Dicho con personas: cada hilo solo puede arrancar un vale de más antes de ponerse a recargar, porque no puede hacer otro load hasta que termine el actual. Con P hilos como máximo, el peso baja como mucho P por debajo del umbral P. Y P menos P es 0. Nunca es negativo. Por eso el umbral de recarga es precisamente P: deja sitio para que todos los hilos a la vez se pasen una vez.
+¿Son reglas de adorno? No. En la parte 11 las rompemos a propósito: con C igual a P, violando R-1, aparecen 42 348 errores. Con esto termina la teoría. Resumen de la ficha de Autores: wait-free en load y store; ninguna memoria extra; una sola operación por lectura que nunca falla. Su punto débil: leer modifica el tablón, así que un CAS de un escritor puede fallar por culpa de un simple lector. Por eso sufre con muchas escrituras sobre pocas pilas.</aside>
+</section>

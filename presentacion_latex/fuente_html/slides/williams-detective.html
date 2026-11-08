@@ -1,0 +1,22 @@
+<section id="williams-detective" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;gap:16px;align-items:center"><div style="width:24px;height:24px;background:#6250D6;border-radius:6px"></div><p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 10 · Distancia · pregunta abierta</p></div>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Williams se hunde entre clústeres: la investigación</h2>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Con 2 hilos, n = 1, u = 50 %: <b>3,05 Mop/s</b> en un clúster y <b>0,09</b> en clústeres distintos (−97 %). Sin Docker, 2,93 frente a 0,70 (−76 %).</p>
+<table style="width:1664px;font-size:26px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:22%;text-align:left">Sospechoso</th><th style="width:44%;text-align:left">Prueba</th><th style="width:34%;text-align:left">Resultado</th></tr>
+<tr><td>Un par defectuoso</td><td>7 pares distintos</td><td>Pasa en los 7: descartado</td></tr>
+<tr><td>Docker</td><td>bench.cpp dentro de Docker, mismos pares</td><td>1,12-1,19 Mop/s, sin hundirse: descartado</td></tr>
+<tr><td>Docker, otra vez</td><td>Programa oficial fuera de Docker, 10 rondas</td><td>Se sigue hundiendo, aunque menos</td></tr>
+<tr><td>boost::atomic</td><td>bench.cpp con la cabecera del artefacto</td><td>1,15-1,28 Mop/s, sin hundirse: descartado</td></tr>
+<tr style="background:#F6E3CF"><td>El programa oficial</td><td>Solo pasa con bench_stack, dentro y fuera</td><td style="color:#9C3A0A">Sigue abierto: sospechoso principal</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Dentro y fuera de Docker también cambian Boost (1.74 y 1.83), g++ y glibc. Boost es un candidato natural; no se midió.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.4 · control_williams.csv · tablas «Dos hilos en distintos pares de núcleos» y «Williams en bench.cpp, dentro de Docker»</p>
+<aside>Dos minutos y medio. La batería mostró algo muy extraño. Con 2 hilos, una pila y 50 % de escrituras, Williams daba 3,05 Mop/s en un mismo clúster y 0,09 en clústeres distintos: un 97 % menos. Ningún otro algoritmo hace eso. Además es inestable: entre clústeres va de 0,02 a 1,09 según la ronda, mientras que dentro de un clúster se queda clavado entre 3,03 y 3,06.
+Lo investigamos como un detective, descartando sospechosos.
+¿Un par de núcleos defectuoso? Pasa en los 7 pares de clústeres distintos: descartado.
+¿Docker? Corrimos bench.cpp, el programa del equipo, dentro de Docker en los mismos pares: 1,12 a 1,19 Mop/s, sin hundimiento. Descartado. Y el programa oficial fuera de Docker, con 10 rondas por par, se sigue hundiendo: 0,70 frente a 2,93. Docker no lo provoca, aunque dentro se hunde más.
+¿boost::atomic, que el artefacto usa en lugar de std::atomic? Pusimos esa cabecera en bench.cpp: 1,15 a 1,28, sin hundimiento. Descartado.
+Queda el sospechoso principal: algo del programa oficial, bench_stack. Solo ahí pasa, dentro y fuera de Docker. Su bucle es más apretado, sin un generador de azar lento entre operaciones, y usa compare_exchange_weak. La sospecha es que dos hilos en clústeres distintos se quedan pisándose por turnos. No está demostrado.
+Y una pregunta nueva: ¿por qué dentro de Docker se hunde más? Dentro y fuera cambian Boost, el compilador y glibc. Boost es un candidato natural, pero es solo una sospecha.</aside>
+</section>
