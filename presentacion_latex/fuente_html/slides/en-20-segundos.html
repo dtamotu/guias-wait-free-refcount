@@ -1,0 +1,26 @@
+<section id="en-20-segundos" data-transition="fade" style="background:#14213D;color:#F7F4EC;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between;gap:40px">
+<p style="font-size:30px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#F4A259">El resultado, en 20 segundos</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.15;color:#F7F4EC">De las 15 afirmaciones del paper, la idea central sale bien parada</h2>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;gap:6px">
+<div style="width:991px;height:72px;background:#5B9BE6;border-radius:8px 0 0 8px"></div>
+<div style="width:219px;height:72px;background:#F4A259"></div>
+<div style="width:330px;height:72px;background:#D9620B"></div>
+<div style="width:106px;height:72px;background:#8A94A6;border-radius:0 8px 8px 0"></div>
+</div>
+<div style="display:flex;gap:6px">
+<p style="width:991px;font-size:30px;line-height:1.3;color:#F7F4EC"><b>9</b> se reproducen</p>
+<p style="width:219px;font-size:30px;line-height:1.3;color:#F7F4EC"><b>2</b> en parte</p>
+<p style="width:330px;font-size:30px;line-height:1.3;color:#F7F4EC"><b>3</b> no se reproducen</p>
+<p style="width:106px;font-size:24px;line-height:1.3;color:#F7F4EC"><b>1</b> no se confirma</p>
+</div>
+</div>
+<div style="display:flex;gap:48px">
+<p style="flex:1;font-size:30px;line-height:1.45;color:#C9D3E3"><span style="color:#9CC2F0">Sale bien:</span> es correcto, cumple su cota wait-free, no acumula basura y su lectura es la más rápida.</p>
+<p style="flex:1;font-size:30px;line-height:1.45;color:#C9D3E3"><span style="color:#F4A259">No sale:</span> que gane a Folly, que gane con un millón de pilas, y la escala de 4 sockets, que este PC no tiene.</p>
+</div>
+<aside>Este es el resumen que deberían recordar aunque se olviden de todo lo demás. Díganlo despacio.
+«Repetimos el paper con los programas oficiales de los autores, en un PC de 24 núcleos, con y sin Docker: más de 14 000 mediciones y ninguna fallida. De las 15 afirmaciones del paper, 9 se reproducen, 2 en parte, 3 no y 1 no se confirma. Lo central sale bien: el algoritmo es correcto, cumple su cota wait-free y lee rápido. Lo que no sale es que gane a Folly.»
+La barra está a escala: cada tramo es proporcional al número de afirmaciones. Azul, se reproducen; naranja claro, en parte; naranja oscuro, no se reproducen; gris, la que no se confirma. Al final de la sesión, en la parte 13, la veremos fila por fila, con la prueba de cada una.
+Un matiz que conviene adelantar: «no se reproduce» no significa «el paper miente». Significa que en esta máquina, con este método, no sale lo mismo. Varias de esas diferencias tienen que ver con que el paper usó 4 procesadores y nosotros uno.</aside>
+</section>

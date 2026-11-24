@@ -1,0 +1,46 @@
+{
+  "v": 4,
+  "createdOnFiles": {"v": 1, "at": "2026-11-08T01:19:13Z"},
+  "lists": "css",
+  "title": "Réplica wait-free refcount",
+  "cover": "portada",
+  "order": [
+    "portada", "agenda", "equipo", "en-20-segundos", "numeros-clave",
+    "div-problema", "conceptos-base", "conteo-referencias", "el-tablon", "carrera-historia", "carrera-tabla", "agujero-codigo", "tres-familias",
+    "div-vocabulario", "operaciones-atomicas", "garantias-progreso", "cache-contencion", "sockets-falsa", "leer-numeros",
+    "div-rivales", "ingenua", "mutex", "libstdcxx", "williams", "folly", "anderson", "seis-vistazo",
+    "div-autores", "vales", "regla-de-oro", "palabra-64", "ejemplo-vales", "load-store", "recarga", "dos-reglas",
+    "div-metodo", "que-midio-paper", "receta", "nuestra-maquina", "adaptaciones", "reproduccion-o-replica",
+    "div-simulacion", "que-es-4-sockets", "mapa-latencias", "diseno-afinidad", "pausa",
+    "div-rendimiento", "tres-reglas", "contencion-curvas", "marcador", "mejor-caso", "lo-que-se-repite", "folly-misterio", "folly-un-hilo", "millon-empate", "techo-ram", "autores-pocos-hilos",
+    "div-latencia", "latencia-medianas", "latencia-afirmaciones", "candado-escondido", "colas", "ruido", "quince-rondas",
+    "div-memoria-distancia", "memoria-retenida", "separar-4-hilos", "escalon-l2", "williams-detective", "miniatura",
+    "div-correccion", "detectores", "romper-reglas", "cota-cas",
+    "div-sin-docker", "piezas-cambian", "docker-no-cambia", "benchcpp-diferente", "comparticion-falsa", "alinear-prueba", "alinear-millon", "mutex-sorpresa", "recortes",
+    "div-veredicto", "veredicto-1", "veredicto-2", "marcador-final", "limitaciones", "preguntas-abiertas", "hallazgos",
+    "div-defensa", "tribunal", "sentencia", "decir-no-decir", "mejoras",
+    "div-recursos", "repetir", "donde-datos", "recursos-paper", "recursos-teoria", "recursos-equipo", "glosario", "ensayo-1", "ensayo-2", "cierre"
+  ],
+  "sections": {
+    "s01": {"description": "Apertura: qué se hizo, quién expone y el resultado en 20 segundos.", "start": "portada"},
+    "s02": {"description": "El problema: la carrera entre leer un puntero compartido y liberar el objeto.", "start": "div-problema"},
+    "s03": {"description": "Vocabulario: operaciones atómicas, garantías de progreso, caché y cómo leer los números.", "start": "div-vocabulario"},
+    "s04": {"description": "Los rivales: Mutex, Libstdc++, Williams, Folly y Anderson, uno por uno.", "start": "div-rivales"},
+    "s05": {"description": "La solución del paper: conteo ponderado con vales y una recarga con cota.", "start": "div-autores"},
+    "s06": {"description": "Cómo se hizo: la receta del artefacto, la máquina y las adaptaciones.", "start": "div-metodo"},
+    "s07": {"description": "Simular 4 Xeon con una sola CPU midiendo distancias reales entre núcleos.", "start": "div-simulacion"},
+    "s08": {"description": "Rendimiento: la figura 5, Folly y el techo de la RAM.", "start": "div-rendimiento"},
+    "s09": {"description": "Latencia: la figura 6, el candado escondido de Williams y el ruido.", "start": "div-latencia"},
+    "s10": {"description": "Memoria retenida y efecto de la distancia entre núcleos.", "start": "div-memoria-distancia"},
+    "s11": {"description": "Corrección: detectores, reglas rotas a propósito y la cota de reintentos.", "start": "div-correccion"},
+    "s12": {"description": "Sin Docker: Docker no cambia nada, la compartición falsa y el alineado.", "start": "div-sin-docker"},
+    "s13": {"description": "Veredicto de las 15 afirmaciones, límites y preguntas abiertas.", "start": "div-veredicto"},
+    "s14": {"description": "Defensa ante el jurado y plan de mejoras.", "start": "div-defensa"},
+    "s15": {"description": "Recursos: cómo repetirlo, referencias, glosario y ensayo de preguntas.", "start": "div-recursos"}
+  },
+  "faces": {
+    "ibm-plex-sans": {"family": "IBM Plex Sans", "href": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap"},
+    "jetbrains-mono": {"family": "JetBrains Mono", "href": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap"}
+  },
+  "designSystems": []
+}

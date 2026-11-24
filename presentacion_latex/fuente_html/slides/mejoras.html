@@ -1,0 +1,31 @@
+<section id="mejoras" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 14 · Trabajo futuro</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Qué haríamos con más tiempo, por orden de rendimiento</h2>
+<div style="display:flex;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:2px solid #2A78D6;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">Con una semana</h3>
+<ul style="font-size:24px;line-height:1.45;color:#3D4A5C;padding:0 0 0 28px">
+<li><b>Segundo módulo de RAM</b> y repetir n = 10⁶ (cargo 9)</li>
+<li>Intervalos de confianza por bootstrap: unas 30 líneas en analizar.py (cargo 11)</li>
+<li>Figura 5 entera con la receta exacta: una noche (cargo 3)</li>
+<li>Latencia con frecuencia fija y núcleos aislados (cargo 5)</li>
+<li>Que otro miembro repita una parte en su PC (cargo 7)</li>
+<li>Escribir a los autores sobre Folly (cargo 4)</li>
+</ul>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">Más lejos</h3>
+<ul style="font-size:24px;line-height:1.45;color:#3D4A5C;padding:0 0 0 28px">
+<li>Una máquina de 2 o 4 sockets: servidor de la universidad o nube (cargos 1 y 2)</li>
+<li>Un AMD Ryzen con dos chiplets, midiendo antes su mapa (cargos 1 y 2)</li>
+<li>TSan en Folly y Anderson, con Folly instrumentado (cargo 8)</li>
+<li>Comprobación de modelos, por ejemplo con GenMC, con P y C pequeños (cargo 8)</li>
+<li>Contadores de hardware con perf (cargos 4 y 9)</li>
+</ul>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Entre paréntesis, la crítica del tribunal que cada mejora debilita · Fuente: DEFENSA.md, sección 5</p>
+<aside>Dos minutos. Qué haríamos con más tiempo, ordenado por lo que más rinde para lo que cuesta. Entre paréntesis, la crítica que cada mejora debilita.
+Con una semana. Lo primero, un segundo módulo de RAM igual, DDR5-5600, y repetir medir_memoria.py y el panel de un millón de pilas: si el rendimiento sube, queda demostrado que la RAM era el techo. Es la mejora con mejor relación coste-valor. Segundo, intervalos de confianza por bootstrap: remuestrear las rondas miles de veces y ver cuánto se mueve la mediana; unas 30 líneas de Python. Tercero, la figura 5 entera con la receta exacta, 7 por 10 segundos, una noche de unas 5 horas. Cuarto, la latencia con la frecuencia fija, sin turbo, con núcleos aislados del sistema y el hilo medido siempre en el mismo núcleo. Quinto, que otro miembro del equipo repita una parte en su propio PC. Y sexto, el más barato: un correo a los autores preguntando por Folly.
+Más lejos: una máquina de 2 o 4 sockets de verdad, de la universidad o alquilada en la nube; o, más barato, un AMD Ryzen con dos chiplets, donde pasar datos de un chiplet a otro cuesta varias veces más, aunque hay que medirlo antes de darlo por hecho. TSan en Folly y Anderson. Comprobación de modelos, por ejemplo con GenMC, que explora todos los órdenes posibles entre hilos, no solo los que salen por azar. Y contadores de hardware con perf.</aside>
+</section>

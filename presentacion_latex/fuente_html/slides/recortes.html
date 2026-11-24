@@ -1,0 +1,28 @@
+<section id="recortes" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 12 · Validación de los recortes</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">¿Cuánto mueve medir 2 s en vez de 10? Lo medimos</h2>
+<div style="display:flex;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:72px;font-weight:600;line-height:1.1;color:#14213D">6,7 %</p>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">La mitad de los 30 puntos se desvía menos que esto</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:72px;font-weight:600;line-height:1.1;color:#9C3A0A">+19 %</p>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">El peor: Folly con n = 10 y u = 10 % (con Docker, hasta +21 %)</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:72px;font-weight:600;line-height:1.1;color:#1F5FAE">4 de 6</p>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">escenarios con el orden idéntico; en los otros 2, empates</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#14213D;border-radius:16px;padding:32px 40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">No es ruido al azar: es un sesgo</p>
+<p style="font-size:30px;line-height:1.45;color:#F7F4EC">Con contención, la versión corta da <b>más</b> en 23 de 25 puntos; con n = 10⁶, da <b>menos</b> en los 5. Como un cronómetro que adelanta en una pista y atrasa en otra. Por qué, no se midió.</p>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Regla que sale de aquí: una ventaja del 10 % no demuestra nada; una de 2 o 3 veces, sí.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Receta exacta (7 × 10 s) frente a 2 s × 5, sin Docker, 6 escenarios, 30 puntos · Fuente: EXPLICACION.md, Parte 6.7 · tablas.md, «Validación de los recortes»</p>
+<aside>Dos minutos. Medimos 2 segundos en lugar de 10. ¿Y si eso cambia el resultado? Lo comprobamos repitiendo puntos con la receta exacta del paper, 7 ejecuciones de 10 segundos, con 24 hilos. Con Docker, en 2 escenarios; sin Docker, en los 6: 30 puntos.
+Tres números. La mitad de los puntos se desvía menos de un 6,7 %. Pero 10 de los 30 se desvían un 10 % o más, y el peor es Folly con 10 pilas y 10 % de escrituras, +19 %; con Docker, Folly con una pila llegó a +21 %. Y el orden es idéntico en 4 de los 6 escenarios; en los otros dos, los que se cruzan están a menos de un 4 % o en un empate que ya conocíamos.
+Lo más interesante es que no es ruido al azar: es un sesgo. Con contención, la versión corta da más que la larga en 23 de 25 puntos. Con un millón de pilas da menos en los 5. Es como un cronómetro que adelanta en una pista y atrasa en otra. Por qué pasa no se midió; una diferencia es que las ejecuciones largas comparten proceso y las cortas no, pero es una suposición.
+La lectura honesta: el recorte no es inocuo, pero sirve para el orden, no para el decimal. De aquí sale la regla que aplicamos en todo el veredicto: si el recorte puede mover a un algoritmo un 19 % y a otro menos de un 1 %, una ventaja de un 10 % entre los dos no demuestra nada; una de 2 o 3 veces, sí.</aside>
+</section>

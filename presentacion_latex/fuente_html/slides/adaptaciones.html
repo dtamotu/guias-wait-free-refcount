@@ -1,0 +1,19 @@
+<section id="adaptaciones" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 6 · Cómo se hizo</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Cuatro adaptaciones, todas declaradas</h2>
+<table style="width:1664px;font-size:26px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:20%;text-align:left">Paper</th><th style="width:27%;text-align:left">Aquí</th><th style="width:53%;text-align:left">Por qué</th></tr>
+<tr><td>Hilos 1 a 216</td><td>1, 3, 6, 9, 12, 18, 24, 30, 36</td><td>La lista del paper entre 6: 24 es «toda la máquina», como 144; 36 es 1,5 veces, como 216</td></tr>
+<tr><td>7 × 10 s, un proceso</td><td>5 × 2 s, un proceso por punto, en orden aleatorio</td><td>La figura 5 pasa de unas 5 h a poco más de 1 h; el calor o una interrupción afectan a todos por igual</td></tr>
+<tr><td>p = 56</td><td>p = 1, 24 y 56</td><td>24 son todos los núcleos reales; 56 se mide, pero no es comparable</td></tr>
+<tr><td>Williams fuera de la figura 6</td><td>Sí se midió</td><td>El paper lo omite «porque su latencia casi siempre era mayor»: se comprobó en vez de creerlo</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Y como recortar puede sesgar, se repitieron puntos con la receta <b>exacta</b> para medir cuánto cambia (parte 12).</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Partes 4.3 y 6.7</p>
+<aside>Dos minutos. Toda réplica adapta algo; lo que la hace seria es declararlo y medir su efecto. Hicimos cuatro adaptaciones.
+Uno, los hilos. El paper va de 1 a 216. Nosotros usamos su misma lista dividida entre 6: 24 hilos equivalen a «toda la máquina», como 144 allí, y 36 son 1,5 veces la máquina, como 216 allí. Se conserva la proporción.
+Dos, la duración. El paper mide la mediana de 7 ejecuciones de 10 segundos, todas en un mismo proceso. Nosotros, 5 rondas de 2 segundos, cada punto en un proceso nuevo y en orden aleatorio. Así la figura 5 pasa de unas 5 horas a poco más de una, y si la CPU se calienta o algo interrumpe, afecta a todos los algoritmos por igual en promedio.
+Tres, la latencia. El paper usa p = 56. Nosotros medimos p = 1, 24, que son todos nuestros núcleos reales, y 56. Con 56 hay más hilos que núcleos, así que se mide pero se declara no comparable.
+Cuatro: Williams no aparece en la figura 6 del paper, que dice que lo omite porque su latencia casi siempre era mayor. El artefacto trae esa línea comentada. La activamos para comprobar la frase en vez de creerla. Spoiler: casi nos engaña un candado escondido.
+Y lo más importante: como recortar puede sesgar, lo verificamos repitiendo puntos con la receta exacta. Lo veremos en la parte 12.</aside>
+</section>

@@ -1,0 +1,26 @@
+<section id="que-midio-paper" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 6 · Cómo se hizo</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">El paper mide dos cosas, en dos máquinas distintas</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#1F5FAE">Figura 5 · rendimiento</p>
+<p style="font-size:30px;line-height:1.4"><b>4 Xeon E7-8867</b>: 72 núcleos, 144 hilos</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C"><i>n</i> pilas. Cada operación elige una al azar: con probabilidad <i>u</i> saca un elemento y lo mete en otra; si no, lee la cima. 6 combinaciones de (<i>n</i>, <i>u</i>).</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#1F5FAE">Figura 6 · latencia</p>
+<p style="font-size:30px;line-height:1.4"><b>Xeon w7-3465X</b>: 28 núcleos, 56 hilos</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C"><i>p</i> hilos a la vez: el primero se mide y los demás hacen store sin parar. Se miden load, store y store que libera.</p>
+</div>
+</div>
+<div style="display:flex;gap:32px">
+<p style="flex:1;font-size:30px;line-height:1.4;background:#14213D;color:#F7F4EC;border-radius:16px;padding:28px 36px"><b style="color:#F4A259">n pequeño</b> = mucha gente en poco sitio</p>
+<p style="flex:1;font-size:30px;line-height:1.4;background:#14213D;color:#F7F4EC;border-radius:16px;padding:28px 36px"><b style="color:#F4A259">u grande</b> = mucha escritura</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 4.1 · los valores del paper se extrajeron de su gráfico vectorial con herramientas/extraer_fig5.py</p>
+<aside>Un minuto y medio. El paper mide dos cosas, y lo hace en dos máquinas distintas, cosa que importa más adelante.
+La figura 5 mide rendimiento en una máquina con 4 procesadores Xeon E7-8867: 72 núcleos y 144 hilos de hardware. Se crean n pilas concurrentes. Cada operación elige una pila al azar: con probabilidad u por ciento saca un elemento y lo mete en otra pila, que es escribir; si no, lee la cima, que es leer. Se varía el número de hilos, en 6 combinaciones de n y u.
+La figura 6 mide latencia en otra máquina, un Xeon w7-3465X de 28 núcleos y 56 hilos. Hay p hilos a la vez: el primero se mide y los demás hacen store sin parar para molestar. Se miden tres operaciones: load, store sin liberar y store que libera.
+Las dos claves para leer cualquier gráfica: n pequeño significa mucha gente en poco sitio, y u grande, mucha escritura. Con n = 1 todos se pelean por el mismo tablón; con un millón de pilas casi nunca coinciden.
+Un detalle de método: para comparar con el paper no leímos sus gráficas a ojo. Sus figuras son vectoriales, y un guion saca la posición exacta de cada marcador y la convierte a Mop/s. Así comparamos número contra número.</aside>
+</section>

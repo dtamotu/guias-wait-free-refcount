@@ -1,0 +1,24 @@
+<section id="agujero-codigo" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 2 · El problema</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">En código, el agujero son dos líneas separadas</h2>
+<div style="display:flex;gap:48px">
+<div style="width:900px;display:flex;flex-direction:column;gap:24px">
+<div style="background:#14213D;border-radius:16px;padding:32px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:28px;line-height:1.5;color:#F7F4EC">load:<br>&#160;&#160;p = tablon<br><span style="color:#F4A259">&#160;&#160;// ← aquí puede pasar todo el store</span><br>&#160;&#160;p.contador += 1<br>&#160;&#160;devolver p</p>
+</div>
+<div style="background:#14213D;border-radius:16px;padding:32px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:28px;line-height:1.5;color:#F7F4EC">store(nuevo):<br>&#160;&#160;viejo = intercambiar(tablon, nuevo)<br>&#160;&#160;viejo.contador -= 1<br>&#160;&#160;si viejo.contador == 0: liberar(viejo)</p>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<h3 style="font-size:40px;font-weight:600;line-height:1.2">¿Por qué no hacer las dos cosas a la vez?</h3>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Porque el tablón y la libreta están en <b>dos sitios distintos</b> de la memoria.</p>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Un procesador actual solo hace una operación indivisible sobre <b>un sitio</b> cada vez: es como tocar una sola cosa con la mano en cada instante.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Partes 1.6 y 1.7 · pseudocódigo, no es el código real</p>
+<aside>Un minuto y medio. La tercera forma de contarlo: el código. Esto es pseudocódigo, para que se lea en voz alta.
+Load hace dos cosas: lee el tablón y luego suma 1 al contador. Store intercambia el tablón, resta 1 al viejo y, si llega a 0, lo libera. El agujero está entre las dos líneas de load, donde está el comentario naranja: ahí puede ejecutarse un store entero de otro hilo.
+La pregunta natural es: ¿y por qué no hacemos las dos cosas a la vez? La respuesta es física. El tablón y la libreta están en dos sitios distintos de la memoria, y los procesadores actuales solo pueden hacer una operación indivisible, atómica, sobre un único sitio. Es como si solo pudieras tocar una cosa con la mano en cada instante. Existe una instrucción para dos sitios a la vez, el doble compare-and-swap, pero los procesadores comunes no la tienen.
+Así que cada solución tiene que ingeniárselas con esa limitación. Hay tres grandes familias, y las vemos en la siguiente.</aside>
+</section>

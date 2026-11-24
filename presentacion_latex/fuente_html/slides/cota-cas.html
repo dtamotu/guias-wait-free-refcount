@@ -1,0 +1,21 @@
+<section id="cota-cas" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 11 · Corrección</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">La cota wait-free, contada en el código real</h2>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Máximo de intentos en 8 061 142 recargas forzadas (P = 32, C = 64)</p>
+<div style="width:1664px;height:72px;background:#EAE4D3;border-radius:8px;display:flex"><div style="width:416px;height:72px;background:#D9620B;border-radius:8px 0 0 8px"></div></div>
+<div style="display:flex;justify-content:space-between"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;font-weight:600;color:#B04A06">8 intentos, como máximo</p><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;color:#5F6B7A">cota del paper: 32</p></div>
+</div>
+<table style="width:1664px;font-size:26px;color:#14213D;font-variant-numeric:tabular-nums">
+<tr style="background:#EAE4D3"><th style="width:34%;text-align:left">Variante</th><th style="width:18%;text-align:right">Recargas (hasta)</th><th style="width:18%;text-align:right">Máx. intentos</th><th style="width:15%;text-align:right">Cota</th><th style="width:15%;text-align:right">Errores</th></tr>
+<tr><td>Real: P = 65 536, C = 524 287</td><td style="text-align:right">1 158</td><td style="text-align:right">4</td><td style="text-align:right">65 536</td><td style="text-align:right">0</td></tr>
+<tr style="background:#F6E3CF"><td>Forzada: P = 32, C = 64</td><td style="text-align:right">8 061 142</td><td style="text-align:right">8</td><td style="text-align:right">32</td><td style="text-align:right">0</td></tr>
+<tr><td>Límite: P = 32, C = 32 (viola R-1)</td><td style="text-align:right">15 600 117</td><td style="text-align:right">10</td><td style="text-align:right">32</td><td style="text-align:right">0</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.5 · herramientas/cota_cas.cpp y correr_cota_cas.sh (copia instrumentada del código de los autores, generada al vuelo)</p>
+<aside>Dos minutos. La gran promesa del paper es: «la recarga reintenta como mucho P veces». Para comprobarlo, correr_cota_cas.sh genera al vuelo una copia del código de los autores con un contador de intentos, sin tocar el original.
+Con los valores reales, P = 65 536 y C = 524 287, casi nunca hay recargas, porque el taco de más de medio millón de vales dura muchísimo: como mucho 1 158 recargas y 4 intentos, solo con 0 % de store.
+Para forzar la situación, bajamos el taco: P = 32 y C = 64. Ahí hubo más de 8 millones de recargas, y el máximo de intentos fue 8. La barra lo enseña: 8 de 32, la cuarta parte de la cota. Con muchísimo margen.
+Ojo con la tercera fila: C = P no falló aquí porque había menos hilos que P, pero recarga en casi todas las operaciones y rinde aproximadamente la mitad. En el boceto, en cambio, esa misma violación sí producía errores, como vimos en la diapositiva anterior.
+Y la frase de honestidad, que conviene decir literalmente: estas pruebas no demuestran que el algoritmo sea correcto, porque una prueba nunca demuestra eso. La demostración está en el paper, en sus secciones 4.1 y 4.2. Lo que dicen nuestras pruebas es que, buscando el fallo con ganas, no apareció, y que la cota se cumple con margen.</aside>
+</section>

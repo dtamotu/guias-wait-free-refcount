@@ -1,0 +1,20 @@
+<section id="ingenua" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 4 · Los rivales</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">La versión ingenua: la que está rota a propósito</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:40px;line-height:1.3">Leer el puntero y, después, sumar 1 al contador.</p>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Es exactamente la carrera de la parte 2. No es un rival del paper: es el problema. Está en <span style="font-family:'JetBrains Mono', 'Courier New', monospace">codigo/estres_asan.cpp</span> para demostrar que el fallo existe y que el detector lo ve.</p>
+</div>
+<div style="width:600px;display:flex;flex-direction:column;gap:20px;background:#14213D;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">Lo que encontraron los detectores</p>
+<p style="font-size:30px;line-height:1.4;color:#F7F4EC"><b>ASan</b> (8, 12 y 16 hilos): double-free; la ejecución se para enseguida</p>
+<p style="font-size:30px;line-height:1.4;color:#F7F4EC"><b>TSan</b> (8 y 16 hilos): carreras de datos y heap-use-after-free</p>
+<p style="font-size:30px;line-height:1.4;color:#F7F4EC"><b>Boceto didáctico</b>: 227 031 errores</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Partes 3.0 y 6.5 · resultados/david-ultra9-285/correccion/</p>
+<aside>Un minuto. Empezamos por la versión que está mal, y la incluimos a propósito. La idea es la de la parte 2: leer el puntero y luego sumar 1 al contador. Tiene el agujero entre los dos pasos.
+¿Para qué sirve una versión rota? Para dos cosas. Primero, para demostrar que el problema no es teórico: si lo ejecutas con muchos hilos, la memoria se rompe de verdad. Segundo, y esto es metodológicamente importante, para demostrar que los detectores funcionan. Más adelante diremos «0 errores» para el algoritmo del paper y para todos los rivales. Un «0 errores» solo vale algo si sabemos que el detector habría saltado. Y aquí salta: AddressSanitizer detiene la ejecución con un double-free, ThreadSanitizer avisa de carreras de datos y de heap-use-after-free, y el boceto didáctico del equipo registra 227 031 errores.
+Es el grupo de control de las pruebas de corrección. Volveremos a él en la parte 11.</aside>
+</section>

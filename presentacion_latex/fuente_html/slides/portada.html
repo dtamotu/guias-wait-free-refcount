@@ -1,0 +1,24 @@
+<section id="portada" data-transition="fade" style="background:#14213D;color:#F7F4EC;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between;gap:40px">
+<div style="display:flex;flex-direction:column;gap:32px">
+<p style="font-size:30px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#F4A259">Réplica de un paper · Euro-Par 2024</p>
+<h1 style="font-size:72px;font-weight:700;line-height:1.1;color:#F7F4EC">A Fast Wait-Free Solution to Read-Reclaim Races in Reference Counting</h1>
+<p style="font-size:40px;line-height:1.35;color:#C9D3E3">Cómo leer un puntero compartido sin que otro hilo destruya el objeto a mitad de camino, y qué pasó al repetir los experimentos</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;gap:4px">
+<div style="width:494px;height:56px;background:#D9620B;border-radius:8px 0 0 8px"></div>
+<div style="flex:1;height:56px;background:#2A78D6;border-radius:0 8px 8px 0"></div>
+</div>
+<div style="display:flex;gap:4px">
+<p style="width:494px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F4A259">peso · 19 bits</p>
+<p style="flex:1;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#9CC2F0">puntero · 45 bits</p>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:end;gap:48px">
+<p style="font-size:30px;line-height:1.5;color:#F7F4EC">David Tamo Turpo · Jheremy Manuel Alvarez Astete · Diego Quispe Candelario</p>
+<p style="font-size:24px;line-height:1.5;color:#C9D3E3;text-align:right">Paper de I. G. de Wolff, D. Anderson,<br>G. K. Keller y A. Seletskiy</p>
+</div>
+<aside>Bienvenida, unos 40 segundos. Presentamos la réplica del paper «A Fast Wait-Free Solution to Read-Reclaim Races in Reference Counting», de de Wolff, Anderson, Keller y Seletskiy, publicado en Euro-Par 2024. La pregunta del paper suena técnica, pero es muy concreta: cuando varios hilos comparten un puntero, ¿cómo lees el objeto sin que otro hilo lo destruya justo cuando vas a usarlo?
+La barra de abajo no es decoración: es la palabra de 64 bits del algoritmo del paper. Los 19 bits naranjas son el «peso», un taco de vales prepagados, y los 45 azules, la dirección del objeto. Al final de la primera hora van a entender por qué meter las dos cosas en la misma palabra lo cambia todo.
+La sesión dura unas dos horas y media, con una pausa de 10 minutos a mitad. Cada diapositiva lleva al pie de dónde salen sus datos: casi todo está en EXPLICACION.md, tablas.md y los CSV del repositorio. Si alguien quiere ver un dato crudo, lo podemos abrir.</aside>
+</section>

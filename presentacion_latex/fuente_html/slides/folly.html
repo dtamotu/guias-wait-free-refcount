@@ -1,0 +1,27 @@
+<section id="folly" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;gap:16px;align-items:center"><div style="width:24px;height:24px;background:#12907F;border-radius:6px"></div><p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 4 · Los rivales · familia 3</p></div>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Folly: Williams en 8 bytes, con provisión de lectores</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Los punteros reales usan 48 de sus 64 bits; en los 16 libres cabe el contador local. Cada libro trae anotada una <b>provisión de 8 192 usuarios</b>, así que casi nunca hay que ir a la libreta.</p>
+<h3 style="font-size:40px;font-weight:600;font-family:'JetBrains Mono', 'Courier New', monospace">load</h3>
+<ol style="font-size:30px;line-height:1.45;color:#14213D;padding:0 0 0 40px">
+<li>Bucle de CAS para sumar 1 al contador local</li>
+<li>Si pasa de 4 096, trasladar un lote a la libreta</li>
+<li>Si llegara a 8 192, esperar cediendo el turno</li>
+</ol>
+</div>
+<div style="width:600px;display:flex;flex-direction:column;gap:14px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Garantía</p><p style="font-size:30px;line-height:1.35">Lock-free; bloqueante con más de 8 192 hilos</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Memoria extra</p><p style="font-size:30px">Ninguna; libera al instante</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">A favor</p><p style="font-size:30px;line-height:1.35">Una operación de 8 bytes por lectura</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">En contra</p><p style="font-size:30px;line-height:1.35">CAS en bucle: puede perder y reintentar</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 3.4 · Facebook/Meta Folly, AtomicSharedPtr.h (takeOwnedBase)</p>
+<aside>Dos minutos. Folly es la biblioteca de C++ de Facebook, hoy Meta. La idea en una frase: Williams, pero metiéndolo todo en 8 bytes y repartiendo las rayitas en lote.
+En vez de un tablón doble, Folly aprovecha que los punteros reales solo usan 48 de sus 64 bits. En los 16 bits libres cabe el contador local. Además, el libro ya tiene anotada de antemano en su libreta una provisión de 8 192 usuarios, así que las lecturas casi nunca necesitan ir a ella.
+La lectura: un bucle de CAS para sumar 1 al contador local; si otro se adelantó, repetir. Si el contador local pasa de 4 096, se traslada un lote de 4 096 a la libreta. Y si llegara a 8 192, más lectores simultáneos que provisión, espera cediendo el turno; por eso, en ese caso extremo, es bloqueante.
+Es casi la misma idea que los Autores. La gran diferencia es una sola instrucción: Folly usa CAS, que puede fallar, y los Autores fetch_add, que no falla. Folly necesita el CAS para comprobar que su contador de 16 bits no se desborda.
+Un aviso antes de los resultados: en el paper Folly sale muy mal parado, rinde entre 0,05 y 0,07 veces lo de los Autores con contención. En esta réplica eso no pasa, ni con Docker ni sin Docker. Es el gran misterio de la parte 8.</aside>
+</section>

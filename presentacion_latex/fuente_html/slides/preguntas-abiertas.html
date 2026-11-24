@@ -1,0 +1,28 @@
+<section id="preguntas-abiertas" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 13 · Veredicto</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Cuatro preguntas abiertas, y cómo cerrarlas</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">¿Por qué Folly va tan distinto?</h3>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">Ya pasa con 1 hilo. <b>Cerrarla:</b> escribir a los autores; comprobar la versión de Folly del artefacto; medir con perf.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">¿Por qué se hunde Williams?</h3>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">Solo en el programa oficial, entre clústeres. <b>Cerrarla:</b> bench_stack con Boost 1.74 fuera de Docker, o con 1.83 dentro.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">¿Por qué Autores va detrás con pocos hilos?</h3>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">Con n = 10⁶; los bytes no lo explican. <b>Cerrarla:</b> contadores de hardware, perf.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:32px">
+<h3 style="font-size:40px;font-weight:600">¿Es la RAM el techo?</h3>
+<p style="font-size:24px;line-height:1.4;color:#3D4A5C">Tres algoritmos al 89-93 %. <b>Cerrarla:</b> un segundo módulo DDR5-5600 y repetir medir_memoria.py.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Partes 0 y 8 · DEFENSA.md, sección 5 (plan de mejoras)</p>
+<aside>Dos minutos. Cuatro preguntas que la réplica abre y no cierra, y para cada una, qué haría falta para cerrarla. Esto también es un resultado: una réplica que termina con preguntas bien planteadas es más útil que una que lo explica todo de forma sospechosa.
+Uno: ¿por qué Folly va tan distinto que en el paper? Sabemos que ya pasa con un hilo y que no es nuestro montaje. Para cerrarla: escribir a los autores preguntando qué versión y configuración de Folly usaron en la figura 5, que cuesta un correo; comprobar la versión que trae el artefacto; y medir con contadores de hardware.
+Dos: ¿por qué Williams se hunde entre clústeres, solo en el programa oficial? Para cerrarla: compilar bench_stack con Boost 1.74 fuera de Docker, o con 1.83 dentro, y ver si el hundimiento sigue a Boost.
+Tres: ¿por qué Autores va por detrás con un millón de pilas y pocos hilos? Los bytes no lo explican. Para cerrarla, contadores de hardware: perf, que este kernel no trae.
+Cuatro: ¿es la RAM de verdad el techo con un millón de pilas? Tres algoritmos llegan al 89-93 %. Para cerrarla: poner un segundo módulo igual y repetir medir_memoria.py. Si el rendimiento sube, queda demostrado. Es la mejora con mejor relación coste-valor de toda la lista.</aside>
+</section>

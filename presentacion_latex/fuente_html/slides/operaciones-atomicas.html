@@ -1,0 +1,26 @@
+<section id="operaciones-atomicas" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 3 · Vocabulario</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Atómica: ocurre entera o no ocurre</h2>
+<table style="width:1664px;font-size:28px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:22%;text-align:left">Operación</th><th style="width:38%;text-align:left">Qué hace</th><th style="width:40%;text-align:left">Analogía</th></tr>
+<tr><td>fetch_add / fetch_sub</td><td>Suma o resta y devuelve el valor anterior</td><td>Arrancar un papelito del taco de turnos</td></tr>
+<tr><td>exchange</td><td>Pone un valor nuevo y devuelve el viejo</td><td>Cambiar el cartel y quedarte con el antiguo</td></tr>
+<tr><td>CAS</td><td>«Si vale X, ponlo a Y; si no, dime cuánto vale»</td><td>Cambio el cartel solo si sigue como lo leí</td></tr>
+<tr><td>DWCAS</td><td>Un CAS sobre 16 bytes en vez de 8</td><td>Lo mismo sobre un cartel doble; más lento</td></tr>
+</table>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#14213D;border-radius:16px;padding:32px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;font-weight:600;color:#F4A259">fetch_add nunca falla</p>
+<p style="font-size:30px;line-height:1.4;color:#C9D3E3">Pides tu turno y lo tienes, aunque haya mil personas.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#14213D;border-radius:16px;padding:32px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;font-weight:600;color:#9CC2F0">CAS puede fallar</p>
+<p style="font-size:30px;line-height:1.4;color:#C9D3E3">Si alguien cambió el valor justo antes, reintentas. Con mucha gente, pierdes una y otra vez.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 2.1 · CAS = compare-and-swap; DWCAS = double-width CAS (instrucción cmpxchg16b)</p>
+<aside>Dos minutos. Una operación es atómica si ocurre entera o no ocurre, sin que nadie pueda ver un estado a medias. Estas son las cuatro que aparecen en los algoritmos.
+fetch_add y fetch_sub suman o restan y te devuelven el valor anterior: es como arrancar el papelito de un taco de turnos en la carnicería; te llevas tu número y el taco queda actualizado en el mismo gesto. exchange pone un valor nuevo y te devuelve el viejo: cambias el cartel y te quedas el antiguo en la mano. CAS, compare-and-swap, dice «si vale X, ponlo a Y; si no, no hagas nada y dime cuánto vale». Y DWCAS es un CAS sobre 16 bytes en lugar de 8: existe en x86, se llama cmpxchg16b, pero es más lento.
+Ahora, la frase más importante de esta parte, la que explica el título del paper: fetch_add nunca falla. Pides tu turno y lo tienes, aunque haya mil personas pidiéndolo. CAS puede fallar: si alguien cambió el valor justo antes que tú, no pasa nada y tienes que reintentar. Con mucha gente, puedes perder una y otra vez.
+El algoritmo del paper lee con fetch_sub. Folly lee con un bucle de CAS. Esa sola diferencia separa a los dos más parecidos.</aside>
+</section>

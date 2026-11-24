@@ -1,0 +1,28 @@
+<section id="garantias-progreso" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 3 · Vocabulario</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Tres garantías de progreso, de menos a más</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<h3 style="font-size:40px;font-weight:600">Bloqueante</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Una sola llave. Si quien la tiene se duerme, <b>todos</b> esperan.</p>
+<p style="font-size:30px;font-style:italic;color:#5F6B7A">«Depende de los demás»</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<h3 style="font-size:40px;font-weight:600;color:#1F5FAE">Lock-free</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Puerta giratoria a empujones: siempre pasa alguien, pero <b>tú</b> podrías perder siempre.</p>
+<p style="font-size:30px;font-style:italic;color:#5F6B7A">«Depende de la suerte»</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:2px solid #D9620B;border-radius:16px;padding:40px">
+<h3 style="font-size:40px;font-weight:600;color:#B04A06">Wait-free</h3>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Cada uno tiene su torniquete: pase lo que pase, terminas en N pasos.</p>
+<p style="font-size:30px;font-style:italic;color:#5F6B7A">«No depende de nadie»</p>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#14213D"><b>Wait-free no significa más rápido.</b> Significa más predecible.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 2.2 · Herlihy, «Wait-free synchronization», ACM TOPLAS, 1991</p>
+<aside>Dos minutos. Esta es la parte «wait-free» del título. Imaginen una puerta por la que tiene que pasar todo el mundo.
+Bloqueante: hay una sola llave. Si quien la tiene se duerme, por ejemplo porque el sistema operativo le quita la CPU, todos esperan. Depende de los demás.
+Lock-free: es una puerta giratoria a empujones. Siempre pasa alguien, así que el sistema en conjunto avanza, pero tú, en concreto, podrías perder una y otra vez para siempre. Depende de la suerte.
+Wait-free: cada persona tiene su propio torniquete. Pase lo que pase con los demás, terminas en un número máximo de pasos. No depende de nadie. Es la garantía más fuerte y la más difícil de conseguir. Esta jerarquía viene de Herlihy, 1991.
+Y ahora la frase que conviene repetir: wait-free no significa más rápido. Significa más predecible. Se puede ser wait-free y lento, igual que se puede ser muy rápido de media y tener a un hilo sufriendo. Esto va a importar mucho al leer los resultados, porque en algunos escenarios un candado simple gana en velocidad al algoritmo del paper, y eso no contradice nada.</aside>
+</section>

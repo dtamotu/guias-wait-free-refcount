@@ -1,0 +1,19 @@
+<section id="decir-no-decir" hidden data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 14 · Para el equipo · oculta al presentar</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Lo que no hay que decir, y qué decir en su lugar</h2>
+<table style="width:1664px;font-size:24px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:34%;text-align:left">No digan</th><th style="width:66%;text-align:left">Digan</th></tr>
+<tr><td style="color:#9C3A0A">«Demostramos que es correcto»</td><td>«No encontramos errores buscándolos, y la cota se cumplió con margen»</td></tr>
+<tr><td style="color:#9C3A0A">«Simulamos 4 Xeon»</td><td>«Simulamos la distancia entre sockets, de forma más suave; NUMA no»</td></tr>
+<tr><td style="color:#9C3A0A">«El paper se equivoca con Folly»</td><td>«Aquí Folly rinde mucho mejor, ya con un hilo; la causa está abierta»</td></tr>
+<tr><td style="color:#9C3A0A">«Docker no influye»</td><td>«Lo medimos: 259 de 270 puntos cambian menos de un 10 %»</td></tr>
+<tr><td style="color:#9C3A0A">«La RAM es el techo»</td><td>«Tres algoritmos llegan al 89-93 % del techo; lo refuerza, no lo demuestra»</td></tr>
+<tr><td style="color:#9C3A0A">«Autores gana», por un 5 %</td><td>«Empatan»</td></tr>
+<tr><td style="color:#9C3A0A">«Es una réplica exacta»</td><td>«Es una reproducción con los programas oficiales, a otra escala»</td></tr>
+<tr><td style="color:#9C3A0A">«Es culpa de nuestro PC»</td><td>«Eso depende de la máquina, y lo marcamos como "en este PC"»</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Diapositiva oculta: se salta al presentar · Fuente: DEFENSA.md, sección 7</p>
+<aside>Diapositiva oculta, solo para preparar la exposición. Muchas críticas nacen de una palabra demasiado fuerte. Cambien la palabra y la crítica desaparece.
+«Demostramos que es correcto» invita al cargo 8: una prueba nunca demuestra corrección. «Simulamos 4 Xeon» invita al cargo 2. «El paper se equivoca con Folly» suena arrogante y no lo sabemos: no tenemos su máquina. «Docker no influye» convence menos que la cifra. «La RAM es el techo» va más allá de lo medido. Llamar victoria a un 5 % contradice nuestra propia regla de empate. «Réplica exacta» es incorrecto según la terminología de la ACM. Y «es culpa de nuestro PC» suena a excusa; «lo marcamos como en este PC» suena a método.
+Antes de exponer, según DEFENSA.md: corregir las erratas del informe del equipo (replica/informe/02_latencia.md, línea 18: 86 700 ns debe ser 99,7 µs; los números del README que no coinciden con capturas/rendimiento.csv; añadir setarch -R al paso de TSan de codigo/ejecutar_pruebas.sh); decidir la fila 11 y el alignas(128) de codigo/bench.cpp; declarar el uso de herramientas si el curso lo pide; y ensayar en voz alta las 20 preguntas del final, uno pregunta y otro responde.</aside>
+</section>

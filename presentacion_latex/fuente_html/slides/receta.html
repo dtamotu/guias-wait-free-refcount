@@ -1,0 +1,26 @@
+<section id="receta" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 6 · Cómo se hizo</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">El código de los autores, con su receta exacta</h2>
+<div style="display:flex;gap:48px">
+<div style="width:520px;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Artefacto oficial de Zenodo, <b>MD5 comprobado</b>, en la misma imagen base: Ubuntu 22.04 y g++-12.</p>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">No es una reimplementación: es su código, el de Folly y el de Anderson, y su programa de pruebas.</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.5;color:#1F5FAE">10.5281/zenodo.11775182</p>
+</div>
+<table style="flex:1;font-size:26px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:28%;text-align:left">Detalle</th><th style="width:72%;text-align:left">Valor</th></tr>
+<tr><td>Orden</td><td>bench_stack -r 10 -s n -u u -i 7 --peek=true</td></tr>
+<tr><td>Algoritmos</td><td>ivo, gnu, jss-free, folly, mine</td></tr>
+<tr><td>Asignador</td><td>jemalloc con LD_PRELOAD</td></tr>
+<tr><td>Memoria</td><td>numactl -i all</td></tr>
+<tr><td>Hilos</td><td>1, 18, 36, 54, 72, 108, 144, 180, 216</td></tr>
+<tr><td>Tamaño de pila</td><td>20 elementos + T/n</td></tr>
+<tr><td>Resultado</td><td>Mediana de 7 ejecuciones de 10 s</td></tr>
+</table>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 4.2 · ivo = Autores, gnu = Libstdc++, jss-free = Williams, mine = Anderson</p>
+<aside>Un minuto y medio. Este es el punto de partida de toda la credibilidad de la réplica.
+Para que la comparación sea justa usamos los binarios oficiales, compilados desde el artefacto que los autores publicaron en Zenodo, con el DOI que ven en pantalla. Comprobamos su suma MD5, así que sabemos que es exactamente lo que publicaron. Y lo compilamos en la misma imagen base: Ubuntu 22.04 con g++-12. Es decir: el mismo código de los autores, el de Folly, el de Anderson y el mismo programa de pruebas. No es una reimplementación.
+Del artefacto extrajimos la receta exacta, que el paper no detalla: la orden de bench_stack con sus parámetros; los nombres internos de los algoritmos, ivo para Autores, gnu para Libstdc++, jss-free para Williams, folly y mine para Anderson; el asignador jemalloc, cargado con LD_PRELOAD; numactl para repartir la memoria entre los 4 sockets; la lista de hilos; el tamaño de cada pila; y el resultado, que es la mediana de 7 ejecuciones de 10 segundos.
+Además corrimos bench.cpp, el programa del equipo, como comprobación independiente: dos programas distintos que deberían contar la misma historia.</aside>
+</section>

@@ -1,0 +1,25 @@
+<section id="diseno-afinidad" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 7 · Simular 4 Xeon</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">La batería de afinidad: fijar cada hilo a un núcleo concreto</h2>
+<div style="display:flex;gap:48px">
+<table style="width:1000px;font-size:26px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:28%;text-align:left">Colocación</th><th style="width:38%;text-align:left">Núcleos</th><th style="width:34%;text-align:left">Qué imita</th></tr>
+<tr><td>E-compacto</td><td>Llena un clúster y luego el siguiente</td><td>Todos en el mismo socket</td></tr>
+<tr><td>E-disperso</td><td>Reparte entre los 4 clústeres</td><td>Hilos en los 4 sockets</td></tr>
+<tr><td>P</td><td>Núcleos P</td><td>Máxima distancia, 86 ns</td></tr>
+<tr><td>todos24</td><td>Los 24, fijados</td><td>Toda la máquina</td></tr>
+<tr><td>sistema</td><td>Sin fijar</td><td>Lo que hizo el paper</td></tr>
+</table>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#14213D;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">Dosis-respuesta</p>
+<p style="font-size:30px;line-height:1.4;color:#F7F4EC">Con 4 hilos, solo cambia la distancia:</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#F4A259">35 → 47 → 86 ns</p>
+<p style="font-size:30px;line-height:1.4;color:#C9D3E3">Subimos la dosis y miramos cuánto cae cada algoritmo.</p>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C"><b>El binario oficial no se toca:</b> fijar_hilos.c se carga con LD_PRELOAD e intercepta la creación de hilos.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 5.4 · herramientas/fijar_hilos.c · listas de núcleos en baterias.py</p>
+<aside>Un minuto y medio. Afinidad significa decidir en qué núcleo exacto corre cada hilo. Lo hacemos con fijar_hilos.c, una pequeña librería que se carga por delante del programa con LD_PRELOAD e intercepta la creación de hilos, pthread_create. Importante: el binario oficial no se modifica, solo cambia dónde cae cada hilo. Y lo comprobamos leyendo el sistema: cada hilo estaba en su núcleo.
+Cinco colocaciones. E-compacto llena un clúster y luego el siguiente: imita tener todos los hilos en el mismo socket mientras quepan. E-disperso reparte entre los 4 clústeres: hilos repartidos por los 4 sockets. P usa los núcleos rápidos: el caso de máxima distancia, aunque con núcleos más potentes. todos24 usa los 24 fijados. Y sistema no fija nada, que es lo que hizo el paper: lo decide Linux.
+El experimento más limpio es con 4 hilos: mismo número de hilos y, entre compacto y disperso, el mismo tipo de núcleo. Lo único que cambia es la distancia. Es un experimento de dosis-respuesta, como en medicina: subimos la dosis, 35, 47 y 86 ns, y miramos cuánto cae cada algoritmo. Los resultados, en la parte 10. Ahora toca una pausa.</aside>
+</section>

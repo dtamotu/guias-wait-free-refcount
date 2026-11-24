@@ -1,0 +1,25 @@
+<section id="numeros-clave" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Apertura</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Siete tandas de medición, ninguna fallida</h2>
+<div style="display:flex;gap:56px;align-items:center">
+<div style="width:440px;display:flex;flex-direction:column;gap:12px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:120px;font-weight:600;line-height:1;color:#B04A06">14 158</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">mediciones en total, con 0 fallidas</p>
+</div>
+<table style="width:1168px;font-size:24px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:46%;text-align:left">Tanda</th><th style="width:36%;text-align:left">Algoritmos</th><th style="width:18%;text-align:right">Mediciones</th></tr>
+<tr><td>Con Docker, programas oficiales</td><td>Los 5 del paper</td><td style="text-align:right">3 720</td></tr>
+<tr><td>Sin Docker, programas oficiales</td><td>Los mismos 5</td><td style="text-align:right">4 660</td></tr>
+<tr><td>Sin Docker, bench.cpp del equipo</td><td>Autores, Libstdc++, Williams, Mutex</td><td style="text-align:right">2 976</td></tr>
+<tr><td>Sin Docker, bench.cpp alineado</td><td>Los mismos 4</td><td style="text-align:right">2 160</td></tr>
+<tr><td>Controles</td><td>Según el caso</td><td style="text-align:right">546</td></tr>
+<tr><td>Tráfico real de RAM</td><td>Los 5 y el techo de la máquina</td><td style="text-align:right">70</td></tr>
+<tr><td>Detectores de errores</td><td>Los 5 del paper y Mutex</td><td style="text-align:right">26</td></tr>
+</table>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 0 · CSV en replica/resultados/david-ultra9-285/</p>
+<aside>Un minuto y medio. Esta tabla responde a «¿cuánto midieron?». Siete tandas, más de 14 000 mediciones, y ninguna falló: cada ejecución terminó con código de salida 0.
+Las dos primeras son el corazón: los programas oficiales del paper, los que publicaron los autores, medidos dentro de Docker y fuera de Docker. Las dos siguientes usan bench.cpp, el programa de pruebas que escribió nuestro equipo, como segunda opinión; ahí no están Folly ni Anderson. La versión «alineada» es una copia de bench.cpp con una sola palabra añadida, y es una de las historias más interesantes de la réplica: la veremos en la parte 12.
+Los controles sirven para separar causas: por ejemplo, el mismo código dentro y fuera de Docker. Las 70 de RAM leen los contadores de la controladora de memoria, y las 26 de detectores pasan AddressSanitizer, UBSan y ThreadSanitizer a todos los rivales, no solo al algoritmo del paper.
+Si alguien pregunta por qué tantas: porque cada vez que algo no cuadraba, en vez de suponer la causa, diseñamos una medición para comprobarla. Esa es la idea que atraviesa toda la presentación.</aside>
+</section>

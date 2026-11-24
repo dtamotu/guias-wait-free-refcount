@@ -1,0 +1,29 @@
+<section id="load-store" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 5 · La solución del paper</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">load y store: tres pasos, sin bucles</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<h3 style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#1F5FAE">load</h3>
+<ol style="font-size:30px;line-height:1.45;color:#14213D;padding:0 0 0 40px">
+<li>fetch_sub: quitar 1 al peso. Devuelve puntero y peso. Nunca falla</li>
+<li>Si el peso sigue ≥ P, fin. Es casi siempre</li>
+<li>Si bajó de P, recargar con increase_weight</li>
+</ol>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:40px">
+<h3 style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#1F5FAE">store</h3>
+<ol style="font-size:30px;line-height:1.45;color:#14213D;padding:0 0 0 40px">
+<li>Sumar C − 1 a la libreta del objeto nuevo</li>
+<li>exchange: poner (nuevo, C) y quedarse con (viejo, peso)</li>
+<li>Restar el peso a la libreta del viejo; si llega a 0, se destruye ya</li>
+</ol>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Sin bucles: <b>wait-free y de tiempo constante</b>. El camino rápido de load es una sola instrucción atómica.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 3.6 · el binario oficial usa una versión espejo (tag, fetch_add) de la del repositorio (weight, fetch_sub)</p>
+<aside>Un minuto y medio. Las dos operaciones, paso a paso.
+Load: primero, un fetch_sub que quita 1 al peso y devuelve el puntero y el peso anterior; nunca falla. Segundo: si el peso sigue siendo al menos P, el número máximo de hilos, se acabó. Es casi siempre: un único paso atómico. Tercero, solo si bajó de P: recargar, con una función que se llama increase_weight. La vemos en la siguiente.
+Store: primero, sumar C menos 1 a la libreta del objeto nuevo; es preparar sus vales. Segundo, un exchange que pone (nuevo, C) y te devuelve (viejo, peso). Tercero, restar ese peso, los vales que nadie arrancó, a la libreta del viejo; si llega a 0, se destruye ya.
+Tres pasos y ningún bucle. Por eso es wait-free y de tiempo constante.
+Una nota de versiones, por si el jurado la pregunta: el binario oficial no usa exactamente este código. El artefacto trae una versión anterior en la que la cuenta sube, con un tag y fetch_add, en vez de bajar. La del repositorio del equipo es la que baja, con weight y fetch_sub. Son el mismo algoritmo en espejo, como contar los vales usados en vez de los que quedan. En las dos, el camino rápido es una sola instrucción atómica.</aside>
+</section>

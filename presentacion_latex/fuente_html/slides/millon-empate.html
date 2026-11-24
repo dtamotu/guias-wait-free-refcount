@@ -1,0 +1,22 @@
+<section id="millon-empate" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 8 · Rendimiento · lo que no se repite</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Con un millón de pilas, cuatro algoritmos tocan el mismo techo</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">En el paper, Autores lidera con 129 Mop/s. Aquí, Autores, Anderson, Libstdc++ y Folly quedan entre <b>53 y 57</b>.</p>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Si cuatro algoritmos tan distintos tocan el mismo techo, el límite no está en el algoritmo: con un millón de pilas, casi cada operación va a la <b>RAM</b>.</p>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Este PC tiene <b>un solo módulo</b>: un canal, 44,8 GB/s como máximo teórico.</p>
+</div>
+<div style="width:600px;display:flex;flex-direction:column;gap:20px;background:#14213D;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">No suponer: medir</p>
+<p style="font-size:30px;line-height:1.45;color:#F7F4EC">La controladora de memoria trae contadores: un cuentakilómetros en la única carretera al almacén.</p>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#C9D3E3">Techo leyendo en orden</p><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;color:#F7F4EC">43 GB/s</p></div>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#C9D3E3">Techo al azar, como las pilas</p><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;font-weight:600;color:#F4A259">37 GB/s</p></div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.1 · herramientas/medir_memoria.py, contar_imc.c y ancho_banda.cpp · memoria_ram.csv</p>
+<aside>Dos minutos. La segunda cosa que no se repite: con un millón de pilas, en el paper gana Autores con 129 Mop/s; aquí, cuatro algoritmos empatan entre 53 y 57.
+Que cuatro algoritmos tan distintos toquen el mismo techo sugiere que el límite no está en el algoritmo, sino en algo común. Con un millón de pilas, casi cada operación tiene que ir a la RAM, porque los datos no caben en la caché. Y el paper tenía 4 chips, cada uno con su memoria, frente a uno solo aquí.
+Pero sugerir no es medir. La CPU trae unos contadores en su controladora de memoria, la pieza por la que pasa todo lo que entra y sale de la RAM. Son como un cuentakilómetros en la única carretera que lleva a un almacén: no hay que adivinar cuánto tráfico hay, basta con leerlo. Como el kernel de este PC no trae la herramienta perf, escribimos contar_imc.c, que lee esos contadores directamente.
+Y esa carretera aquí es estrecha: un solo módulo de RAM, la otra ranura vacía, un solo canal, con 44,8 GB/s como máximo teórico. Medimos dos techos reales, porque no es lo mismo leer en orden que saltar de un sitio a otro, igual que leer un libro página a página es más rápido que abrirlo en páginas al azar: 43 GB/s en orden y 37 al azar, que es como acceden las pilas. Siguiente diapositiva: cuánto usa cada algoritmo de ese techo.</aside>
+</section>

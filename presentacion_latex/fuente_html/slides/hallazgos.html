@@ -1,0 +1,25 @@
+<section id="hallazgos" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 13 · Lo que aporta la réplica</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Siete hallazgos que no estaban en el paper</h2>
+<table style="width:1664px;font-size:28px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:5%;text-align:right">#</th><th style="width:60%;text-align:left">Hallazgo</th><th style="width:35%;text-align:left">La cifra</th></tr>
+<tr><td style="text-align:right">1</td><td>bench.cpp del equipo tiene compartición falsa</td><td>Autores, de 35 a 120 Mop/s al alinear</td></tr>
+<tr><td style="text-align:right">2</td><td>El binario oficial de latencia se compila sin -mcx16</td><td>Williams: 40 680 → 3 104 ns</td></tr>
+<tr><td style="text-align:right">3</td><td>Importa compartir caché, no la distancia</td><td>−45 % al salir del clúster; 47 o 86 ns, igual</td></tr>
+<tr><td style="text-align:right">4</td><td>Williams se hunde entre clústeres en el programa oficial</td><td>−97 % con Docker, −76 % sin Docker</td></tr>
+<tr><td style="text-align:right">5</td><td>Con un millón de pilas, el freno es sobre todo la RAM</td><td>89-93 % del techo de 37 GB/s</td></tr>
+<tr><td style="text-align:right">6</td><td>Alinear frena con un millón: dejan de caber en la L3</td><td>+207 a +265 B de RAM por operación</td></tr>
+<tr><td style="text-align:right">7</td><td>Docker no cambia los programas oficiales</td><td>259 de 270 puntos, menos de un 10 %</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Los dos primeros nacen de errores, uno del programa del equipo y otro del artefacto, y salieron de controles diseñados para buscarlos.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 0, «Lo más valioso que salió por el camino» · Parte 6.6</p>
+<aside>Dos minutos. Más allá del veredicto, esto es lo que la réplica aporta y que no estaba en el paper. Si el jurado pregunta «¿qué aportan ustedes?», esta es la respuesta.
+Uno: el programa de pruebas del equipo, bench.cpp, tiene compartición falsa. Con una palabra, Autores pasa de 35 a 120 Mop/s.
+Dos: el binario oficial de latencia se compila sin -mcx16, y con eso Williams lleva un candado escondido. Cambia el veredicto de Williams con contención.
+Tres: importa compartir caché, no tanto la distancia. Dos hilos que comparten L2 rinden casi el doble que cualquier otra pareja, y da igual que el viaje dure 47 u 86 nanosegundos.
+Cuatro: Williams se hunde entre clústeres, pero solo en el programa oficial: un 97 % con Docker y un 76 % sin Docker. La causa sigue abierta.
+Cinco: con un millón de pilas, el freno es sobre todo la RAM: tres algoritmos llegan al 89-93 % de lo que da este PC.
+Seis: alinear las pilas frena con un millón, porque dejan de caber en la L3: cada operación saca de la RAM entre 207 y 265 bytes más.
+Siete: Docker no cambia los programas oficiales: 259 de 270 puntos cambian menos de un 10 %.
+Y fíjense en la frase de abajo: los dos primeros hallazgos nacen de errores, la compartición falsa del programa del equipo y el -mcx16 que falta en el artefacto. A ellos se suma un tercer error nuestro que no está en la lista, la primera medición de RAM. Los encontramos porque buscábamos errores activamente.</aside>
+</section>

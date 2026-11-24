@@ -1,0 +1,20 @@
+<section id="mapa-latencias" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 7 · Simular 4 Xeon</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Medir antes de suponer: los 4 clústeres sí se comportan como sockets</h2>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Tiempo que tarda una línea de caché en viajar entre dos núcleos (mediana por clase)</p>
+<div style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:center;gap:24px"><p style="width:420px;font-size:30px;text-align:right">E, mismo clúster</p><div style="width:385px;height:56px;background:#2A78D6;border-radius:0 8px 8px 0"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px">35 ns · 1,00×</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="width:420px;font-size:30px;text-align:right">E, clústeres distintos</p><div style="width:521px;height:56px;background:#2A78D6;border-radius:0 8px 8px 0"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px">47 ns · 1,35×</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="width:420px;font-size:30px;text-align:right">Núcleo P ↔ núcleo E</p><div style="width:741px;height:56px;background:#2A78D6;border-radius:0 8px 8px 0"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px">67 ns · 1,93×</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="width:420px;font-size:30px;text-align:right">Dos núcleos P</p><div style="width:949px;height:56px;background:#2A78D6;border-radius:0 8px 8px 0"></div><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px">86 ns · 2,47×</p></div>
+</div>
+<div style="display:flex;gap:32px">
+<p style="flex:1;font-size:30px;line-height:1.4;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:28px 36px"><b>Sorpresa:</b> los núcleos P, los más rápidos calculando, son los más lentos pasándose datos.</p>
+<p style="flex:1;font-size:30px;line-height:1.4;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:28px 36px"><b>Pero más suave:</b> en Xeon de esa época, entre sockets ronda 3×; aquí, entre clústeres, 1,35×.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: tablas.md, «Latencia entre núcleos» · herramientas/latencia_nucleos.cpp · figura topologia.png · 3×: Intel Community y Chips and Cheese, dato indirecto</p>
+<aside>Dos minutos. Los 16 núcleos E del Core Ultra 9 285 están en 4 clústeres de 4, y cada clúster comparte una caché L2. Exactamente 4 grupos: suena a 4 sockets en miniatura. Pero hay que comprobarlo.
+El programa latencia_nucleos.cpp lanza una «pelota» entre cada par de núcleos y mide cuánto tarda en ir y volver. Estas son las medianas por clase. Dentro de un mismo clúster de núcleos E: 35 nanosegundos. Entre clústeres distintos: 47, es decir, 1,35 veces más. Entre un núcleo P y uno E: 67. Y entre dos núcleos P: 86, casi 2,5 veces más.
+Dos conclusiones. Primera: los clústeres sí se comportan como sockets, cerca dentro y más lejos fuera. La hipótesis se confirma. Segunda, una sorpresa: los núcleos P son los más lejanos entre sí. Son los más rápidos calculando y los más lentos pasándose datos. No lo habríamos adivinado sin medir.
+Y una advertencia honesta. En procesadores de la generación del paper, una transferencia dentro del socket ronda los 40 a 45 ns, y entre sockets los 130 a 140: unas 3 veces. Ese dato es indirecto, porque viene de máquinas parecidas, no de la del paper. Aquí, entre clústeres, el castigo es de 1,35 veces. La miniatura tiene la forma correcta, pero el castigo es mucho más suave. En el repositorio está el mapa completo de todos los pares, en topologia.png.</aside>
+</section>

@@ -1,0 +1,19 @@
+<section id="recarga" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 5 · La solución del paper · la verdadera aportación</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">La recarga reintenta como mucho P veces</h2>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">increase_weight suma los vales a la libreta e intenta con un CAS subir el peso del tablón. Si el CAS falla, mira <b>por qué</b>:</p>
+<table style="width:1664px;font-size:30px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:32%;text-align:left">Lo que ve al fallar</th><th style="width:38%;text-align:left">Qué significa</th><th style="width:30%;text-align:left">Qué hace</th></tr>
+<tr><td>El puntero ya es otro</td><td>Beto cambió el tablón</td><td>Deshace y sale</td></tr>
+<tr style="background:#F6E3CF"><td>El peso subió</td><td>Otro hilo ya recargó</td><td style="color:#B04A06">Deshace y sale: lo nuevo</td></tr>
+<tr><td>El peso bajó</td><td>Otro hilo arrancó un vale</td><td>Reintenta con el peso nuevo</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#14213D">Solo reintenta si el peso <b>bajó</b>. Empezó por debajo de P y nunca baja de 0: como mucho <b>P reintentos</b>, sin depender de la suerte.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 3.6 · demostración formal en el paper, secciones 4.1 y 4.2</p>
+<aside>Dos minutos y medio. Esta es la diapositiva más importante de la parte 5, porque aquí está la novedad del paper.
+El taco se agota, y antes de que se agote hay que recargar. Si la recarga pudiera reintentarse para siempre, el algoritmo no sería wait-free. Así que la pregunta es: ¿cuántas veces puede reintentar?
+Cuando el peso cae por debajo de P, el hilo llama a increase_weight. Suma a la libreta los vales que va a añadir y, con un CAS, intenta cambiar el tablón para subir el peso. Si el CAS funciona, listo. Si falla, mira por qué falló, y hay tres casos.
+Uno: el puntero ya es otro. Beto cambió el tablón, así que recargar ya no sirve: deshace la suma y sale. Dos: el peso subió. Otro hilo ya recargó: deshace y sale. Tres: el peso bajó. Otro hilo arrancó un vale: reintenta con el peso nuevo.
+Ahora el razonamiento: solo reintenta si el peso bajó. Y el peso empezó por debajo de P y nunca baja de 0. Por tanto, reintenta como mucho P veces. Ahí está la cota, sin depender de la suerte.
+¿Qué es lo nuevo? Algoritmos anteriores salían solo si el CAS funcionaba o si el peso volvía a ser suficiente. El truco nuevo es la fila resaltada: salir también en cuanto se detecta que otro ya recargó, aunque el peso esté bajo en ese momento. En la parte 11 comprobamos esta cota contando intentos en el código real: como mucho 8, con una cota de 32.</aside>
+</section>

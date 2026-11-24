@@ -1,0 +1,19 @@
+<section id="quince-rondas" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 9 · Latencia</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Sin Docker y con 15 rondas: ¿se sostiene?</h2>
+<table style="width:1664px;font-size:28px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:30%;text-align:left">Fila del veredicto</th><th style="width:48%;text-align:left">Con 15 rondas</th><th style="width:22%;text-align:left">Queda</th></tr>
+<tr><td>7 · load el más rápido</td><td>El más bajo en los 3 casos; con p = 56, Anderson a un 7 %</td><td style="color:#1F5FAE">Se sostiene, por poco</td></tr>
+<tr><td>9 · store con contención</td><td>461 frente a 470 ns; con p = 56, 1 531, 1 534 y 1 554</td><td style="color:#8A5A00">Sigue el empate</td></tr>
+<tr style="background:#F4D9CF"><td>11 · store &amp; reclaim más rápido</td><td>Autores baja de 1 531 a 1 480 ns: un 3 %, dentro del ruido</td><td style="color:#9C3A0A">Ya no se confirma</td></tr>
+<tr><td>12 · Williams, más lento</td><td>Sin contención, sí; con contención supera a Libstdc++ en 5 de 6</td><td style="color:#8A5A00">En parte, más débil</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.45;color:#3D4A5C">Las 5 rondas de Docker de la fila 11 iban de 440 a 1 470 ns: su mediana de 813 pudo depender de la suerte. Es una sospecha, no una medida.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.2 · tablas.md, «Latencia: medianas en ns (nativo, binarios oficiales)» · figura nativo_oficial_fig6.png</p>
+<aside>Dos minutos. Para salir de dudas, repetimos la latencia con los mismos programas oficiales, fuera de Docker y con 15 rondas en vez de 5. Con p = 1 todo sale igual, casi al nanosegundo. Con contención, fila por fila del veredicto.
+Fila 7, el load más rápido: se sostiene, por poco. Autores tiene la mediana más baja en los tres casos. Con p = 24, las rondas de Autores, Folly y Anderson salen en dos grupos, unas por debajo de 520 ns y otras por encima de 1 000. Autores cae menos veces en el grupo lento, 2 de 15 frente a 6 de Folly y 7 de Anderson, pero con 15 rondas no se puede afirmar que sea una propiedad del algoritmo. Con p = 56, Anderson queda a un 7 % y los rangos se solapan: empate.
+Fila 9, el store con contención: sigue el empate. Diferencias de un 2 % como mucho.
+Fila 11, la que se cae. Con Docker, Autores bajaba de 1 516 a 813 nanosegundos con p = 56. Aquí baja de 1 531 a 1 480, un 3 %, y con p = 24, de 461 a 456. Anderson y Libstdc++ se mueven igual de poco. El efecto que describe el paper aquí no se distingue del ruido. Las 5 rondas de Docker de ese punto iban de 440 a 1 470: su mediana pudo depender de la suerte. Por eso la fila 11 pasó de «se reproduce» a «no se confirma».
+Fila 12, Williams: sigue «en parte», algo más débil.
+Lección de método: cuando los datos lo pidieron, bajamos una fila. Eso también es parte del resultado.</aside>
+</section>

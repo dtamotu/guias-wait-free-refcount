@@ -1,0 +1,27 @@
+<section id="piezas-cambian" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 12 · Sin Docker</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Fuera del contenedor no cambia solo Docker</h2>
+<div style="display:flex;gap:48px;align-items:start">
+<table style="width:900px;font-size:28px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:40%;text-align:left">Pieza</th><th style="width:30%;text-align:left">Con Docker</th><th style="width:30%;text-align:left">Sin Docker</th></tr>
+<tr><td>g++-12</td><td>12.3.0</td><td>12.4.0</td></tr>
+<tr><td>glibc</td><td>2.35</td><td>2.39</td></tr>
+<tr><td>Boost</td><td>1.74</td><td>1.83</td></tr>
+<tr><td>jemalloc</td><td>5.2.1</td><td>5.3.0</td></tr>
+<tr><td>Compilar Folly</td><td>getdeps.py</td><td>CMake directo</td></tr>
+</table>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Tres tandas sin Docker</p>
+<p style="font-size:30px;line-height:1.4"><b>Oficiales:</b> 4 660 mediciones</p>
+<p style="font-size:30px;line-height:1.4"><b>bench.cpp:</b> 2 976</p>
+<p style="font-size:30px;line-height:1.4"><b>bench.cpp alineado:</b> 2 160</p>
+<p style="font-size:24px;line-height:1.4;color:#5F6B7A">Los oficiales se midieron la noche del 6 al 7 de noviembre de 2026: 4 h 44 min, sin un fallo.</p>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Si algo cambia, no se puede culpar a Docker sin más. Si nada cambia, todas esas piezas juntas tampoco importan.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.6 y Parte 8 · pendientes.sh · registro en bin/pendientes.log</p>
+<aside>Un minuto y medio. Antes de comparar, una advertencia de método: fuera del contenedor no cambia solo Docker. Cambian también el compilador, de 12.3 a 12.4; la biblioteca C, glibc, de 2.35 a 2.39; Boost, de 1.74 a 1.83; jemalloc, de 5.2.1 a 5.3.0; y la forma de compilar Folly.
+La consecuencia lógica: si algo cambia, no se puede culpar a Docker sin más. Y si nada cambia, es que todas esas piezas juntas tampoco importan aquí.
+Hubo tres tandas sin Docker: los programas oficiales, 4 660 mediciones; bench.cpp del equipo, 2 976; y bench.cpp con las pilas alineadas, 2 160.
+Una anécdota que vale la pena contar, porque muestra cómo es el trabajo real: al principio los programas oficiales no compilaban fuera del contenedor. La causa resultó ser la biblioteca fmt: su archivo de CMake sube 4 carpetas para hallar su raíz, pero el enlace estaba a 3 carpetas, así que buscaba una ruta que no existía. La corrección añade dos enlaces. Con ella, la cola pendientes.sh compiló los binarios oficiales y los midió la noche del 6 al 7 de noviembre de 2026: 4 horas y 44 minutos, sin un solo fallo.</aside>
+</section>

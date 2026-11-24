@@ -1,0 +1,38 @@
+<section id="glosario" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 15 · Recursos</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Glosario de bolsillo</h2>
+<div style="display:flex;gap:32px">
+<table style="width:816px;font-size:24px;color:#14213D">
+<tr><td style="width:32%">Afinidad</td><td style="width:68%;color:#3D4A5C">Fijar en qué núcleo corre un hilo</td></tr>
+<tr><td>Atómica</td><td style="color:#3D4A5C">Ocurre entera o no ocurre</td></tr>
+<tr><td>Bloque de control</td><td style="color:#3D4A5C">La libreta: donde vive el contador</td></tr>
+<tr><td>C</td><td style="color:#3D4A5C">Máximo de vales en el tablón</td></tr>
+<tr><td>CAS</td><td style="color:#3D4A5C">«Si vale X, ponlo a Y»; puede fallar</td></tr>
+<tr><td>Compartición falsa</td><td style="color:#3D4A5C">Datos distintos en la misma línea</td></tr>
+<tr><td>Contención</td><td style="color:#3D4A5C">Muchos hilos peleando por un dato</td></tr>
+<tr><td>Contador partido</td><td style="color:#3D4A5C">Cuenta junto al puntero y en la libreta</td></tr>
+<tr><td>DWCAS</td><td style="color:#3D4A5C">CAS sobre 16 bytes (cmpxchg16b)</td></tr>
+<tr><td>fetch_add</td><td style="color:#3D4A5C">Suma atómica; nunca falla</td></tr>
+<tr><td>Hazard pointer</td><td style="color:#3D4A5C">Cartel: «estoy usando esto»</td></tr>
+<tr><td>Línea de caché</td><td style="color:#3D4A5C">Bloque de 64 bytes que viaja</td></tr>
+</table>
+<table style="width:816px;font-size:24px;color:#14213D">
+<tr><td style="width:32%">Lock-free</td><td style="width:68%;color:#3D4A5C">Alguien avanza; tú quizá no</td></tr>
+<tr><td>Mop/s</td><td style="color:#3D4A5C">Millones de operaciones por segundo</td></tr>
+<tr><td>n · u</td><td style="color:#3D4A5C">Número de pilas · % de escrituras</td></tr>
+<tr><td>NUMA</td><td style="color:#3D4A5C">Parte de la RAM está más lejos</td></tr>
+<tr><td>P · p</td><td style="color:#3D4A5C">Máximo de hilos · hilos en latencia</td></tr>
+<tr><td>p50 · p99</td><td style="color:#3D4A5C">Mediana · lo malo que puede ponerse</td></tr>
+<tr><td>Peso</td><td style="color:#3D4A5C">Los vales que quedan en el tablón</td></tr>
+<tr><td>Recarga</td><td style="color:#3D4A5C">Añadir vales: increase_weight</td></tr>
+<tr><td>Socket</td><td style="color:#3D4A5C">Chip físico; el paper usa 4</td></tr>
+<tr><td>τ de Kendall</td><td style="color:#3D4A5C">De −1 a +1: ¿coincide el orden?</td></tr>
+<tr><td>Use-after-free</td><td style="color:#3D4A5C">Usar memoria ya liberada</td></tr>
+<tr><td>Wait-free</td><td style="color:#3D4A5C">Todos acaban en pasos acotados</td></tr>
+</table>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Glosario completo: EXPLICACION.md, Parte 10</p>
+<aside>Diapositiva de consulta, no hace falta leerla. Sirve para dos cosas: dejarla en pantalla durante el turno de preguntas, por si alguien del público se perdió una palabra, y repasar antes de exponer.
+Si hay que elegir tres para repetir en voz alta: CAS, que puede fallar, frente a fetch_add, que nunca falla; wait-free, todos acaban en un número acotado de pasos, frente a lock-free, alguien avanza pero tú quizá no; y compartición falsa, datos distintos que se estorban por caer en la misma línea de caché.
+El glosario completo, con más de 40 términos, está en la Parte 10 de EXPLICACION.md.</aside>
+</section>

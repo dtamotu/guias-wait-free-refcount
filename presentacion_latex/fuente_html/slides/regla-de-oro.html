@@ -1,0 +1,8 @@
+<section id="regla-de-oro" data-transition="fade" style="background:#D9620B;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:48px">
+<p style="font-size:30px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#14213D">La regla de oro</p>
+<h1 style="font-size:96px;font-weight:700;line-height:1.1;color:#14213D">Libreta = vales en el taco + vales en manos de la gente</h1>
+<p style="font-size:40px;line-height:1.35;color:#14213D;width:1500px">Mientras se cumpla, nunca llega a 0 algo que alguien pueda usar. En el paper, cada vale es un <b>peso</b> y el sistema, <b>conteo de referencias ponderado</b>.</p>
+<aside>Un minuto. Una sola frase, y es la que hace correcto al algoritmo: la libreta es igual a los vales que quedan en el taco más los vales que tiene la gente en la mano.
+Mientras esa igualdad se cumpla, nunca puede llegar a 0 algo que alguien pueda usar, porque cada persona que lo usa tiene un vale contado en la libreta. En el paper a cada vale se le llama peso, weight, y al sistema, conteo de referencias ponderado. No es una idea nueva del todo: el conteo ponderado existe desde hace décadas. Lo nuevo del paper es cómo recarga el taco sin perder la garantía wait-free, y eso viene en tres diapositivas.
+Pregunta para el público, si hay tiempo: ¿qué pasaría si el taco se vaciara del todo? Respuesta: alguien arrancaría un vale que no existe y la igualdad se rompería. Por eso hay que recargar antes de que se vacíe, y por eso hay reglas sobre cuándo.</aside>
+</section>

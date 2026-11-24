@@ -1,0 +1,23 @@
+<section id="carrera-historia" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 2 · El problema</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">La carrera, contada como historia</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;gap:24px;align-items:start"><p style="width:56px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#1F5FAE">1</p><p style="flex:1;font-size:30px;line-height:1.4"><b>Marta</b> lee el tablón: «estante 42». Va hacia allí.</p></div>
+<div style="display:flex;gap:24px;align-items:start"><p style="width:56px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#B04A06">2</p><p style="flex:1;font-size:30px;line-height:1.4">Antes de que llegue, <b>Beto</b> cambia el tablón a «estante 77».</p></div>
+<div style="display:flex;gap:24px;align-items:start"><p style="width:56px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#B04A06">3</p><p style="flex:1;font-size:30px;line-height:1.4">Beto resta 1 en la libreta del 42. Queda en 0: era el último.</p></div>
+<div style="display:flex;gap:24px;align-items:start"><p style="width:56px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#B04A06">4</p><p style="flex:1;font-size:30px;line-height:1.4">Beto tira el libro 42 a la trituradora.</p></div>
+<div style="display:flex;gap:24px;align-items:start"><p style="width:56px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#1F5FAE">5</p><p style="flex:1;font-size:30px;line-height:1.4">Marta llega y suma 1 en la libreta… de un libro que ya no existe.</p></div>
+</div>
+<div style="width:520px;display:flex;flex-direction:column;justify-content:center;gap:16px;background:#14213D;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">Se llama</p>
+<p style="font-size:40px;font-weight:600;line-height:1.2;color:#F7F4EC">Carrera read-reclaim</p>
+<p style="font-size:30px;line-height:1.4;color:#C9D3E3">Una lectura compite con una liberación, y la lectura llega tarde.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 1.4 · Marta es un hilo lector (azul) y Beto, un hilo escritor (naranja)</p>
+<aside>Un minuto y medio. Cuéntenlo como un cuento, despacio, señalando cada paso.
+Marta es un hilo lector y Beto un hilo escritor, y trabajan a la vez. El libro del estante 42 solo lo «usa» el tablón, así que su libreta marca 1.
+Paso 1: Marta mira el tablón, lee «estante 42» y se dirige hacia allí. Paso 2: antes de que llegue, Beto cambia el tablón a «estante 77». Paso 3: Beto va a la libreta del libro 42 y resta 1, la referencia que tenía el tablón. Queda en 0: era el último. Paso 4: Beto tira el libro 42 a la trituradora. Y paso 5: Marta llega y quiere sumar 1 en la libreta de un libro que ya no existe.
+Marta está escribiendo sobre una libreta destruida. En el ordenador, ese trozo de memoria puede pertenecer ya a otra cosa. Eso es un use-after-free, y esta situación concreta, en la que una lectura compite con una liberación, se llama carrera read-reclaim. Es exactamente la del título del paper.</aside>
+</section>

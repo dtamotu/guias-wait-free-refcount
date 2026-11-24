@@ -17,6 +17,7 @@ El proyecto cuenta con dos niveles de explicación: **Técnico Detallado** (con 
 * 🧪 [**`02_GUIA_EXPERIMENTOS_Y_CODIGOS.md`**](02_GUIA_EXPERIMENTOS_Y_CODIGOS.md): **Compendio General de Experimentos**. Análisis de la batería de pruebas y códigos de réplica.
 * 📑 [**`00_INDICE_GENERAL.md`**](00_INDICE_GENERAL.md): Índice maestro alternativo para navegación en escritorio local.
 * 🎧 [**`podcast_notebooklm/`**](podcast_notebooklm/00_COMO_GENERAR_EL_PODCAST.md): **Podcast para NotebookLM** en 14 episodios, con las fuentes en `.md` y `.pdf` y el prompt de cada episodio. Sale de la réplica (`EXPLICACION.md` y `DEFENSA.md`); no lo mezcles con estas guías en el mismo cuaderno, porque se escribieron antes de la réplica y a veces la contradicen.
+* 🎤 [**`presentacion_latex/`**](presentacion_latex/LEEME.md): **Presentación de la réplica en PDF (LaTeX Beamer)**: 105 diapositivas para unas 2 h 30 min, una versión con las notas del orador, un anexo con las 20 figuras originales y el código para regenerarla. También sale de la réplica, no de estas guías.
 
 ---
 

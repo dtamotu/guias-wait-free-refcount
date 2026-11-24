@@ -1,0 +1,27 @@
+<section id="benchcpp-diferente" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 12 · Sin Docker</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Con bench.cpp cambian el cronómetro y la pista a la vez</h2>
+<div style="display:flex;gap:40px;align-items:start">
+<table style="width:1080px;font-size:24px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:26%;text-align:left"></th><th style="width:37%;text-align:left">Oficial, con Docker</th><th style="width:37%;text-align:left">bench.cpp, sin Docker</th></tr>
+<tr><td>Pilas en memoria</td><td>Cada una en su sitio (alignas(128))</td><td>Seguidas, sin alinear</td></tr>
+<tr><td>Nodos por pila</td><td>20 + T/n</td><td>16, o 2 si n &gt; 10</td></tr>
+<tr><td>Generador de azar</td><td>Uno rápido</td><td>mt19937_64, más lento</td></tr>
+<tr><td>Compilación</td><td>g++ 12.3, -O3</td><td>g++ 12.4, -O2</td></tr>
+<tr><td>Williams</td><td>boost::atomic</td><td>std::atomic</td></tr>
+<tr><td>Autores</td><td>Versión del artefacto</td><td>Versión publicada</td></tr>
+<tr><td>Algoritmos</td><td>Los 5 del paper</td><td>Sin Folly ni Anderson; con Mutex</td></tr>
+</table>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#14213D;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F4A259">Control 1</p>
+<p style="font-size:30px;line-height:1.4;color:#F7F4EC">El <b>mismo código</b> dentro y fuera, alternando, 48 puntos:</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:40px;font-weight:600;color:#F4A259">1,02×</p>
+<p style="font-size:24px;line-height:1.4;color:#C9D3E3">mediana (0,91× a 1,13×). Las diferencias vienen del programa, no de Docker.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Fuente: EXPLICACION.md, Parte 6.6 · controles.sh y herramientas/controles.py · tablas.md, «Mismo código dentro y fuera de Docker»</p>
+<aside>Dos minutos. La otra comparación es menos limpia, y hay que decirlo: con bench.cpp del equipo no es «lo mismo, pero sin Docker». Cambia también el programa. Es como cambiar de cronómetro y de pista a la vez: si sale otro tiempo, no sabes a cuál de los dos culpar.
+Esto es lo que cambia: el programa oficial pone cada pila en su sitio con alignas(128); bench.cpp las deja seguidas. El oficial usa 20 nodos más T/n por pila; bench.cpp, 16, o 2 si hay más de 10 pilas. El oficial usa un generador de azar rápido; bench.cpp, mt19937_64, más lento. Se compila con -O3 frente a -O2. Williams usa boost::atomic frente a std::atomic. Y Autores es la versión del artefacto frente a la versión publicada. Además, bench.cpp no tiene Folly ni Anderson, y añade el Mutex.
+Para separar efectos hicimos dos controles. El primero: compilar el mismo código dentro y fuera del contenedor y medir alternando, un punto fuera y el mismo dentro, en orden al azar. 48 puntos, 3 rondas: mediana 1,02. Conclusión: las diferencias entre las dos tandas vienen del programa, no de Docker.
+El segundo control es el que destapó el hallazgo más claro de la réplica. Lo vemos ahora.</aside>
+</section>

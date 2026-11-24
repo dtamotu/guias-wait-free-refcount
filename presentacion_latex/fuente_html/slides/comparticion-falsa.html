@@ -1,0 +1,29 @@
+<section id="comparticion-falsa" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 12 · Sin Docker · hallazgo</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Con 10 pilas, bench.cpp sale 3 veces más lento: compartición falsa</h2>
+<div style="display:flex;gap:40px;align-items:start">
+<table style="width:880px;font-size:26px;color:#14213D;font-variant-numeric:tabular-nums">
+<tr style="background:#EAE4D3"><th style="width:40%;text-align:left">Autores, 24 hilos</th><th style="width:30%;text-align:right">Oficial, Docker</th><th style="width:30%;text-align:right">bench.cpp</th></tr>
+<tr><td>n = 1, u = 1 %</td><td style="text-align:right">19,8</td><td style="text-align:right">21,0</td></tr>
+<tr><td>n = 1, u = 10 %</td><td style="text-align:right">4,4</td><td style="text-align:right">5,0</td></tr>
+<tr style="background:#F4D9CF"><td>n = 10, u = 1 %</td><td style="text-align:right">121,9</td><td style="text-align:right;color:#9C3A0A">35,4</td></tr>
+<tr style="background:#F4D9CF"><td>n = 10, u = 10 %</td><td style="text-align:right">55,4</td><td style="text-align:right;color:#9C3A0A">18,4</td></tr>
+</table>
+<table style="flex:1;font-size:26px;color:#14213D;font-variant-numeric:tabular-nums">
+<tr style="background:#EAE4D3"><th style="width:40%;text-align:left">bench.cpp</th><th style="width:25%;text-align:right">Bytes/pila</th><th style="width:35%;text-align:right">10 pilas ocupan</th></tr>
+<tr><td>Autores</td><td style="text-align:right">8</td><td style="text-align:right">~2 líneas</td></tr>
+<tr><td>Libstdc++</td><td style="text-align:right">16</td><td style="text-align:right">~3 líneas</td></tr>
+<tr><td>Williams</td><td style="text-align:right">16</td><td style="text-align:right">~3 líneas</td></tr>
+<tr><td>Mutex</td><td style="text-align:right">56</td><td style="text-align:right">~9 líneas</td></tr>
+</table>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#14213D;border-radius:16px;padding:32px 40px">
+<p style="font-size:30px;line-height:1.45;color:#F7F4EC">Diez personas, cada una con su cuaderno… pero los diez «cuadernos» son <b>diez renglones de la misma hoja</b>, y la hoja solo puede estar en una mano.</p>
+<p style="font-size:30px;line-height:1.45;color:#F4A259">Con Autores, las «10 pilas» se comportan casi como 2: su diseño compacto juega en su contra.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">Mop/s · Fuente: EXPLICACION.md, Parte 6.6, «Control 2» · líneas de caché de 64 bytes</p>
+<aside>Dos minutos y medio. Este fue el hallazgo más claro. Miren la tabla de la izquierda, Autores con 24 hilos. Con una pila, el programa oficial y bench.cpp coinciden: 19,8 frente a 21; 4,4 frente a 5. Pero con 10 pilas, bench.cpp rinde entre 3 y 3,4 veces menos: 121,9 frente a 35,4. Algo pasa solo cuando hay varias pilas.
+La historia. Imaginen 10 personas, cada una con su propio cuaderno. Nadie comparte nada. Pero resulta que los 10 «cuadernos» son 10 renglones de la misma hoja, y esa hoja solo puede estar en una mano. Cada uno escribe solo en su renglón, y aun así la hoja viaja de mano en mano como si todos compartieran el mismo. Eso es la compartición falsa: no se comparte ningún dato, pero se comparte el papel.
+Lo mismo con números, en la tabla de la derecha. Los datos viajan en líneas de caché de 64 bytes. En bench.cpp, cada pila de Autores ocupa 8 bytes, así que las 10 pilas caben en unas 2 líneas. Las de Libstdc++ y Williams, 16 bytes, en unas 3. Las del Mutex, 56 bytes, en unas 9. Es decir: con Autores, las «10 pilas» se comportan casi como 2. Su propio diseño compacto, 8 bytes frente a 16, juega aquí en su contra.
+¿Y el programa oficial? Declara su pila como alignas(128): cada pila en su sitio, sin vecinas. bench.cpp no. Pero una hipótesis no vale hasta que se comprueba.</aside>
+</section>

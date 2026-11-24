@@ -1,0 +1,21 @@
+<section id="detectores" data-transition="fade" style="background:#F7F4EC;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B04A06">Parte 11 · Corrección</p>
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Ninguno de los seis rompió la memoria en lo probado</h2>
+<table style="width:1664px;font-size:26px;color:#14213D">
+<tr style="background:#EAE4D3"><th style="width:44%;text-align:left">Prueba</th><th style="width:30%;text-align:left">Algoritmos</th><th style="width:13%;text-align:right">Ejecuciones</th><th style="width:13%;text-align:right">Avisos</th></tr>
+<tr><td>ASan + UBSan, bench.cpp, 8 y 16 hilos</td><td>Autores, Libstdc++, Williams, Mutex</td><td style="text-align:right">12</td><td style="text-align:right;color:#1F5FAE">0</td></tr>
+<tr><td>TSan, bench.cpp, 8 hilos</td><td>Los mismos 4</td><td style="text-align:right">4</td><td style="text-align:right;color:#1F5FAE">0</td></tr>
+<tr><td>ASan + UBSan, bench_stack oficial, Docker</td><td>Los 5 del paper</td><td style="text-align:right">10</td><td style="text-align:right;color:#1F5FAE">0</td></tr>
+<tr style="background:#F4D9CF"><td>ASan y TSan sobre la versión ingenua</td><td>El control: la rota</td><td style="text-align:right">—</td><td style="text-align:right;color:#9C3A0A">Salta enseguida</td></tr>
+</table>
+<div style="display:flex;gap:24px">
+<p style="flex:1;font-size:24px;line-height:1.4;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:20px 24px"><b>«0 avisos» solo vale si el detector estaba puesto:</b> se comprobó la instrumentación, y la versión ingenua lo hace saltar.</p>
+<p style="flex:1;font-size:24px;line-height:1.4;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:20px 24px"><b>Folly y Anderson no pasaron TSan:</b> libfolly.a no está instrumentada y daría avisos falsos.</p>
+<p style="flex:1;font-size:24px;line-height:1.4;background:#FDFBF6;border:1px solid #E2DCCB;border-radius:12px;padding:20px 24px"><b>4 segundos por prueba:</b> un detector solo ve lo que ocurre mientras mira. 0 errores no demuestra que no existan.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5F6B7A">ASan: accesos a memoria liberada · TSan: accesos simultáneos sin protección · UBSan: operaciones que C++ no define · Fuente: EXPLICACION.md, Parte 6.5 · herramientas/sanitizers_rivales.sh</p>
+<aside>Dos minutos. Tres detectores automáticos. AddressSanitizer, ASan, vigila los accesos a memoria ya liberada. ThreadSanitizer, TSan, vigila los accesos simultáneos sin protección. Y UBSan vigila operaciones que C++ no define, como desbordar un entero.
+Al principio solo se pasaron a Autores, donde dieron 0 errores con ASan a 8, 12 y 16 hilos y 0 avisos con TSan. Después se pasaron a todos los rivales. Sobre bench.cpp: ASan con UBSan, 12 ejecuciones; TSan, 4. Sobre el bench_stack oficial, dentro de Docker: ASan con UBSan para los 5 del paper, 10 ejecuciones. Cero avisos en todo.
+Dicho sencillo: ninguno de los seis rompió la memoria en estas pruebas. Y esto importa: si un rival hubiera ganado usando memoria ya liberada, su victoria no valdría.
+Tres avisos para no leer de más. Uno: «0 avisos» solo vale si el detector estaba puesto. Se comprobó que los binarios llevan la instrumentación, y la versión ingenua, la fila roja, demuestra que el detector sí salta cuando hay un error. Dos: Folly y Anderson no pasaron TSan, porque la biblioteca de Folly no está instrumentada y daría avisos falsos. Tres: son 4 segundos por prueba y un solo escenario de contención fuerte. Un detector solo ve lo que ocurre mientras mira. Encontrar 0 errores no demuestra que no existan, y lo decimos así en el veredicto: «se reproduce en lo probado».</aside>
+</section>
