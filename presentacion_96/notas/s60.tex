@@ -1,0 +1,7 @@
+Ahora la latencia, también con el programa del equipo. Barras huecas, el i5; rellenas, el Ultra 9. Arriba sin contención; abajo, con todos los hilos de cada máquina. La rayita sube hasta el percentil 99.
+
+Sin contención, el orden es idéntico en las dos: Williams siempre el último, con su doble bucle de 16 bytes.
+
+Con contención hay que mirar dos cosas. La mediana más baja es la del Mutex. Pero mirad sus rayitas: llegan a 21 o 26 microsegundos. La cola más corta es la de Autores en las dos máquinas, por debajo de 1,4 microsegundos.
+
+La mediana dice cuánto tarda la operación típica; el percentil 99, cuánto puede llegar a tardar. Un algoritmo wait-free promete lo segundo, no lo primero.

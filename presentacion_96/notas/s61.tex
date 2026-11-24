@@ -1,0 +1,7 @@
+El Mutex merece su propia diapositiva, porque es el resultado más contraintuitivo. Con una pila y muchas escrituras, el candado más simple gana al algoritmo del paper en el Ultra 9, tanto en la batería completa como en la pasada rápida.
+
+En el i5, en cambio, gana Autores. Pero una pasada anterior del equipo en el i5 daba lo contrario, así que ahí no podemos concluir nada.
+
+La explicación razonable: el Mutex duerme a los que esperan. Si casi todos duermen, la línea compartida casi no viaja. En Autores todos siguen intentándolo, y sus compare-and-swap fallan.
+
+Esto no le quita valor al paper. Wait-free no significa el más rápido; significa que nadie se queda atascado. Si el hilo que tiene el candado se detiene, en el Mutex se paran todos; en Autores, no.

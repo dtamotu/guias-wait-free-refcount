@@ -1,0 +1,7 @@
+Esta receta no aparece en el paper: la sacamos del propio artefacto, leyendo cómo lanzaban las pruebas.
+
+El programa crea n pilas. En cada operación elige una al azar; con probabilidad u por ciento mueve un elemento de una pila a otra, y si no, solo lee la cima.
+
+Para leer todo lo que viene, basta recordar dos cosas. Con n pequeño, todos los hilos se pelean por las mismas pilas: eso es contención. Con u grande, hay muchas escrituras. Con n igual a un millón, casi nunca coinciden dos hilos.
+
+Cada punto del paper es la mediana de siete ejecuciones de diez segundos.

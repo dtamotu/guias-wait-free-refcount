@@ -1,0 +1,7 @@
+Primera prueba de corrección, en las dos máquinas. Comparamos una versión ingenua, que lee el puntero y después se apunta en el contador, con el código de los autores.
+
+AddressSanitizer vigila el uso de memoria ya liberada. En el i5 atrapa a la versión ingenua con un use-after-free; en el Ultra 9, con una doble liberación. Es el mismo fallo de fondo, visto en otro momento. Al código de los autores no le encuentra nada, ni con 16 hilos.
+
+ThreadSanitizer vigila los accesos simultáneos sin protección. Mismo resultado: la ingenua cae y la de los autores pasa limpia.
+
+Que la ingenua caiga es importante: demuestra que los detectores estaban funcionando. Un cero sin esa prueba no valdría nada.

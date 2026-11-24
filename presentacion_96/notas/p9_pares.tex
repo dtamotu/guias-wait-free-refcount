@@ -1,0 +1,5 @@
+Con dos hilos se ve todavía más claro. Probamos catorce parejas de núcleos, de cuatro clases.
+
+La lección: lo que importa es compartir la caché L2, no los nanosegundos. Entre clústeres o entre núcleos P, Autores rinde casi lo mismo, aunque un viaje dure casi el doble que el otro. El salto está antes, al dejar de compartir caché. No es una rampa, es un escalón.
+
+Y la rareza de Williams: entre clústeres se hunde a casi nada. Lo investigamos como detectives. No es un par de núcleos defectuoso, porque pasa en los siete. No lo provoca Docker, porque fuera también se hunde, aunque menos. No es boost::atomic. Solo pasa con el programa oficial, y eso sigue abierto.

@@ -1,0 +1,7 @@
+Este dibujo explica por qué Anderson gana con escrituras sobre una sola pila. L son lectores; E, un escritor.
+
+En Autores, cada lector resta un vale de la palabra compartida. Eso es una escritura. Cuando el escritor intenta su compare-and-swap, lo más probable es que un lector haya cambiado la palabra justo antes: el CAS falla y tiene que repetir. Además, al terminar, cada lector resta uno en el contador del objeto: hay dos líneas calientes.
+
+En Anderson, el lector solo lee la palabra y anuncia en su propia mesa qué objeto está usando. La palabra no cambia por leerla, así que el escritor acierta a la primera.
+
+Nada es gratis: Anderson no puede liberar al instante. Lo veremos en memoria y en latencia.

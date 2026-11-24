@@ -1,0 +1,7 @@
+La hipótesis tiene nombre: compartición falsa.
+
+Recordad que la caché no mueve datos sueltos, sino líneas de 64 bytes. En bench.cpp las pilas están seguidas en memoria. Cada pila de Autores ocupa 8 bytes, así que caben ocho en una línea. Las diez pilas ocupan unas dos líneas.
+
+El dibujo lo muestra: A, B y C escriben en pilas distintas, pero en la misma línea. Para escribir, cada uno necesita la línea entera en exclusiva, así que viaja de uno a otro como si compartieran un dato. Es como diez personas con su propio cuaderno, pero los diez cuadernos son renglones de la misma hoja.
+
+El programa oficial pide 128 bytes por pila, con alignas: cada pila en su hueco. Curiosamente, el diseño compacto de Autores, 8 bytes frente a 16 de los demás, aquí le perjudica.

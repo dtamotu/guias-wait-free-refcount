@@ -1,0 +1,5 @@
+El cuarto paso fue repetir con los binarios oficiales, ya fuera de Docker. Primero hubo que entender por qué no compi- laban.
+
+El culpable era fmt, una biblioteca de formato que usa Folly. Su archivo de configuración sube cuatro carpetas para encontrar su raíz, y nuestro enlace estaba a tres. Buscaba una carpeta que no existía. Dos enlaces más y compiló.
+
+Después, un solo guion, pendientes.sh, hizo todo de un tirón durante la noche: compilar, medir los cinco algoritmos, repetir la latencia con quince rondas y medir la versión alineada del programa del equipo. Tardó 4 horas y 44 minutos, sin un solo fallo. Otro guion comprobó al final que no faltaba nada.

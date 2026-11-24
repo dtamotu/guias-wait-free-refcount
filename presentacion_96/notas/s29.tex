@@ -1,0 +1,5 @@
+Al principio estas pruebas solo se pasaron al algoritmo de los autores. Pero si un rival ganara en velocidad porque usa memoria ya liberada, la comparación sería injusta. Así que se pasaron a los seis.
+
+Se añadió UBSan, que vigila operaciones que C++ no define, como desbordar un entero. Resultado: cero avisos en los seis, tanto en el programa del equipo como en el oficial.
+
+Dos salvedades. Folly y Anderson no pasaron ThreadSanitizer, porque la biblioteca de Folly no está preparada para él y daría avisos falsos. Y son pruebas cortas, de cuatro segundos, en un solo escenario.

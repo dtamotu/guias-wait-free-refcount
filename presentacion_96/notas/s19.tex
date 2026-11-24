@@ -1,0 +1,5 @@
+Un detalle que es fácil pasar por alto. Salir de Docker no cambia solo Docker. Cambian el compilador, la biblioteca de C, Boost, jemalloc y la forma de compilar Folly.
+
+Esto tiene dos lecturas. Si algo cambia, no podemos culpar a Docker sin más, porque hay cinco sospechosos. Y si nada cambia, sabemos que esas cinco piezas tampoco importan.
+
+Lo de Boost lo retomaremos: el Williams del artefacto usa Boost, y es el único algoritmo con una diferencia grande entre las dos tandas. Pero es una sospecha que no medimos.

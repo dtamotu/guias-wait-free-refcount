@@ -1,0 +1,7 @@
+La gran promesa del paper es que la recarga reintenta como mucho P veces. Para comprobarlo en el código real, y no solo en el boceto, añadimos un contador a una copia del código de los autores.
+
+Con los valores reales, P es 65~536 y el taco tiene más de medio millón de vales: casi nunca hace falta recargar. El máximo fue 4 intentos.
+
+Para ponerlo a prueba, bajamos P a 32. Así forzamos 64 millones de recargas. El máximo fue 8, muy lejos de la cota de 32. A la derecha se ve el reparto: el 81 por ciento de las recargas sale al primer intento, y 8 intentos solo ocurrieron 4 veces.
+
+La tercera barra viola una de las reglas. No falló aquí, pero porque había menos hilos que P. No es una licencia para saltársela.

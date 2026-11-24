@@ -1,0 +1,5 @@
+Cómo se mide. Se lanzan p hilos. Solo el primero se cronometra; los demás escriben sin parar para crear competencia. Se miden tres operaciones: leer, escribir sin liberar, y escribir liberando el objeto viejo.
+
+Cada caja resume muchísimas repeticiones. La raya gruesa es la mediana, la operación típica. La caja contiene la mitad central. Los bigotes llegan al 1 por ciento más rápido y al 1 por ciento más lento.
+
+Recordad la diferencia: la mediana dice cómo va normalmente; el percentil 99, cuánto puede llegar a tardar. Para un algoritmo wait-free, lo segundo es lo que importa.

@@ -1,0 +1,7 @@
+Solo lo imprescindible para seguir los resultados.
+
+El paper propone un puntero compartido atómico. Su lectura es una sola instrucción, un fetch\_sub, que a diferencia de un compare-and-swap nunca falla. Y libera la memoria en el acto, sin dejarla pendiente.
+
+Lo compara con cuatro rivales: el de la biblioteca estándar de GCC, que usa un candado; Williams y Folly, que parten el contador en dos; y Anderson, que usa hazard pointers y libera más tarde. Nosotros añadimos un Mutex como referencia.
+
+Del paper sacamos quince afirmaciones comprobables. Las agrupamos en rendimiento, latencia, memoria y corrección. Al final de la presentación las veremos todas con su veredicto.

@@ -1,0 +1,38 @@
+% ===================== PARTE 10: VALIDACIÓN DE LOS RECORTES (nueva) =====================
+\parte{Validación de los recortes}{Validación de los recortes}
+  {Se midieron 2 segundos en vez de 10. ¿Cambia eso el resultado? Se repitió la receta exacta del paper para comprobarlo.}{p10_portada}
+
+\begin{frame}{La receta exacta frente a la recortada}
+  \fuente{docker/rendimiento.csv (2 escenarios) y nativo\_oficial (6 escenarios, 30 puntos); tablas.md; EXPLICACION.md, Parte 6.7}
+  \begin{columns}[T]
+    \column{0.54\textwidth}\scriptsize\renewcommand{\arraystretch}{1.05}
+    \begin{tabular}{@{}llrrr@{}}
+      \toprule
+      \textbf{Escenario} & \textbf{Algoritmo} & \textbf{10\,s\por7} & \textbf{2\,s\por5} & \textbf{Dif.}\\
+      \midrule
+      $n = 1$, $u = 1$\,\% & Autores & 19,00 & 19,81 & +4,3\,\%\\
+      & Anderson & 16,99 & 18,64 & +9,7\,\%\\
+      & Folly & 7,53 & 9,11 & \textbf{+21,0\,\%}\\
+      & Williams & 4,29 & 4,83 & +12,6\,\%\\
+      & Libstdc++ & 1,39 & 1,19 & $-14,8$\,\%\\
+      \midrule
+      $n = \pot{6}$, $u = 50$\,\% & Libstdc++ & 60,43 & 56,34 & $-6,8$\,\%\\
+      & Anderson & 58,69 & 56,50 & $-3,7$\,\%\\
+      & Folly & 57,70 & 53,39 & $-7,5$\,\%\\
+      & Autores & 56,30 & 55,37 & $-1,7$\,\%\\
+      & Williams & 42,44 & 40,39 & $-4,8$\,\%\\
+      \bottomrule
+    \end{tabular}
+    \par\smallskip\scriptsize Con Docker, 24 hilos, Mop/s.
+    \column{0.42\textwidth}
+    \sub{Sin Docker, en los 6 escenarios}
+    \begin{itemize}\footnotesize\setlength{\itemsep}{3pt}
+      \item La mitad se desvía menos de un 6,7\,\%; 10 de 30, un 10\,\% o más. Peor caso: Folly, +19,0\,\%.
+      \item \textbf{Es un sesgo, no ruido:} con contención el recorte da \emph{más} en 23 de 25 puntos; con $n = \pot{6}$, \emph{menos} en los 5. No se sabe por qué.
+      \item \textbf{El orden casi no cambia:} idéntico en 4 de 6 escenarios; los cruces son entre algoritmos a menos de un 4\,\%.
+    \end{itemize}
+  \end{columns}
+  \vfill
+  \caja{El recorte sirve para el orden, no para el decimal: por eso una ventaja del 10\,\% \textbf{no demuestra nada}, y una de 2 o 3 veces, sí.}
+  \nota{p10_recortes}
+\end{frame}

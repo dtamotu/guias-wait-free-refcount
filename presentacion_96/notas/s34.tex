@@ -1,0 +1,5 @@
+Esto parece un fallo y no lo es. Con una sola pila, Autores pasa de 94 a 24 millones de operaciones por segundo al pasar de uno a tres hilos.
+
+La explicación es la idea más importante de toda la presentación. La memoria se mueve entre núcleos en bloques de 64 bytes. Para escribir en un bloque, un núcleo tiene que tenerlo en exclusiva. Imaginad un cuaderno que no se puede fotocopiar: para escribir hay que tenerlo en la mano. Con un hilo, el cuaderno nunca sale de tu mano. Con tres, se pasa el tiempo viajando.
+
+Con un millón de pilas, cada hilo trabaja en su rincón y casi nunca coincide con otro. Ahí más hilos sí es más trabajo: de 3,3 a 9,9. Esa diferencia entre recuadros tiene un nombre: contención.

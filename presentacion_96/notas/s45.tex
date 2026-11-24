@@ -1,0 +1,7 @@
+Un detalle incómodo que no escondemos. Con un millón de pilas y pocos hilos, por debajo del techo de la RAM, Autores va por detrás: con un hilo, Anderson y Libstdc++ rinden casi un 50 por ciento más. En el paper, con un hilo, iban parejos.
+
+¿Será que Autores mueve más memoria? No: con seis hilos, Libstdc++ mueve más bytes por operación y aun así va más rápido.
+
+Tampoco es Docker: sin Docker se repite.
+
+No sabemos la causa. Lo marcamos como pregunta abierta, y por eso la quinta afirmación del paper, que Autores supera a Anderson cuando hay muchas pilas, no se reproduce aquí.

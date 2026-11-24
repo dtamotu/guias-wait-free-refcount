@@ -1,0 +1,9 @@
+Esta diapositiva es una lección de método.
+
+La primera vez que medimos a Williams en latencia, su lectura con 24 hilos tardaba 40 microsegundos, 93 veces más que Autores. Parecía confirmar la frase del paper. Pero era un error de medida, y era nuestro.
+
+Williams guarda 16 bytes y necesita una instrucción especial, cmpxchg16b. El compilador solo la usa si se le pide con la bandera -mcx16. El programa de rendimiento la lleva; el de latencia, no, porque el paper deja a Williams fuera de esa prueba. Sin la bandera, la biblioteca Boost mete un candado interno sin avisar. Fue como cronometrar a un corredor con una mochila que nadie le vio poner.
+
+Lo descubrimos comparando con el programa del equipo, y lo confirmamos mirando las instrucciones del binario.
+
+Queda una duda: si los autores midieron a Williams así, su frase vendría en parte del candado. No podemos saberlo, porque no publican esos datos.

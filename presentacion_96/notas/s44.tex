@@ -1,0 +1,5 @@
+Los contadores refuerzan la explicación: los que rozan el techo dejan de crecer aunque añadamos hilos.
+
+Pero hay que ser honestos con lo que no explican. Autores se queda en el mismo rendimiento usando solo tres cuartos del techo, así que algo más lo frena. Y el techo que medimos solo lee, mientras que las pilas leen y escriben. La prueba definitiva sería poner un segundo módulo de memoria y ver si sube.
+
+Una anécdota de método: la primera versión de esta medida decía lo contrario, 14 gigas por segundo, como si la RAM no fuera el freno. Lo que nos hizo sospechar fue que el tráfico no crecía cuando crecía el rendimiento. Estábamos midiendo el final de cada ejecución, cuando el programa ya estaba liberando memoria.

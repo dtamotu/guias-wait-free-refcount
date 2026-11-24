@@ -1,0 +1,122 @@
+% Estilo común de la presentación «Conteo de referencias wait-free: lo que dicen los experimentos».
+% Lo cargan presentacion.tex (sin notas) y presentacion_con_notas.tex.
+\usepackage[spanish,es-noshorthands,es-nodecimaldot,es-tabla]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{tgheros}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[scaled=0.9]{inconsolata}
+\usepackage{booktabs,tabularx,array,graphicx,xcolor,etoolbox,amssymb,colortbl}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning,babel}
+\hypersetup{pdftitle={Conteo de referencias wait-free: lo que dicen los experimentos},
+  pdfauthor={},pdfcreator={},pdfproducer={},pdfsubject={Réplica · Euro-Par 2024},pdfkeywords={}}
+
+% ---------- paleta ----------
+\definecolor{azul}{HTML}{1F4E79}
+\definecolor{azulclaro}{HTML}{9DB9D5}
+\definecolor{tinta}{HTML}{1B2430}
+\definecolor{gris}{HTML}{5B6573}
+\definecolor{suave}{HTML}{EEF1F5}
+\definecolor{ambar}{HTML}{B7791F}
+\definecolor{ambarsuave}{HTML}{FBF6EC}
+\definecolor{verde}{HTML}{1B7F3B}
+\definecolor{rojo}{HTML}{B3261E}
+% colores de los algoritmos (los mismos que en las gráficas)
+\definecolor{cAutores}{HTML}{D62728}
+\definecolor{cAnderson}{HTML}{9B4DCA}
+\definecolor{cFolly}{HTML}{E69F00}
+\definecolor{cWilliams}{HTML}{138A5E}
+\definecolor{cLibs}{HTML}{3B8FD9}
+\definecolor{cMutex}{HTML}{3A3A3A}
+\newcommand{\alg}[2]{\textcolor{#1}{\rule{0.62em}{0.62em}}\,#2}
+
+% ---------- plantilla ----------
+\setbeamersize{text margin left=7mm,text margin right=7mm}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{normal text}{fg=tinta}
+\setbeamercolor{structure}{fg=azul}
+\setbeamercolor{alerted text}{fg=rojo}
+\setbeamertemplate{itemize item}{\textcolor{azul}{\scriptsize$\blacksquare$}}
+\setbeamertemplate{itemize subitem}{\textcolor{gris}{--}}
+\setbeamertemplate{enumerate item}{\textcolor{azul}{\bfseries\insertenumlabel.}}
+\setlength{\leftmargini}{1.2em}
+
+% sección en curso (aparece encima del título) y fuente de cada diapositiva (al pie)
+\gdef\laseccion{}
+\gdef\lafuente{}
+\newcommand{\fuente}[1]{\gdef\lafuente{#1}}
+\BeforeBeginEnvironment{frame}{\gdef\lafuente{}}
+
+\setbeamertemplate{frametitle}{%
+  \vspace*{6pt}%
+  \ifx\laseccion\empty\else{\color{azul}\fontsize{6.5}{7}\selectfont\bfseries\MakeUppercase{\laseccion}}\par\vspace{2pt}\fi
+  {\color{tinta}\fontsize{12.5}{14}\selectfont\bfseries\insertframetitle}\par
+  \vspace{3pt}{\color{azul!25}\rule{\linewidth}{0.5pt}}\vspace*{-2pt}}
+
+\setbeamertemplate{footline}{%
+  \leavevmode\hbox to\paperwidth{\hspace{7mm}%
+    \begin{minipage}[b]{0.78\paperwidth}\raggedright\color{gris}\fontsize{5.6}{6.6}\selectfont
+      \ifx\lafuente\empty\else Fuente: \lafuente\fi\end{minipage}%
+    \hfill{\color{gris}\fontsize{5.6}{6.6}\selectfont Réplica · Euro-Par 2024\quad
+      \textbf{\insertframenumber}\,/\,\inserttotalframenumber}\hspace{7mm}}\vspace{5pt}}
+
+% ---------- bloques ----------
+% \caja: idea clave (barra azul); \aviso: matiz o salvedad (barra ámbar)
+\newcommand{\caja}[2][\linewidth]{%
+  \begin{tikzpicture}\node[fill=suave,inner sep=5pt,text width=#1-10pt-2pt,align=justify,
+      font=\small]
+    (c){#2};\fill[azul] (c.north west) rectangle ([xshift=2pt]c.south west);\end{tikzpicture}}
+\newcommand{\aviso}[2][\linewidth]{%
+  \begin{tikzpicture}\node[fill=ambarsuave,inner sep=5pt,text width=#1-10pt-2pt,align=left,
+      font=\footnotesize]
+    (c){#2};\fill[ambar] (c.north west) rectangle ([xshift=2pt]c.south west);\end{tikzpicture}}
+% \porque{TÍTULO}{texto}: recuadro «Por qué ocurre» con la teoría que explica un resultado
+\newcommand{\porque}[3][\linewidth]{%
+  \begin{tikzpicture}\node[draw=azul!20,line width=0.6pt,fill=white,inner sep=6pt,
+      text width=#1-12pt-1.2pt,align=left,font=\footnotesize]
+    {{\color{azul}\fontsize{6.5}{7.5}\selectfont\bfseries POR QUÉ OCURRE: \MakeUppercase{#2}}\par\smallskip #3};
+  \end{tikzpicture}}
+\newcommand{\sub}[1]{{\color{azul}\bfseries #1}\par\smallskip}
+\newcommand{\cifra}[2]{\begin{minipage}[t]{\linewidth}\centering
+  {\color{azul}\fontsize{22}{24}\selectfont\bfseries #1}\par\smallskip{\color{gris}\scriptsize #2}\end{minipage}}
+\newcommand{\cmd}[1]{\colorbox{tinta}{\parbox{\dimexpr\linewidth-2\fboxsep}{\color{white}\ttfamily\scriptsize #1}}}
+\newcommand{\pot}[1]{10\textsuperscript{#1}}
+\newcommand{\por}{\texttimes}
+% los dos repositorios de GitHub de la réplica (enlaces clicables)
+\newcommand{\repo}[2]{\href{https://github.com/#1}{\ttfamily github.com/#1}\ #2}
+\newcommand{\repos}{\begin{tabular}{@{}l@{}}
+  \repo{dtamotu/replica-wait-free-refcount}{(rama \texttt{replica-completa})}\\
+  \repo{davichiacustico-ux/replica-wait-free-refcount}{}\end{tabular}}
+
+% veredictos
+\newcommand{\etiqueta}[2]{{\setlength{\fboxsep}{1.4pt}\colorbox{#1}{\color{white}\fontsize{6}{7}\selectfont\bfseries #2}}}
+\newcommand{\sirep}{\etiqueta{verde}{Se reproduce}}
+\newcommand{\norep}{\etiqueta{rojo}{No se reproduce}}
+\newcommand{\enparte}{\etiqueta{ambar}{En parte}}
+\newcommand{\noconf}{\etiqueta{gris}{No se confirma}}
+
+% ---------- portadas de parte ----------
+\newcounter{parte}
+\newcommand{\parte}[4]{%
+  \stepcounter{parte}\gdef\laseccion{#1}%
+  {\setbeamercolor{background canvas}{bg=azul}\setbeamertemplate{footline}{}%
+  \frame[plain,c]{\hypertarget{parte\theparte}{}%
+    {\color{azulclaro}\small\bfseries PARTE \theparte}\par\medskip
+    {\color{white}\fontsize{22}{26}\selectfont\bfseries #2\par}\bigskip
+    {\color{azulclaro}\normalsize #3\par}%
+    \note{\input{notas/#4}}}}}
+\newcommand{\notaparte}{}
+
+% ---------- notas ----------
+% \nota{sNN} carga notas/sNN.tex como nota del orador de la diapositiva.
+\newcommand{\nota}[1]{\note{\input{notas/#1}}}
+\setbeamertemplate{note page}{%
+  \vspace*{6pt}%
+  \begin{minipage}[t]{0.30\textwidth}\vspace{0pt}%
+    \fcolorbox{azul!30}{white}{\insertslideintonotes{0.27}}\end{minipage}\hfill
+  \begin{minipage}[t]{0.66\textwidth}\vspace{2pt}%
+    {\color{azul}\fontsize{6.5}{7.5}\selectfont\bfseries NOTAS · DIAPOSITIVA \insertframenumber\,/\,\inserttotalframenumber}\par\smallskip
+    {\color{tinta}\bfseries\small\insertframetitle}\end{minipage}\par\medskip
+  {\color{azul!25}\rule{\textwidth}{0.5pt}}\par\smallskip
+  \fontsize{8.6}{11}\selectfont\color{tinta}\setlength{\parskip}{4pt}\raggedright
+  \insertnote}

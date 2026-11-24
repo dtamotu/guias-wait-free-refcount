@@ -1,0 +1,5 @@
+Mirando las 15 rondas una por una aparece algo curioso: no se reparten de forma continua, sino en dos grupos. Unas por debajo de 520 nanosegundos y otras por encima de mil, sin nada en medio.
+
+En el grupo rápido, Autores, Folly y Anderson están muy juntos. Autores cae menos veces en el grupo lento, 2 de 15, pero con tan pocas rondas no nos atrevemos a decir que sea una propiedad del algoritmo.
+
+La pista: cuando fijamos los hilos a núcleos concretos, el grupo lento no aparece. Así que probablemente depende de dónde coloca Linux al hilo que se cronometra, en un núcleo rápido o en uno eficiente. Es un indicio, no una prueba.

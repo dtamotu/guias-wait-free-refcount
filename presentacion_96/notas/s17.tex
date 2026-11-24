@@ -1,0 +1,7 @@
+El tercer paso fue medir sin Docker. La idea era sencilla: si dentro y fuera da lo mismo, el contenedor no influye.
+
+Empezamos con el programa del equipo, bench.cpp, porque los binarios oficiales no compilaban fuera del contenedor. Necesitan compilar Folly y ParlayLib, y el sistema de permisos del asistente bloqueó ese paso por tratarse de código descargado. Lanzado a mano, se paraba a mitad.
+
+bench.cpp tiene cuatro algoritmos: le faltan Folly y Anderson. Le añadimos jemalloc y el escenario de un millón de pilas, sin tocar su código.
+
+Ojo: aquí cambiaban a la vez el entorno y el programa. Si salía distinto, no sabíamos a quién culpar. Por eso hicieron falta controles.

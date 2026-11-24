@@ -1,0 +1,5 @@
+¿Por qué no cambia nada? Porque un contenedor no es una máquina virtual. Es un proceso normal de Linux que ve otro sistema de archivos. La CPU, la memoria y el núcleo del sistema son los mismos. Una instrucción atómica se ejecuta igual dentro que fuera.
+
+Lo confirmamos con un control: compilamos el mismo código dentro y fuera y lo medimos alternando, un punto fuera y el mismo dentro. Mediana del cociente: 1,02. Es decir, igual.
+
+La conclusión práctica: si dos tandas dan distinto, la culpa es del programa, no de Docker.

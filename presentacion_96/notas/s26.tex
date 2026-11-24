@@ -1,0 +1,7 @@
+El boceto es una versión didáctica del algoritmo, con un parámetro P de 8 hilos. Tiene una ventaja: lo podemos romper a propósito y ver qué pasa.
+
+A la izquierda, los errores. La versión ingenua da cientos de miles. Si violamos la regla de que el taco tenga al menos el doble de vales que hilos, poniendo C igual a P, aparecen decenas de miles. Con el algoritmo completo, cero.
+
+A la derecha, el máximo de intentos de la recarga. El algoritmo del paper se queda en 8 o menos, dentro de su cota. Si quitamos la salida temprana, la que dice «otro ya recargó, me voy», no aparecen errores, pero los intentos se disparan a 45 y 55. Es decir: sigue siendo correcto, pero ha perdido la garantía wait-free.
+
+Las dos máquinas cuentan exactamente la misma historia.

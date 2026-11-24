@@ -1,0 +1,5 @@
+Para simular cuatro sockets necesitamos decidir en qué núcleo exacto corre cada hilo. A eso se le llama afinidad.
+
+Lo hicimos sin tocar el binario oficial. Una librería pequeña se carga delante del programa, intercepta el momento en que se crea cada hilo y lo ata a un núcleo. Comprobamos después que cada hilo estaba donde debía.
+
+El experimento más limpio es con cuatro hilos: compacto, todos en un mismo grupo; disperso, uno en cada grupo; y en núcleos P, lo más lejos posible. Mismo número de hilos y mismo tipo de núcleo: lo único que cambia es la distancia. Es un experimento de dosis y respuesta.

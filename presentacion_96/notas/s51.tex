@@ -1,0 +1,5 @@
+Hay dos excepciones, y ninguna permite culpar a Docker.
+
+La primera es Williams cuando sus dos hilos están en clústeres distintos. Con Docker se hunde a 0,09; sin Docker, a 0,70. En el mismo clúster va a unos 3 en los dos casos. Se hunde siempre, pero más dentro de Docker. Recordad que fuera cambian cinco piezas, entre ellas Boost, que es justo la biblioteca que usa Williams. Lo investigamos en la parte 9.
+
+La segunda es la latencia con muchos hilos, donde algunas medianas cambian el doble. Pero ahí una misma medida cambia todavía más de una ronda a otra. Con ese ruido no se puede juzgar a nadie.

@@ -1,0 +1,7 @@
+El segundo paso fue compilar y medir dentro de Docker. Un solo guion lo hace todo: baja, comprueba, construye la imagen, compila y mide. Tarda unas tres horas.
+
+¿Por qué Docker? Porque nos da el mismo entorno que usaron los autores, Ubuntu 22.04 con g++-12, sin instalar nada en el sistema.
+
+Docker no es una máquina virtual: no hay un procesador simulado. El programa corre en la misma CPU y con el mismo núcleo de Linux. Es como correr en la misma pista con un dorsal puesto.
+
+Aun así, que Docker no cambie los números no se puede suponer. Lo comprobamos midiendo, y lo veremos en la parte 4.

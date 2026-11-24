@@ -1,0 +1,114 @@
+% ===================== PARTE 11: VEREDICTO Y CIERRE (nueva) =====================
+\parte{Veredicto y cierre}{Veredicto y cierre}
+  {Las 15 afirmaciones del paper, una por una; los límites de esta réplica, sin rodeos; y lo que queda abierto.}{p11_portada}
+
+\begin{frame}{El veredicto, afirmación por afirmación}
+  \fuente{EXPLICACION.md, Parte 7; cifras de la tanda con Docker}
+  \fontsize{6.4}{7.4}\selectfont\renewcommand{\arraystretch}{0.98}\setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\linewidth}{@{}r p{0.33\linewidth} X l@{}}
+    \toprule
+    & \textbf{Lo que dice el paper} & \textbf{Resultado aquí} & \textbf{Veredicto}\\
+    \midrule
+    1 & Mucho más rápido que Libstdc++ & Gana con contención (0,06\por{} a 0,16\por); empata con $n = \pot{6}$ & \sirep\\
+    2 & Mucho más rápido que Williams & Gana en los 6 escenarios (0,24\por{} a 0,73\por) & \sirep\\
+    3 & Mucho más rápido que Folly & Gana 3, empata 2 y pierde 1; la brecha ya existe con 1 hilo & \norep\\
+    4 & Con $u$ pequeño, supera a Anderson & +6\,\% con $n = 1$ y +65\,\% con $n = 10$ & \sirep\\
+    5 & Con $n$ grande, supera a Anderson & Pierde hasta 18 hilos y empata desde 24 & \norep\\
+    6 & Con mucha contención, Anderson gana & Anderson 1,87\por{} a 1,99\por & \sirep\\
+    7 & \texttt{load}, siempre el de menor latencia & El más bajo en los tres casos; con contención, por poco & \sirep\\
+    8 & \texttt{store}, segundo con $p = 1$ & Cuarto de cinco, por 5\,ns & \norep\\
+    9 & \texttt{store}, el mejor con contención & Empate con Anderson & \enparte\\
+    10 & \texttt{store \& reclaim} más lento con $p = 1$ & Los cinco & \sirep\\
+    11 & Con contención, algunos más rápidos en \texttt{s\&r} & Sin Docker y 15 rondas, 1-4\,\%: ruido & \noconf\\
+    12 & Williams, latencia casi siempre mayor & Sin contención sí; con contención, no siempre & \enparte\\
+    13 & Anderson, poco sobrecoste; Autores, ninguno & Anderson hasta 469\,KB; los demás, bajo el límite & \sirep\\
+    14 & La recarga reintenta como mucho $P$ veces & Máximo 8 con $P = 32$, en millones de recargas & \sirep\\
+    15 & No hay \emph{use-after-free} & 0 errores con ASan y TSan, en lo probado & \sirep\\
+    \bottomrule
+  \end{tabularx}
+  \nota{p11_veredicto}
+\end{frame}
+
+\begin{frame}{En una frase, y en un marcador}
+  \fuente{EXPLICACION.md, Partes 0 y 7}
+  \vspace{2mm}
+  \begin{columns}[T]
+    \column{0.24\textwidth}\cifra{\textcolor{verde}{9}}{se reproducen}
+    \column{0.24\textwidth}\cifra{\textcolor{ambar}{2}}{en parte}
+    \column{0.24\textwidth}\cifra{\textcolor{rojo}{3}}{no se reproducen}
+    \column{0.24\textwidth}\cifra{\textcolor{gris}{1}}{no se confirma}
+  \end{columns}
+  \vspace{6mm}
+  \caja{\textbf{La idea central del paper sale bien parada:} el algoritmo es correcto, cumple su cota, no acumula basura y lee rápido. Lo que no se sostiene aquí es la superioridad frente a Folly ni la ventaja con muchísimas pilas, y no se pudo reproducir la escala de 4 sockets.}
+  \par\medskip
+  \aviso{Sin Docker, con los mismos programas oficiales, la tabla sale igual salvo la fila 11, que deja de confirmarse con 15 rondas.}
+  \nota{p11_frase}
+\end{frame}
+
+\begin{frame}{Limitaciones, dichas sin rodeos}
+  \fuente{EXPLICACION.md, Parte 8}
+  \begin{columns}[T]
+    \column{0.32\textwidth}
+    \sub{La máquina}
+    \begin{itemize}\scriptsize
+      \item No hay 4 sockets ni NUMA: se simulan; castigo de 1,35\por{} frente a unas 3\por.
+      \item 24 núcleos, no 72, y sin SMT: la zona de más de 54 hilos queda fuera.
+      \item Un solo módulo de RAM: limita $n = \pot{6}$.
+      \item CPU híbrida (P y E) y frecuencia sin fijar.
+    \end{itemize}
+    \column{0.32\textwidth}
+    \sub{El método}
+    \begin{itemize}\scriptsize
+      \item Recortes de 2\,s \por{} 5: desvío de hasta un 21\,\%, con sesgo.
+      \item Valores del paper leídos de su PDF, no sus datos crudos.
+      \item Dos medidas de Williams descartadas por errores nuestros.
+      \item ASan y TSan cortos; Folly y Anderson sin TSan.
+    \end{itemize}
+    \column{0.32\textwidth}
+    \sub{Las conclusiones}
+    \begin{itemize}\scriptsize
+      \item Folly, Williams entre clústeres y Autores con $n = \pot{6}$ y pocos hilos: \textbf{preguntas abiertas}.
+      \item El techo de RAM se apoya en contadores, pero no está demostrado.
+      \item Las causas no medidas se presentan como hipótesis.
+    \end{itemize}
+  \end{columns}
+  \vfill
+  \caja{Una prueba solo encuentra errores; no demuestra que no existan. La demostración de corrección es la del paper.}
+  \nota{p11_limites}
+\end{frame}
+
+\begin{frame}{Lo que queda abierto, y para el equipo}
+  \fuente{replica/completa/TRASPASO.md, «Lo que sigue abierto»; EXPLICACION.md, Parte 8}
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+    \sub{Preguntas abiertas}
+    \begin{itemize}\footnotesize\setlength{\itemsep}{2pt}
+      \item Por qué Folly rinde aquí mucho más que en el paper.
+      \item Por qué Williams se hunde entre clústeres en el programa oficial, y más dentro de Docker ($-97$\,\%) que fuera ($-76$\,\%).
+      \item Por qué Autores va por detrás con $n = \pot{6}$ y pocos hilos.
+      \item Si la RAM es de verdad el techo: haría falta un segundo módulo.
+      \item Por qué el recorte tiene sesgo.
+    \end{itemize}
+    \column{0.46\textwidth}
+    \sub{Para el equipo}
+    \begin{itemize}\footnotesize\setlength{\itemsep}{2pt}
+      \item \texttt{bench.cpp}, línea 73: añadir \texttt{alignas(128)} a \texttt{Pila}.
+      \item \texttt{replica/informe/02\_latencia.md}, línea 18: el paper pone 99,7\,\textmu s, no 86\,700\,ns.
+      \item \texttt{ejecutar\_pruebas.sh}: a TSan le falta \texttt{setarch -R}.
+      \item Quien active a Williams en latencia, que compile con \texttt{-mcx16}.
+    \end{itemize}
+  \end{columns}
+  \nota{p11_abierto}
+\end{frame}
+
+{\setbeamercolor{background canvas}{bg=azul}\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+  \vfill\centering
+  {\color{white}\fontsize{28}{32}\selectfont\bfseries ¿Preguntas?\par}\bigskip
+  {\color{azulclaro}\large David · Jheremy · Diego}\par\vfill
+  {\color{white}\small\bfseries Código, datos y explicación completa}\par\medskip
+  {\color{azulclaro}\small\repos}\par\medskip
+  {\color{azulclaro}\scriptsize En la rama \texttt{replica-completa}: \texttt{replica/completa/EXPLICACION.md} y \texttt{replica/resultados/david-ultra9-285/}}
+  \vspace*{6mm}
+  \nota{p11_preguntas}
+\end{frame}}

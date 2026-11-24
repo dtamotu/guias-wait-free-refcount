@@ -1,0 +1,7 @@
+La CPU tiene contadores en su controladora de memoria, la pieza por la que pasa todo lo que entra y sale de la RAM. Es como un cuentakilómetros en la única carretera que lleva al almacén: no hay que adivinar el tráfico, basta con leerlo.
+
+Primero medimos el techo de la máquina: 43 gigas por segundo leyendo en orden y 37 saltando al azar, que es como acceden las pilas.
+
+A la izquierda: Anderson, Libstdc++ y Folly llegan a 33 o 34 gigas por segundo, entre el 89 y el 93 por ciento del techo al azar, y dejan de crecer. A la derecha, los bytes que cada operación saca de la RAM: Autores es el que menos gasta, unos 515 bytes.
+
+La explicación de la memoria sale reforzada, pero con matices.

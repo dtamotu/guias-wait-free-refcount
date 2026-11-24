@@ -1,0 +1,7 @@
+Aquí sí entra la teoría, porque es la que explica por qué la cota se cumple.
+
+La lectura es una resta que no puede fallar. Solo cuando el peso baja de P hay que recargar, y la recarga sí usa un compare-and-swap, que puede fallar. La clave del paper es qué hacer cuando falla: si otro ya cambió el puntero o ya recargó, me voy; solo reintento si el peso bajó. Como el peso empezó por debajo de P y no puede bajar de cero, como mucho reintento P veces.
+
+La regla de que el taco tenga el doble de vales que hilos garantiza que el peso nunca sea negativo.
+
+El simulador del equipo prueba intercalados al azar y comprueba las reglas en cada paso. El algoritmo del paper no falla nunca; cada variante a la que le quitamos una pieza, sí. Y los intentos con P igual a 4 nunca pasan de 4.

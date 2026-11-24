@@ -1,0 +1,118 @@
+% ===================== APERTURA (diapositivas 1-5) =====================
+{\setbeamercolor{background canvas}{bg=azul}\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+  \vspace*{4mm}
+  {\color{azulclaro}\scriptsize\bfseries RÉPLICA EXPERIMENTAL · EURO-PAR 2024}\par\bigskip
+  {\color{white}\fontsize{21}{26}\selectfont\bfseries Conteo de referencias wait-free:\\lo que dicen los experimentos\par}\bigskip
+  {\color{azulclaro}\small Réplica de «A Fast Wait-Free Solution to Read-Reclaim Races in Reference Counting»\\
+   de I.\,G. de Wolff, D. Anderson, G.\,K. Keller y A. Seletskiy}\par\vfill
+  {\color{azulclaro}\rule{3.2cm}{0.4pt}}\par\medskip
+  {\color{white}\small David Tamo Turpo · Jheremy Manuel Alvarez Astete · Diego Quispe Candelario}\par\smallskip
+  {\color{azulclaro}\scriptsize Medido en un Intel Core Ultra 9 285 y un Intel Core i5-10400}\par\medskip
+  {\color{azulclaro}\scriptsize\repos}\par
+  \vspace*{3mm}
+  \nota{s01}
+\end{frame}}
+
+\begin{frame}{La réplica en cifras}
+  \fuente{EXPLICACION.md, Parte 0; resultados de cada máquina}
+  \vspace{2mm}
+  \begin{columns}[T]
+    \column{0.32\textwidth}\cifra{14\,158}{mediciones en el Core Ultra 9,\\en 7 tandas}\par\bigskip
+                           \cifra{5 + 1}{algoritmos: los 5 del paper\\y un Mutex de referencia}
+    \column{0.32\textwidth}\cifra{0}{mediciones fallidas}\par\bigskip\medskip
+                           \cifra{4}{formas de correr las pruebas: Docker,\\sin Docker, \texttt{bench.cpp} y alineado}
+    \column{0.32\textwidth}\cifra{2}{máquinas: Core Ultra 9 285\\y Core i5-10400}\par\bigskip
+                           \cifra{9 de 15}{afirmaciones del paper\\que se reproducen}
+  \end{columns}
+  \vfill
+  \caja{Se usaron los \textbf{binarios oficiales} del artefacto de los autores, no una reimplementación, y cada diferencia se investigó con un control.}
+  \nota{s02}
+\end{frame}
+
+\begin{frame}{Qué se puso a prueba}
+  \fuente{de Wolff et al., Euro-Par 2024, secciones 4 y 6; EXPLICACION.md, Parte 7}
+  \begin{columns}[T]
+    \column{0.49\textwidth}
+    \sub{El algoritmo, en una línea}
+    Un puntero compartido atómico cuya lectura es un único \texttt{fetch\_sub}, una instrucción que \textbf{nunca falla}. La memoria se libera en el instante en que el último usuario termina.
+    \par\bigskip
+    \sub{Sus rivales en el paper}\footnotesize
+    \begin{tabular}{@{}ll@{}}
+      \alg{cLibs}{Libstdc++} & candado dentro del puntero\\
+      \alg{cWilliams}{Williams} & contador partido, CAS de 16 bytes\\
+      \alg{cFolly}{Folly} & contador partido en 8 bytes\\
+      \alg{cAnderson}{Anderson} & \emph{hazard pointers}, liberación diferida\\
+      \alg{cMutex}{Mutex} & referencia del equipo, fuera del paper\\
+    \end{tabular}
+    \column{0.47\textwidth}
+    \sub{Las 15 afirmaciones que se contrastan}\footnotesize
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabularx}{\linewidth}{@{}lX@{}}
+      \toprule
+      Filas 1--6 & Rendimiento frente a cada rival (figura 5)\\
+      Filas 7--12 & Latencia de \texttt{load}, \texttt{store} y \texttt{store \& reclaim} (figura 6)\\
+      Fila 13 & No retiene memoria; Anderson sí, poca\\
+      Filas 14--15 & La recarga reintenta como mucho $P$ veces; no hay \emph{use-after-free}\\
+      \bottomrule
+    \end{tabularx}
+    \par\bigskip
+    \caja{Cada afirmación tiene su prueba, y su veredicto al final (parte 11).}
+  \end{columns}
+  \nota{s03}
+\end{frame}
+
+\begin{frame}{La respuesta corta, antes del detalle}
+  \fuente{EXPLICACION.md, Parte 0}
+  \footnotesize\renewcommand{\arraystretch}{1.18}
+  \begin{tabularx}{\linewidth}{@{}>{\bfseries}p{0.30\linewidth}X@{}}
+    \toprule
+    ¿Es correcto? & Sí en lo probado: 0 errores con ASan y TSan, en las dos máquinas\\
+    ¿Cumple su promesa wait-free? & Sí: como mucho 8 reintentos, con una cota de 32\\
+    ¿Deja memoria sin liberar? & No. Anderson sí retiene algo: 469\,KB con 24 hilos\\
+    ¿Tiene el \texttt{load} más rápido? & Sí, aunque con contención por poco\\
+    ¿Gana a Libstdc++ y a Williams? & Sí: con y sin Docker, y en las dos máquinas\\
+    ¿Gana a Folly? & \textcolor{rojo}{Aquí no}: gana 3 escenarios, empata 2 y pierde 1. La causa sigue abierta\\
+    ¿Gana a Anderson? & Depende: con pocas escrituras sí; con muchas sobre una pila, Anderson llega a 1,99\por\\
+    ¿Importa dónde cae cada hilo? & Con contención, mucho: hasta $-55$\,\%. Sin contención, $\pm3$\,\% como mucho\\
+    ¿Docker cambia los resultados? & No: 259 de 270 puntos cambian menos de un 10\,\%\\
+    ¿Por qué empatan todos con \pot{6} pilas? & Muy probablemente por la RAM: rozan el 89-93\,\% del techo de la máquina\\
+    \bottomrule
+  \end{tabularx}
+  \nota{s04}
+\end{frame}
+
+\begin{frame}{Recorrido de la presentación}
+  \fuente{reparto sugerido; los tiempos suman unas 2 horas sin el turno de preguntas}
+  \begin{columns}[T]
+    \column{0.52\textwidth}\small
+    \renewcommand{\arraystretch}{1.08}
+    \begin{tabular}{@{}rlr@{}}
+      \toprule
+      & Parte (clic para ir) & Min.\\
+      \midrule
+      1 & \hyperlink{parte1}{Diseño experimental y cómo se corrió} & 22\\
+      2 & \hyperlink{parte2}{Corrección} & 8\\
+      3 & \hyperlink{parte3}{Rendimiento frente al paper} & 16\\
+      4 & \hyperlink{parte4}{Docker frente a sin Docker} & 6\\
+      5 & \hyperlink{parte5}{Dos máquinas, el mismo programa} & 12\\
+      6 & \hyperlink{parte6}{Hallazgo: compartición falsa} & 9\\
+      7 & \hyperlink{parte7}{Latencia} & 14\\
+      8 & \hyperlink{parte8}{Memoria retenida} & 4\\
+      9 & \hyperlink{parte9}{Topología y afinidad} & 12\\
+      10 & \hyperlink{parte10}{Validación de los recortes} & 4\\
+      11 & \hyperlink{parte11}{Veredicto y cierre} & 10\\
+      \bottomrule
+    \end{tabular}
+    \column{0.42\textwidth}
+    \sub{Reparto sugerido}\small
+    \begin{tabular}{@{}lr@{}}
+      \textbf{David}: apertura, partes 1 y 2 & 33 min\\[2pt]
+      \textbf{Jheremy}: partes 3 a 6 & 43 min\\[2pt]
+      \textbf{Diego}: partes 7 a 11 & 44 min\\
+    \end{tabular}
+    \par\bigskip
+    \caja[\linewidth]{Cada parte responde a una pregunta y termina con lo que se concluye.}
+  \end{columns}
+  \nota{s05}
+\end{frame}

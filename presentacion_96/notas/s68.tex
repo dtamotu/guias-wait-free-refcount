@@ -1,0 +1,7 @@
+Y una sorpresa. Con un millón de pilas, alinear no ayuda: frena. Autores, Williams y Libstdc++ pierden un 25 por ciento; el Mutex, solo un 3.
+
+La sospecha era el tamaño. Sin alinear, un millón de pilas ocupan entre 8 y 16 megas, y caben en los 36 megas de caché L3 de este procesador. Alineadas, ocupan 128 megas, y no caben. Es como un fichero de un millón de fichas: si son tarjetas pequeñas, caben en el cajón de tu mesa; si cada una va en una carpeta grande, tienes que ir al almacén.
+
+Eso da dos predicciones comprobables. Con un millón de pilas, cada operación debería sacar más bytes de la RAM: sí, entre 207 y 265 bytes más, un 41 a 48 por ciento. Con cien mil pilas, las alineadas ocupan 12,8 megas y todavía caben, así que alinear no debería frenar: y no frena.
+
+Las dos versiones se midieron seguidas y alternando, así que las compara el mismo estado de la máquina.

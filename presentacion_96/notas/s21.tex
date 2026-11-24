@@ -1,0 +1,7 @@
+Ahora el i5-10400. Corre Linux dentro de Windows, con WSL2, y el compilador g++ 13.3. Tiene 6 núcleos y cada uno ejecuta dos hilos a la vez, así que el sistema ve 12.
+
+Todo se lanzó con un solo guion del equipo, ejecutar\_pruebas.sh. Hace cinco cosas: la demo del código de los autores, los detectores de errores ASan y TSan, el boceto con sus variantes rotas, y una pasada rápida de rendimiento y de latencia con bench.cpp.
+
+TSan necesitó un truco: desactivar la aleatorización de direcciones con setarch, porque en estos núcleos de Linux fallaba al arrancar.
+
+Lo importante: el mismo guion se corrió en el Ultra 9. Por eso podemos compararlas. Pero es una sola pasada de un segundo por punto: solo nos fiaremos de las diferencias grandes.

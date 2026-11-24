@@ -1,0 +1,5 @@
+Las colas cuentan dos historias que la mediana esconde. Las tres barras de cada algoritmo son la mediana, el percentil 99 y el 99,95, que es lo que solo supera una operación de cada dos mil.
+
+A la izquierda, sin contención, liberando: todos van finos hasta el 99,95, donde Anderson salta a casi 8 microsegundos. ¿Por qué justo ahí? Anderson vacía su caja de pendientes cada 2~000 retiradas, y uno de cada 2~000 es exactamente el 0,05 por ciento. La coincidencia es demasiado exacta para ser casualidad, aunque no lo medimos directamente.
+
+A la derecha, con 24 hilos, leyendo: Williams y Libstdc++ tienen colas de 10 y 65 microsegundos. Es lo que significa de verdad lock-free: alguien avanza siempre, pero un hilo concreto puede quedarse atrás. Autores, wait-free, se queda en 1,6.

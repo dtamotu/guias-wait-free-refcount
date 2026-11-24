@@ -1,0 +1,5 @@
+En el escenario sin contención, el Ultra 9 gana con mucha diferencia: casi cien millones de operaciones por segundo con 18 hilos, frente a unos 24 del i5.
+
+Aquí no hay una línea disputada: cada hilo trabaja en su rincón. Lo que manda es cuántos núcleos hay. El i5 tiene 12 hilos de hardware y se estanca ahí; el Ultra 9 tiene 24 núcleos y sigue subiendo.
+
+Fijaos también en el orden: en el i5, Autores gana claramente; en el Ultra 9, Autores, Libstdc++ y Mutex van juntos. Es la misma tendencia al empate que vimos con un millón de pilas, cuando el límite deja de ser el algoritmo.

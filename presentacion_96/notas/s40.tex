@@ -1,0 +1,7 @@
+Con un solo hilo no hay contención: no hay nadie con quien pelear y nada viaja entre núcleos. Si la brecha viniera de los cuatro sockets, con un hilo debería desaparecer.
+
+Pues no desaparece. En el paper, Folly con un hilo rinde un 20 por ciento de Autores. Aquí, entre un 86 y un 129 por ciento. A la derecha está el control: Williams, que coincide bastante bien entre paper y réplica.
+
+Hay otra pista en el propio paper: en la figura 6, medida en otra máquina, la lectura de Folly sin contención tarda casi lo mismo que la de Autores. Folly no es lento de nacimiento.
+
+Así que algo de la máquina de la figura 5, o de cómo se midió, le penaliza. Con nuestro PC no se puede saber. Lo dejamos como pregunta abierta, y lo decimos así.

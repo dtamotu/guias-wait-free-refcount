@@ -1,0 +1,7 @@
+Una hipótesis no vale hasta que se comprueba. En una copia de bench.cpp añadimos una sola palabra, alignas 128, para que cada pila ocupe su propio hueco. El archivo del equipo no se tocó.
+
+A la izquierda, cuánto mejora cada algoritmo al alinear, con 24 hilos. En los paneles de diez pilas, Autores mejora 3,4 y 3,3 veces. Williams y el Mutex también mejoran, menos. Con una pila, todo se queda en uno: ese es el control. Si la palabra mejorara también con una sola pila, la explicación sería falsa.
+
+A la derecha, Autores con diez pilas según los hilos: la versión sin alinear se queda clavada en 33; la alineada sube hasta 120, pegada al binario oficial, que es la línea punteada.
+
+Autores gana más porque tiene más pilas por línea, y porque nada más lo frena. Libstdc++ gana poco con 24 hilos porque ya lo frena su candado; con 6 hilos mejora el doble.

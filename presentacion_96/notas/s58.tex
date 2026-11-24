@@ -1,0 +1,9 @@
+¿Cómo puede un procesador el doble de rápido perder? Por lo que vimos al principio: con contención, lo caro no es calcular, sino mover la línea compartida de un núcleo a otro.
+
+En el Ultra 9 medimos esos viajes: entre 35 y 86 nanosegundos según dónde estén los núcleos. Y sin fijar los hilos, Linux los reparte entre núcleos P y E, que están lejos.
+
+El i5 es un solo bloque de seis núcleos, y cada núcleo ejecuta dos hilos que comparten sus cachés. Si dos hilos caen en el mismo núcleo, la línea ni siquiera viaja.
+
+Tenemos una pista fuerte en el propio Ultra 9: dos hilos que comparten caché L2 rinden casi el doble que cualquier otra pareja. Es la misma física.
+
+Pero en el i5 no lo medimos, así que es una hipótesis. Lo decimos claro.

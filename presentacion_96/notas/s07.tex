@@ -1,0 +1,5 @@
+Hay cuatro máquinas en juego. El paper usó dos: cuatro Xeon con 144 hilos para el rendimiento y un Xeon w7 de un solo chip para la latencia.
+
+Nosotros usamos otras dos. El Core Ultra 9~285 es un procesador híbrido de 24 núcleos: 8 rápidos, llamados P, y 16 eficientes, llamados E. Ahí se hizo la réplica completa. El i5-10400 tiene 6 núcleos con dos hilos cada uno y corre Linux dentro de Windows, con WSL2. Ahí se hicieron la corrección y una pasada rápida.
+
+La consecuencia importante: ninguna de las dos tiene cuatro chips. Así que no comparamos Mop/s entre máquinas, sino el orden de los algoritmos y cuánto rinde cada uno respecto a otro.

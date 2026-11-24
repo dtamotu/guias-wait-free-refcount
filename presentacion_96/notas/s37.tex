@@ -1,0 +1,9 @@
+Cuatro resultados que se repiten, cada uno con su explicación.
+
+Libstdc++ se hunde: de 58 a poco más de uno. En el paper también, en proporción parecida. Es lo que hace un candado: formar una cola.
+
+Williams pierde siempre, porque cada lectura necesita dos bucles de compare-and-swap de 16 bytes. Cada bucle puede fallar y repetirse.
+
+Anderson gana cuando hay escrituras sobre una pila. La razón es fina: en Autores cada lectura cambia la palabra compartida, así que el compare-and-swap de quien escribe falla por culpa de un simple lector. En Anderson, leer no cambia esa palabra.
+
+Y Autores brilla con pocas escrituras, porque su lectura es una sola instrucción que no puede fallar. En resumen: compare-and-swap puede fallar; fetch\_sub, no.

@@ -1,0 +1,7 @@
+Resumen de la comparación entre máquinas.
+
+Lo que no depende de la máquina es justo lo que afirma el paper frente a los rivales sin espacio extra: Autores gana a Williams y a Libstdc++, y Libstdc++ se hunde con contención. También se repiten el orden de latencia y la corrección.
+
+Lo que sí depende es la velocidad absoluta, y de forma inesperada: con contención gana la máquina antigua. También depende el caso del Mutex y si los algoritmos empatan cuando no hay contención.
+
+La lección general: no se puede predecir el rendimiento concurrente por la velocidad de un núcleo. Importa la geometría del chip.
