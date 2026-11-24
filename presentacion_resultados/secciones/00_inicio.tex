@@ -1,0 +1,150 @@
+% ---------- Apertura ----------
+{\setbeamercolor{background canvas}{bg=marino}
+\begin{frame}[plain]
+  \vspace*{9mm}\hspace*{3mm}\begin{minipage}{0.88\paperwidth}
+  {\fontsize{8}{9.5}\selectfont\bfseries\color{marinoclaro}RÉPLICA EXPERIMENTAL · EURO-PAR 2024\par}\vspace{3mm}
+  {\fontsize{20}{23.5}\selectfont\bfseries\color{white}Conteo de referencias wait-free:\\ lo que dicen los experimentos\par}\vspace{3.5mm}
+  {\fontsize{9}{11.5}\selectfont\color{marinoclaro}Réplica de «A Fast Wait-Free Solution to Read-Reclaim Races in Reference Counting»\\
+  de I.\,G.~de~Wolff, D.~Anderson, G.\,K.~Keller y A.~Seletskiy\par}\vspace{9mm}
+  {\color{marinoclaro}\rule{40mm}{0.5pt}}\par\vspace{2.5mm}
+  {\fontsize{9}{11}\selectfont\color{white}David Tamo Turpo · Jheremy Manuel Alvarez Astete · Diego Quispe Candelario\par}\vspace{1.5mm}
+  {\fontsize{7.5}{9}\selectfont\color{marinoclaro}Medido en un Intel Core Ultra 9 285 y un Intel Core i5-10400\par}
+  \end{minipage}
+  \note{Buenas. Vamos a presentar la réplica de un paper de Euro-Par 2024 sobre conteo de referencias wait-free.
+
+  Esta presentación no empieza por la teoría. Empieza por los experimentos: qué medimos, en qué máquinas, cómo lo corrimos y qué salió. La teoría aparece solo donde hace falta para explicar un resultado.
+
+  Medimos en dos máquinas: un Intel Core Ultra 9 285, donde se hizo la réplica completa, y un Intel Core i5-10400, donde se hicieron las pruebas de corrección y una pasada rápida del programa del equipo. Ese mismo programa también se corrió en el Ultra 9, así que las dos máquinas se pueden comparar directamente.}
+\end{frame}}
+
+\begin{frame}{La réplica en cifras}
+  \fuente{EXPLICACION.md, Parte 0; datos/ultra9 y datos/i5\_10400}
+  \vspace{5mm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.32\textwidth}\cifra{14\,158}{mediciones en el Core Ultra 9,\\en 7 tandas}
+    \column{0.32\textwidth}\cifra{0}{mediciones fallidas}
+    \column{0.32\textwidth}\cifra{2}{máquinas: Core Ultra 9 285\\y Core i5-10400}
+  \end{columns}
+  \vspace{7mm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.32\textwidth}\cifra{5 + 1}{algoritmos: los 5 del paper\\y un Mutex de referencia}
+    \column{0.32\textwidth}\cifra{4}{formas de correr las pruebas:\\Docker, sin Docker, bench.cpp, alineado}
+    \column{0.32\textwidth}\cifra{9 de 15}{afirmaciones del paper\\que se reproducen}
+  \end{columns}
+  \vspace{6mm}
+  \begin{idea}
+    Se usaron los binarios oficiales del artefacto de los autores, no una reimplementación, y cada diferencia se investigó con un control.
+  \end{idea}
+  \note{Seis cifras para situarnos.
+
+  Hicimos más de catorce mil mediciones en el Ultra 9, repartidas en siete tandas, y ninguna falló. Probamos los cinco algoritmos del paper y añadimos un Mutex como referencia, porque es lo que usaría cualquiera sin pensarlo mucho.
+
+  Corrimos las pruebas de cuatro formas: con Docker, sin Docker con los mismos programas oficiales, con el programa del equipo, y con una copia corregida de ese programa. Más adelante explicamos por qué hicieron falta las cuatro.
+
+  El resultado global: de las quince afirmaciones del paper que pusimos a prueba, nueve se reproducen. Las otras seis las veremos una por una.}
+\end{frame}
+
+\begin{frame}{Qué se puso a prueba}
+  \fuente{de Wolff et al., Euro-Par 2024, secciones 4 y 6; EXPLICACION.md, Parte 7}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \textbf{\color{marino}El algoritmo, en una línea}\par\vspace{1mm}
+    {\small Un puntero compartido atómico cuya lectura es un único \cod{fetch\_sub}, una instrucción que nunca falla. La memoria se libera en el instante en que el último usuario termina.}\par\vspace{3mm}
+    \textbf{\color{marino}Sus rivales en el paper}\par\vspace{1mm}
+    {\footnotesize
+    \begin{tabular}{@{}p{17mm}p{46mm}@{}}
+      \algLib & candado dentro del puntero\\
+      \algWil & contador partido, CAS de 16 bytes\\
+      \algFol & contador partido en 8 bytes\\
+      \algAnd & hazard pointers, liberación diferida\\
+      \algMut & referencia del equipo, fuera del paper
+    \end{tabular}}
+    \column{0.48\textwidth}
+    \textbf{\color{marino}Las 15 afirmaciones que se contrastan}\par\vspace{1mm}
+    {\footnotesize
+    \begin{tabular}{@{}p{15.5mm}p{51mm}@{}}
+      \toprule
+      Filas 1–6 & Rendimiento frente a cada rival (figura 5)\\
+      Filas 7–12 & Latencia de \cod{load}, \cod{store} y \cod{store \& reclaim} (figura 6)\\
+      Fila 13 & No retiene memoria; Anderson sí, poca\\
+      Filas 14–15 & La recarga reintenta como mucho P veces; no hay \textit{use-after-free}\\
+      \bottomrule
+    \end{tabular}}
+    \vspace{3mm}
+    \begin{idea}Cada afirmación tiene su prueba y su veredicto al final.\end{idea}
+  \end{columns}
+  \note{Solo lo imprescindible para seguir los resultados.
+
+  El paper propone un puntero compartido atómico. Su lectura es una sola instrucción, un fetch\_sub, que a diferencia de un compare-and-swap nunca falla. Y libera la memoria en el acto, sin dejarla pendiente.
+
+  Lo compara con cuatro rivales: el de la biblioteca estándar de GCC, que usa un candado; Williams y Folly, que parten el contador en dos; y Anderson, que usa hazard pointers y libera más tarde. Nosotros añadimos un Mutex como referencia.
+
+  Del paper sacamos quince afirmaciones comprobables. Las agrupamos en rendimiento, latencia, memoria y corrección. Al final de la presentación las veremos todas con su veredicto.}
+\end{frame}
+
+\begin{frame}{La respuesta corta, antes del detalle}
+  \fuente{EXPLICACION.md, Parte 0}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}>{\bfseries}p{47mm}X@{}}
+    \toprule
+    ¿Es correcto? & Sí en lo probado: 0 errores con ASan y TSan, en las dos máquinas\\
+    ¿Cumple su promesa wait-free? & Sí: como mucho 8 reintentos, con una cota de 32\\
+    ¿Deja memoria sin liberar? & No. Anderson sí retiene algo: 469 KB con 24 hilos\\
+    ¿Tiene el \cod{load} más rápido? & Sí, aunque con contención por poco\\
+    ¿Gana a Libstdc++ y a Williams? & Sí: con y sin Docker, y en las dos máquinas\\
+    ¿Gana a Folly? & Aquí no: gana 3 escenarios, empata 2 y pierde 1. La causa sigue abierta\\
+    ¿Gana a Anderson? & Depende: con pocas escrituras sí; con muchas sobre una pila, Anderson llega a 1,99×\\
+    ¿Importa dónde cae cada hilo? & Con contención, mucho: hasta −55 \%. Sin contención, ±3 \% como mucho\\
+    ¿Docker cambia los resultados? & No: 259 de 270 puntos cambian menos de un 10 \%\\
+    ¿Por qué empatan todos con 10⁶ pilas? & Muy probablemente por la RAM: rozan el 89-93 \% del techo de la máquina\\
+    \bottomrule
+  \end{tabularx}
+  \note{Esta es la respuesta corta. Si alguien tuviera que irse ahora, esto es lo que hay que llevarse.
+
+  Lo importante del paper sale bien parado: el algoritmo es correcto, cumple su cota de reintentos, no deja memoria sin liberar y tiene la lectura más rápida, aunque con contención por poco.
+
+  Lo que no se sostiene en nuestras máquinas es la ventaja sobre Folly y la ventaja con un millón de pilas. Y frente a Anderson, depende del escenario.
+
+  Además descubrimos cosas que el paper no cuenta: que Docker no influye, que con un millón de pilas el freno es la RAM, y otras que veremos más adelante.}
+\end{frame}
+
+\begin{frame}{Recorrido de la presentación}
+  \fuente{reparto sugerido; los tiempos suman unas 2 horas sin el turno de preguntas}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \column{0.6\textwidth}
+    \begin{tabular}{@{}rlr@{}}
+      \toprule
+      & Parte & Minutos\\
+      \midrule
+      1 & Diseño experimental y cómo se corrió & 22\\
+      2 & Corrección & 8\\
+      3 & Rendimiento frente al paper & 16\\
+      4 & Docker frente a sin Docker & 6\\
+      5 & Dos máquinas, el mismo programa & 12\\
+      6 & Hallazgo: compartición falsa & 9\\
+      7 & Latencia & 14\\
+      8 & Memoria retenida & 4\\
+      9 & Topología y afinidad & 12\\
+      10 & Validación de los recortes & 4\\
+      11 & Veredicto y cierre & 10\\
+      \bottomrule
+    \end{tabular}
+    \column{0.36\textwidth}
+    \textbf{\color{marino}Reparto sugerido}\par\vspace{2mm}
+    \begin{tabular}{@{}lr@{}}
+      \textbf{David}: apertura, partes 1 y 2 & 33 min\\[1mm]
+      \textbf{Jheremy}: partes 3 a 6 & 43 min\\[1mm]
+      \textbf{Diego}: partes 7 a 11 & 44 min
+    \end{tabular}
+    \vspace{5mm}
+    \begin{idea}Cada parte responde a una pregunta y termina con lo que se concluye.\end{idea}
+  \end{columns}
+  \note{Este es el recorrido. Son once partes y unas dos horas, sin contar las preguntas.
+
+  La primera parte es la más larga porque explica cómo se hicieron las pruebas: de dónde salieron los programas, por qué primero con Docker y luego sin Docker, y qué se corrió en cada máquina. Sin eso, los resultados no se pueden juzgar.
+
+  Después vienen los resultados, en el orden del paper: corrección, rendimiento y latencia. En medio van los hallazgos propios de la réplica.
+
+  El reparto entre los tres es una sugerencia; se puede mover.}
+\end{frame}

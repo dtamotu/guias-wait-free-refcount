@@ -1,0 +1,164 @@
+% ---------- Parte 2: corrección ----------
+\section{Corrección}
+\portadilla{2}{Corrección: ¿funciona sin romperse?}{Ser rápido no vale de nada si se rompe la memoria. Detectores automáticos, variantes rotas a propósito y la cota de intentos medida en el código real.}{Segunda parte: corrección. Antes de hablar de velocidad, hay que saber si el algoritmo funciona. Un algoritmo rápido que a veces usa memoria ya liberada no sirve.
+
+Veremos tres cosas: los detectores de errores en las dos máquinas, un boceto que rompemos a propósito para ver si cada regla hace falta, y la cota de intentos medida en el código real de los autores.}
+
+\begin{frame}{Los detectores de errores dan lo mismo en las dos máquinas}
+  \fuente{datos de corrección: capturas/02, 03 y 09 (i5-10400) y resultados/david-ultra9-285/correccion (Ultra 9)}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}p{43mm}p{21mm}LL@{}}
+    \toprule
+    \textbf{Prueba} & \textbf{Versión} & \textbf{Core i5-10400} & \textbf{Core Ultra 9 285}\\
+    \midrule
+    AddressSanitizer, 8 hilos & ingenua & \textit{heap-use-after-free} & \textit{double-free}\\
+    AddressSanitizer, 8, 12 y 16 hilos & Autores & \textbf{0 errores} (53, 68 y 92 ms) & \textbf{0 errores} (63, 98 y 137 ms)\\
+    ThreadSanitizer, 8 hilos & ingenua & carreras de datos y \textit{heap-use-after-free} & carreras de datos y \textit{heap-use-after-free}\\
+    ThreadSanitizer, 8 y 16 hilos & Autores & \textbf{0 avisos} & \textbf{0 avisos}\\
+    \bottomrule
+  \end{tabularx}
+  \vspace{2mm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \begin{porque}[: los dos detectores]
+      \textbf{ASan} marca cada bloque liberado y avisa si alguien lo vuelve a tocar. \textbf{TSan} registra quién accede a qué y avisa de dos accesos a la vez sin protección. Los dos solo ven lo que ocurre mientras miran.
+    \end{porque}
+    \column{0.48\textwidth}
+    \begin{idea}\footnotesize La versión ingenua (leer el puntero y después sumar 1 al contador) cae en las dos máquinas, aunque con un síntoma distinto. La del paper no da ni un aviso, con hasta 16 hilos y 3,2 millones de operaciones.\end{idea}
+  \end{columns}
+  \note{Primera prueba de corrección, en las dos máquinas. Comparamos una versión ingenua, que lee el puntero y después se apunta en el contador, con el código de los autores.
+
+  AddressSanitizer vigila el uso de memoria ya liberada. En el i5 atrapa a la versión ingenua con un use-after-free; en el Ultra 9, con una doble liberación. Es el mismo fallo de fondo, visto en otro momento. Al código de los autores no le encuentra nada, ni con 16 hilos.
+
+  ThreadSanitizer vigila los accesos simultáneos sin protección. Mismo resultado: la ingenua cae y la de los autores pasa limpia.
+
+  Que la ingenua caiga es importante: demuestra que los detectores estaban funcionando. Un cero sin esa prueba no valdría nada.}
+\end{frame}
+
+\begin{frame}{Romper el algoritmo a propósito: cada regla hace falta}
+  \fuente{capturas/04 y 05 (i5-10400); resultados/david-ultra9-285/correccion/04 y 05 (Ultra 9); codigo/boceto/}
+  \grafica[49mm]{boceto.pdf}
+  \begin{idea}Sin la regla C ≥ 2P aparecen decenas de miles de errores. Sin la «salida temprana» no hay errores, pero los intentos pasan de 8 a 45-55: sigue siendo correcto, pero ya no es wait-free.\end{idea}
+  \note{El boceto es una versión didáctica del algoritmo, con un parámetro P de 8 hilos. Tiene una ventaja: lo podemos romper a propósito y ver qué pasa.
+
+  A la izquierda, los errores. La versión ingenua da cientos de miles. Si violamos la regla de que el taco tenga al menos el doble de vales que hilos, poniendo C igual a P, aparecen decenas de miles. Con el algoritmo completo, cero.
+
+  A la derecha, el máximo de intentos de la recarga. El algoritmo del paper se queda en 8 o menos, dentro de su cota. Si quitamos la salida temprana, la que dice «otro ya recargó, me voy», no aparecen errores, pero los intentos se disparan a 45 y 55. Es decir: sigue siendo correcto, pero ha perdido la garantía wait-free.
+
+  Las dos máquinas cuentan exactamente la misma historia.}
+\end{frame}
+
+\begin{frame}{La cota de intentos, medida en el código real de los autores}
+  \fuente{resultados/david-ultra9-285/correccion/cota\_cas.csv (herramientas/correr\_cota\_cas.sh); EXPLICACION.md, Parte 6.5}
+  \grafica[43mm]{cota_cas.pdf}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \begin{idea}\footnotesize Con millones de recargas forzadas, el máximo fue 8 intentos frente a una cota de 32. Con los valores reales, 4 frente a 65\,536.\end{idea}
+    \column{0.48\textwidth}
+    \begin{ojo}La fila «límite» viola R-1 (C = P): no falló porque había menos hilos que P, pero recarga en casi cada operación y rinde la mitad.\end{ojo}
+  \end{columns}
+  \note{La gran promesa del paper es que la recarga reintenta como mucho P veces. Para comprobarlo en el código real, y no solo en el boceto, añadimos un contador a una copia del código de los autores.
+
+  Con los valores reales, P es 65 536 y el taco tiene más de medio millón de vales: casi nunca hace falta recargar. El máximo fue 4 intentos.
+
+  Para ponerlo a prueba, bajamos P a 32. Así forzamos 64 millones de recargas. El máximo fue 8, muy lejos de la cota de 32. A la derecha se ve el reparto: el 81 por ciento de las recargas sale al primer intento, y 8 intentos solo ocurrieron 4 veces.
+
+  La tercera barra viola una de las reglas. No falló aquí, pero porque había menos hilos que P. No es una licencia para saltársela.}
+\end{frame}
+
+\begin{frame}{La teoría que explica la cota}
+  \fuente{de Wolff et al., secciones 4.1 y 4.2; EXPLICACION.md, Parte 3.6; capturas/08\_simulador.txt}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.53\textwidth}
+    \begin{porque}[: la recarga termina]
+      \begin{enumerate}\setlength{\itemsep}{1pt}
+        \item El \cod{load} es un \cod{fetch\_sub} del peso: \textbf{nunca falla}.
+        \item Si el peso cae bajo P, el hilo recarga con un CAS. Si el CAS falla, mira por qué:
+        \begin{itemize}
+          \item otro cambió el puntero o \textbf{ya recargó}: sale;
+          \item el peso \textbf{bajó}: reintenta.
+        \end{itemize}
+        \item El peso empezó por debajo de P y nunca baja de 0: como mucho \textbf{P reintentos}.
+        \item \textbf{R-1, C ≥ 2P}: cada hilo solo puede gastar un vale de más antes de recargar, así que el peso nunca llega a ser negativo.
+      \end{enumerate}
+    \end{porque}
+    \column{0.43\textwidth}
+    \small\textbf{\color{marino}Simulador de intercalados}\par\vspace{1mm}
+    \footnotesize 20\,000 ejecuciones por variante, comprobando las reglas tras cada paso atómico.\par\vspace{1mm}
+    \begin{tabular}{@{}lr@{}}
+      \toprule
+      Variante & Ejecuciones con fallo\\
+      \midrule
+      Algoritmo del paper & \textbf{0}\\
+      Ingenua & 4\,796\\
+      Umbral 0 & 5\,089\\
+      Sin reserva previa & 1\,171\\
+      Sin salida temprana & 5\,467\\
+      \bottomrule
+    \end{tabular}\par\vspace{1mm}
+    \scriptsize Con P = 4: 1 intento en el 80,1\,\% de las recargas, 2 en el 18,2\,\%, 3 en el 1,7\,\% y 4 en el 0,06\,\%. Nunca 5.
+  \end{columns}
+  \note{Aquí sí entra la teoría, porque es la que explica por qué la cota se cumple.
+
+  La lectura es una resta que no puede fallar. Solo cuando el peso baja de P hay que recargar, y la recarga sí usa un compare-and-swap, que puede fallar. La clave del paper es qué hacer cuando falla: si otro ya cambió el puntero o ya recargó, me voy; solo reintento si el peso bajó. Como el peso empezó por debajo de P y no puede bajar de cero, como mucho reintento P veces.
+
+  La regla de que el taco tenga el doble de vales que hilos garantiza que el peso nunca sea negativo.
+
+  El simulador del equipo prueba intercalados al azar y comprueba las reglas en cada paso. El algoritmo del paper no falla nunca; cada variante a la que le quitamos una pieza, sí. Y los intentos con P igual a 4 nunca pasan de 4.}
+\end{frame}
+
+\begin{frame}{Los rivales tampoco rompen la memoria}
+  \fuente{resultados/david-ultra9-285/correccion/10\_sanitizers\_rivales.txt (herramientas/sanitizers\_rivales.sh)}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}Xp{52mm}rr@{}}
+    \toprule
+    \textbf{Prueba} & \textbf{Algoritmos} & \textbf{Ejecuciones} & \textbf{Avisos}\\
+    \midrule
+    ASan + UBSan sobre \cod{bench.cpp}, 8 y 16 hilos & Autores, Libstdc++, Williams, Mutex & 12 & \textbf{0}\\
+    TSan sobre \cod{bench.cpp}, 8 hilos & Autores, Libstdc++, Williams, Mutex & 4 & \textbf{0}\\
+    ASan + UBSan sobre el \cod{bench\_stack} oficial, 8 y 16 hilos, en Docker & Autores, Libstdc++, Williams, Folly, Anderson & 10 & \textbf{0}\\
+    \bottomrule
+  \end{tabularx}
+  \vspace{3mm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \begin{idea}\footnotesize\textbf{Por qué importa:} si un rival ganara usando memoria ya liberada, su victoria no valdría. Ninguno de los seis lo hace en estas pruebas.\end{idea}
+    \column{0.48\textwidth}
+    \begin{ojo}Folly y Anderson no pasaron TSan: \cod{libfolly.a} no está instrumentada y daría avisos falsos. Son 4 segundos por prueba y un solo escenario de contención fuerte (n = 1, u = 50\,\%).\end{ojo}
+  \end{columns}
+  \note{Al principio estas pruebas solo se pasaron al algoritmo de los autores. Pero si un rival ganara en velocidad porque usa memoria ya liberada, la comparación sería injusta. Así que se pasaron a los seis.
+
+  Se añadió UBSan, que vigila operaciones que C++ no define, como desbordar un entero. Resultado: cero avisos en los seis, tanto en el programa del equipo como en el oficial.
+
+  Dos salvedades. Folly y Anderson no pasaron ThreadSanitizer, porque la biblioteca de Folly no está preparada para él y daría avisos falsos. Y son pruebas cortas, de cuatro segundos, en un solo escenario.}
+\end{frame}
+
+\begin{frame}{Lo que estas pruebas demuestran, y lo que no}
+  \fuente{EXPLICACION.md, Parte 6.5 y Referencias}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \small\textbf{\color{bien}Lo que sí muestran}\par\vspace{1mm}
+    \footnotesize
+    \begin{itemize}
+      \item Buscando el fallo con ganas, en dos máquinas y con tres herramientas, no apareció.
+      \item Cada regla del diseño es necesaria: quitarla rompe la corrección o la cota.
+      \item La cota se cumple con holgura en el código real: 8 frente a 32.
+    \end{itemize}
+    \column{0.48\textwidth}
+    \small\textbf{\color{mal}Lo que no muestran}\par\vspace{1mm}
+    \footnotesize
+    \begin{itemize}
+      \item Que el algoritmo sea correcto: una prueba nunca demuestra eso. La demostración está en el paper, secciones 4.1 y 4.2, y no se reproduce aquí.
+      \item Que no haya errores en escenarios que no se probaron.
+    \end{itemize}
+  \end{columns}
+  \vspace{4mm}
+  \begin{idea}Veredicto de las filas 14 y 15: \vsi\ la recarga reintenta como mucho P veces; \vsi\ no hay \textit{use-after-free}, en lo probado.\end{idea}
+  \note{Conviene ser preciso con lo que hemos demostrado.
+
+  Hemos buscado el fallo con ganas, en dos máquinas y con tres herramientas, y no ha aparecido. Hemos visto que cada regla del diseño hace falta. Y hemos visto la cota cumplida con holgura en el código real.
+
+  Lo que no hemos hecho es demostrar que el algoritmo sea correcto. Eso solo lo hace una demostración matemática, y está en el paper. Una prueba solo puede encontrar errores, nunca garantizar que no existan.
+
+  Con eso, las dos últimas afirmaciones de la lista se reproducen.}
+\end{frame}

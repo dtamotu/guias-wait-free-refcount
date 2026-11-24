@@ -1,0 +1,13 @@
+$ uname -sr
+Linux 6.18.54.1-microsoft-standard-WSL2
+
+$ g++ --version | head -1
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+
+$ nproc
+12
+
+$ lscpu | grep -E 'Model name|^CPU\(s\)'
+CPU(s):                                  12
+Model name:                              Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+

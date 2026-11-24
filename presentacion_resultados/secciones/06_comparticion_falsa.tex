@@ -1,0 +1,166 @@
+% ---------- Parte 6: compartición falsa ----------
+\section{Hallazgo: compartición falsa}
+\portadilla{6}{Hallazgo: compartición falsa en el programa del equipo}{Con 10 pilas, \texttt{bench.cpp} rendía 3 veces menos que el programa oficial. La causa era una sola palabra.}{Sexta parte: el hallazgo más claro de la réplica, y el que mejor muestra cómo se investiga una diferencia.
+
+Al comparar el programa del equipo con el oficial, con diez pilas, Autores rendía tres veces menos. Vamos a ver el síntoma, la hipótesis, la prueba y una sorpresa final.}
+
+\begin{frame}{El síntoma: con 10 pilas, \texorpdfstring{\cod{bench.cpp}}{bench.cpp} rinde unas 3 veces menos}
+  \fuente{datos/ultra9/docker/rendimiento.csv y datos/ultra9/nativo/rendimiento.csv, 24 hilos; EXPLICACION.md, Parte 6.6}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.56\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}lccc@{}}
+      \toprule
+      \textbf{24 hilos, Mop/s} & \textbf{Autores} & \textbf{Williams} & \textbf{Libstdc++}\\
+      & \multicolumn{3}{c}{\scriptsize oficial con Docker → \cod{bench.cpp} sin Docker}\\
+      \midrule
+      n = 1 · u = 1\,\% & 19,8 → 21,0 & 4,8 → 4,0 & 1,2 → 0,9\\
+      n = 1 · u = 10\,\% & 4,4 → 5,0 & 1,6 → 0,9 & 0,6 → 0,4\\
+      n = 1 · u = 50\,\% & 1,1 → 1,2 & 0,4 → 0,2 & 0,2 → 0,1\\
+      \rowcolor{suave}\textbf{n = 10 · u = 1\,\%} & \textbf{121,9 → 35,4} & 34,7 → 11,4 & 10,8 → 6,7\\
+      \rowcolor{suave}\textbf{n = 10 · u = 10\,\%} & \textbf{55,4 → 18,4} & 16,1 → 5,8 & 5,4 → 3,6\\
+      n = 10⁶ · u = 50\,\% & 55,4 → 78,8 & 40,4 → 50,7 & 56,3 → 82,5\\
+      \bottomrule
+    \end{tabular}
+    \column{0.4\textwidth}
+    \begin{idea}\footnotesize Con una pila, Autores coincide. Con 10 pilas rinde \textbf{entre 3 y 3,4 veces menos}. Algo pasa solo cuando hay varias pilas.\end{idea}
+    \begin{ojo}Docker no es: el control de la parte 4 dio 1,02×. El cambio está en el programa.\end{ojo}
+  \end{columns}
+  \note{Este fue el hallazgo más claro. Comparamos, con 24 hilos, el programa oficial con el del equipo.
+
+  Con una sola pila, Autores da prácticamente lo mismo en los dos: unos 20 Mop/s. Pero con diez pilas, el programa oficial da 122 y el nuestro, 35. Tres veces y media menos.
+
+  Que solo pase con varias pilas es la pista. Con una pila no hay vecinas; con diez, sí. Y ya sabíamos, por el control de Docker, que el entorno no era el culpable.}
+\end{frame}
+
+\begin{frame}{La causa: 10 pilas comparten 2 líneas de caché}
+  \fuente{codigo/bench.cpp, línea 73; tamaños medidos con sizeof; EXPLICACION.md, Parte 6.6}
+  \centering
+  \begin{tikzpicture}[scale=0.8,every node/.append style={transform shape},font=\scriptsize,
+      c/.style={draw=white,line width=0.8pt,fill=cAutores!75,minimum width=8.6mm,minimum height=6.5mm,inner sep=0pt,text=white,font=\tiny\bfseries},
+      v/.style={c,fill=linea,text=tinta2},
+      h/.style={circle,draw=tinta,fill=white,minimum size=5mm,inner sep=0pt,font=\tiny\bfseries},
+      f/.style={-{Stealth[length=1.5mm]},line width=0.6pt}]
+    \node[anchor=west,font=\footnotesize\bfseries,color=tinta] at (-0.45,1.75) {\cod{bench.cpp}: las pilas seguidas, 8 bytes cada una};
+    \foreach \i in {0,...,7} { \node[c] (a\i) at (\i*0.86,0.8) {P\i}; }
+    \node[draw=cAutores,line width=0.9pt,fit=(a0)(a7),inner sep=0.6pt] (l1) {};
+    \node[anchor=west,font=\tiny,color=tinta2] at (7.05,0.8) {una línea de 64 bytes};
+    \foreach \i/\x in {8/0,9/1} { \node[c] (b\i) at (\x*0.86,0) {P\i}; }
+    \foreach \x in {2,...,7} { \node[v] at (\x*0.86,0) {}; }
+    \node[h] (h1) at (0.86*1,-0.7) {A}; \node[h] (h2) at (0.86*4,-0.7) {B}; \node[h] (h3) at (0.86*6,-0.7) {C};
+    \draw[f,color=cAutores] (h1) -- (a1.south); \draw[f,color=cAutores] (h2.north) to[bend left=10] (a4.south); \draw[f,color=cAutores] (h3.north) to[bend right=10] (a6.south);
+    \node[anchor=north,align=center,font=\tiny,color=tinta] at (0.86*3.5,-1.05) {A, B y C escriben en pilas distintas, pero en la misma línea:\\la línea viaja entre los tres como si compartieran un dato};
+    \begin{scope}[xshift=9.3cm]
+      \node[anchor=west,font=\footnotesize\bfseries,color=tinta] at (-0.45,1.75) {Oficial: \cod{alignas(128)}};
+      \foreach \i/\y in {0/0.8,1/0,2/-0.8} {
+        \node[c,minimum width=8.6mm] (q\i) at (0,\y) {P\i};
+        \foreach \x in {1,...,3} { \node[v,minimum width=8.6mm] at (\x*0.86,\y) {}; }
+      }
+      \node[anchor=west,font=\tiny,color=tinta2,align=left] at (3.1,0) {cada pila en su\\hueco de 128 B:\\no se estorban};
+    \end{scope}
+  \end{tikzpicture}
+  \vspace{1mm}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+    \begin{tabular}{@{}lcc@{}}
+      \toprule
+      \textbf{Algoritmo} & \textbf{Bytes por pila} & \textbf{Las 10 pilas ocupan}\\
+      \midrule
+      Autores & 8 & 80 B: \textbf{unas 2 líneas}\\
+      Libstdc++, Williams & 16 & 160 B: unas 3 líneas\\
+      Mutex & 56 & 560 B: unas 9 líneas\\
+      \bottomrule
+    \end{tabular}
+    \column{0.49\textwidth}
+    \begin{porque}[: compartición falsa]
+      La caché mueve líneas enteras de 64 bytes. Dos datos distintos en la misma línea se estorban aunque nadie los comparta. Con Autores, las «10 pilas» se comportan casi como 2: su diseño compacto juega en su contra.
+    \end{porque}
+  \end{columns}
+  \note{La hipótesis tiene nombre: compartición falsa.
+
+  Recordad que la caché no mueve datos sueltos, sino líneas de 64 bytes. En bench.cpp las pilas están seguidas en memoria. Cada pila de Autores ocupa 8 bytes, así que caben ocho en una línea. Las diez pilas ocupan unas dos líneas.
+
+  El dibujo lo muestra: A, B y C escriben en pilas distintas, pero en la misma línea. Para escribir, cada uno necesita la línea entera en exclusiva, así que viaja de uno a otro como si compartieran un dato. Es como diez personas con su propio cuaderno, pero los diez cuadernos son renglones de la misma hoja.
+
+  El programa oficial pide 128 bytes por pila, con alignas: cada pila en su hueco. Curiosamente, el diseño compacto de Autores, 8 bytes frente a 16 de los demás, aquí le perjudica.}
+\end{frame}
+
+\begin{frame}{La prueba: una sola palabra, \texorpdfstring{\cod{alignas(128)}}{alignas(128)}, en una copia}
+  \fuente{datos/ultra9/nativo y nativo\_alineado/rendimiento.csv (batería completa, 24 hilos); datos/ultra9/controles.csv (control de alineación)}
+  \grafica[50mm]{alineado.pdf}
+  \begin{idea}\footnotesize Con n = 10, Autores pasa de 35,4 a 120,3 Mop/s (3,40×), casi los 127 del binario oficial. El control: con n = 1 no hay pilas vecinas, y la palabra no cambia nada (0,95× a 1,05×). Si mejorara también ahí, la explicación sería falsa.\end{idea}
+  \note{Una hipótesis no vale hasta que se comprueba. En una copia de bench.cpp añadimos una sola palabra, alignas 128, para que cada pila ocupe su propio hueco. El archivo del equipo no se tocó.
+
+  A la izquierda, cuánto mejora cada algoritmo al alinear, con 24 hilos. En los paneles de diez pilas, Autores mejora 3,4 y 3,3 veces. Williams y el Mutex también mejoran, menos. Con una pila, todo se queda en uno: ese es el control. Si la palabra mejorara también con una sola pila, la explicación sería falsa.
+
+  A la derecha, Autores con diez pilas según los hilos: la versión sin alinear se queda clavada en 33; la alineada sube hasta 120, pegada al binario oficial, que es la línea punteada.
+
+  Autores gana más porque tiene más pilas por línea, y porque nada más lo frena. Libstdc++ gana poco con 24 hilos porque ya lo frena su candado; con 6 hilos mejora el doble.}
+\end{frame}
+
+\begin{frame}{La batería sin alinear: los paneles n = 10 miden el programa, no el algoritmo}
+  \fuente{datos/ultra9/nativo/rendimiento.csv; \cod{bench.cpp} sin Docker, sin alinear, mediana de 5 rondas}
+  \grafica[60mm]{fig5_benchcpp.pdf}
+  \note{Esta es la batería completa del programa del equipo sin alinear. Fijaos en los dos paneles de diez pilas: Autores, en rojo, se queda plano en unos 33, muy lejos de los 120 que puede dar.
+
+  La consecuencia práctica: de estos dos paneles no se puede sacar ninguna conclusión sobre los algoritmos. Lo que miden es el defecto del programa de pruebas.
+
+  Y ojo: las pasadas rápidas de la parte 5, en las dos máquinas, usan esta misma versión sin alinear. Sus paneles de diez pilas llevan el mismo freno. Como lo llevan los dos, la comparación entre máquinas sigue siendo justa, pero los valores absolutos no.}
+\end{frame}
+
+\begin{frame}{Sorpresa: con un millón de pilas, alinear frena}
+  \fuente{datos/ultra9/nativo\_alineado/memoria\_alineado.csv (herramientas/alinear\_memoria.py); 24 hilos, u = 50\,\%, 3 rondas alternadas}
+  \grafica[34mm]{alineado_ram.pdf}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \begin{porque}[: ya no cabe en la caché]
+      \footnotesize Un millón de pilas de 8-16 bytes son 8-16 MB: caben en los 36 MB de L3. Con 128 bytes cada una, son 128 MB: no caben, y muchas operaciones van a la RAM. El Mutex ya ocupaba 56 MB y no cabía antes: por eso casi no cambia.
+    \end{porque}
+    \column{0.46\textwidth}
+    \footnotesize\textbf{\color{marino}Dos predicciones, las dos cumplidas}
+    \begin{enumerate}
+      \item Con 10⁶, más bytes de RAM por operación: +207 a +265 B (41-48\,\%), y el rendimiento baja en proporción.
+      \item Con 10⁵, las pilas alineadas ocupan 12,8 MB y caben: alinear no frena (0,94× a 1,02×).
+    \end{enumerate}
+  \end{columns}
+  \note{Y una sorpresa. Con un millón de pilas, alinear no ayuda: frena. Autores, Williams y Libstdc++ pierden un 25 por ciento; el Mutex, solo un 3.
+
+  La sospecha era el tamaño. Sin alinear, un millón de pilas ocupan entre 8 y 16 megas, y caben en los 36 megas de caché L3 de este procesador. Alineadas, ocupan 128 megas, y no caben. Es como un fichero de un millón de fichas: si son tarjetas pequeñas, caben en el cajón de tu mesa; si cada una va en una carpeta grande, tienes que ir al almacén.
+
+  Eso da dos predicciones comprobables. Con un millón de pilas, cada operación debería sacar más bytes de la RAM: sí, entre 207 y 265 bytes más, un 41 a 48 por ciento. Con cien mil pilas, las alineadas ocupan 12,8 megas y todavía caben, así que alinear no debería frenar: y no frena.
+
+  Las dos versiones se midieron seguidas y alternando, así que las compara el mismo estado de la máquina.}
+\end{frame}
+
+\begin{frame}{Qué cambia este hallazgo}
+  \fuente{EXPLICACION.md, Partes 6.6 y 8}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \small\textbf{\color{marino}Para leer los resultados}\par\vspace{1mm}
+    \footnotesize
+    \begin{itemize}
+      \item Los paneles n = 10 de \cod{bench.cpp} sin alinear están frenados por el programa: no dicen nada de los algoritmos.
+      \item Con 10⁶ pilas, \cod{bench.cpp} va un 26-46\,\% más rápido que el oficial. Antes se atribuía a sus pilas de 2 nodos; ahora apunta a que sus pilas apretadas caben en la caché. Medido dentro de \cod{bench.cpp}; frente al oficial sigue siendo una deducción.
+      \item Aun con el freno, el orden se mantiene: entre los 3 algoritmos comunes, \cod{bench.cpp} y el oficial coinciden en quién gana en 49 de 54 puntos.
+    \end{itemize}
+    \column{0.48\textwidth}
+    \small\textbf{\color{marino}Para el equipo}\par\vspace{1mm}
+    \footnotesize
+    \begin{tcolorbox}[colback=tinta,colupper=white,boxrule=0pt,arc=1.5pt,left=4pt,top=2pt,bottom=2pt,fontupper=\scriptsize\ttfamily]
+      // codigo/bench.cpp, línea 73\\
+      template <class I> struct alignas(128) Pila
+    \end{tcolorbox}
+    Se probó en una copia; \cod{bench.cpp} no se ha tocado, por la regla del equipo. Queda a su criterio aplicarlo.\par\vspace{2mm}
+    \begin{idea}\footnotesize Lección general: en un benchmark concurrente, dónde caen los datos en memoria puede pesar más que el algoritmo.\end{idea}
+  \end{columns}
+  \note{¿Qué cambia este hallazgo?
+
+  Para leer los resultados: los paneles de diez pilas del programa del equipo sin alinear no sirven para comparar algoritmos. Y la ventaja del programa del equipo con un millón de pilas probablemente viene de que sus pilas, apretadas, caben en la caché.
+
+  Aun así, lo importante se sostiene: entre los tres algoritmos comunes, los dos programas coinciden en quién gana en 49 de 54 puntos, con el freno y todo.
+
+  Para el equipo: la corrección es una palabra en la línea 73. No la aplicamos porque la regla del equipo es no tocar bench.cpp; queda a su criterio.
+
+  La lección general: en un benchmark concurrente, cómo se colocan los datos en memoria puede pesar más que el propio algoritmo.}
+\end{frame}

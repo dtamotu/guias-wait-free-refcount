@@ -1,0 +1,484 @@
+% ---------- Parte 1: diseño experimental y cómo se corrió ----------
+\section{Diseño experimental}
+\portadilla{1}{Diseño experimental: qué se midió y cómo se corrió}{Cuatro formas de correr las mismas pruebas, en dos máquinas, y por qué hizo falta cada una.}{Primera parte: cómo se hicieron las pruebas. Es la base de todo lo demás, porque un resultado vale lo que vale el experimento que lo produce.
+
+Vamos a ver las máquinas, de dónde salieron los programas, cómo se corrieron con Docker y sin Docker, qué es el programa del equipo y qué se hizo en el i5-10400.}
+
+\begin{frame}{Cuatro máquinas en juego: dos del paper y dos nuestras}
+  \fuente{de Wolff et al., sección 6; datos/ultra9/equipo.txt; datos/i5\_10400/00\_entorno.txt}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}H{22mm}LLLL@{}}
+    \toprule
+    & \textbf{Paper, figura 5} & \textbf{Paper, figura 6} & \textbf{Réplica A} & \textbf{Réplica B}\\
+    \midrule
+    Procesador & 4 × Xeon E7-8867 & Xeon w7-3465X & Core Ultra 9 285 & Core i5-10400\\
+    Núcleos e hilos & 72 núcleos, 144 hilos & 28 núcleos, 56 hilos & 24 núcleos (8 P + 16 E), sin SMT & 6 núcleos, 12 hilos (SMT)\\
+    Chips y memoria & 4 sockets, 4 nodos NUMA & 1 socket & 1 socket y 1 nodo NUMA; L3 de 36 MB; RAM en 1 canal & 1 socket\\
+    Sistema & — & — & Ubuntu 24.04, y Docker con Ubuntu 22.04 & WSL2 sobre Windows, Ubuntu 24.04\\
+    Qué se midió & Rendimiento & Latencia & Todo: 4 tandas, controles, RAM, corrección & Corrección y una pasada rápida de \cod{bench.cpp}\\
+    \bottomrule
+  \end{tabularx}
+  \vspace{2mm}
+  \begin{idea}
+    Ninguna de nuestras máquinas tiene 4 sockets. Por eso se comparan \textbf{órdenes y proporciones} entre algoritmos, no Mop/s absolutos entre máquinas.
+  \end{idea}
+  \note{Hay cuatro máquinas en juego. El paper usó dos: cuatro Xeon con 144 hilos para el rendimiento y un Xeon w7 de un solo chip para la latencia.
+
+  Nosotros usamos otras dos. El Core Ultra 9 285 es un procesador híbrido de 24 núcleos: 8 rápidos, llamados P, y 16 eficientes, llamados E. Ahí se hizo la réplica completa. El i5-10400 tiene 6 núcleos con dos hilos cada uno y corre Linux dentro de Windows, con WSL2. Ahí se hicieron la corrección y una pasada rápida.
+
+  La consecuencia importante: ninguna de las dos tiene cuatro chips. Así que no comparamos Mop/s entre máquinas, sino el orden de los algoritmos y cuánto rinde cada uno respecto a otro.}
+\end{frame}
+
+\begin{frame}{Qué se corrió en cada máquina y de qué forma}
+  \fuente{EXPLICACION.md, Partes 0, 4 y 6.6; resultados/david-ultra9-285/LEEME.md}
+  \scriptsize
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{36mm}CCCCCC@{}}
+    \toprule
+    & \multicolumn{5}{c}{\textbf{Core Ultra 9 285}} & \textbf{i5-10400}\\
+    \cmidrule(lr){2-6}\cmidrule(l){7-7}
+    & Docker, binarios oficiales & Sin Docker, binarios oficiales & Sin Docker, \cod{bench.cpp} & Sin Docker, \cod{bench.cpp} alineado & Pasada rápida de \cod{bench.cpp} & Pasada rápida de \cod{bench.cpp}\\
+    \midrule
+    Rendimiento (figura 5) & ✓ & ✓ & ✓ & ✓ & ✓ & ✓\\
+    Latencia (figura 6) & ✓ 5 rondas & ✓ 15 rondas & ✓ & — & ✓ & ✓\\
+    Hilos fijados a núcleos & ✓ & ✓ & ✓ & ✓ & — & —\\
+    Dos hilos en pares de núcleos & ✓ 3 rondas & ✓ 10 rondas & ✓ & — & — & —\\
+    Memoria retenida & ✓ & ✓ & — & — & — & —\\
+    Receta exacta, 10 s × 7 & ✓ 2 escenarios & ✓ 6 escenarios & — & — & — & —\\
+    Tráfico real de RAM & ✓ & — & ✓ & ✓ & — & —\\
+    ASan, TSan, boceto & ✓ rivales & — & ✓ rivales & — & ✓ & ✓\\
+    \midrule
+    Mediciones & 3\,720 & 4\,660 & 2\,976 & 2\,160 & 168 & 168\\
+    \bottomrule
+  \end{tabularx}
+  \vspace{1mm}
+  \begin{idea}La pasada rápida es el mismo guion, \cod{ejecutar\_pruebas.sh}, en las dos máquinas: es la comparación directa entre ellas.\end{idea}
+  \note{Esta tabla es el mapa de toda la réplica. Las columnas son las formas de correr las pruebas; las filas, los experimentos.
+
+  En el Ultra 9 hay cuatro tandas grandes: los binarios oficiales con Docker y sin Docker, el programa del equipo sin Docker, y una copia de ese programa con una corrección de una palabra que explicaremos en la parte 6.
+
+  La penúltima columna es importante. El guion del equipo, ejecutar\_pruebas.sh, se corrió igual en las dos máquinas. Eso nos da una comparación directa entre el i5 y el Ultra 9 con el mismo programa y los mismos parámetros. La veremos en la parte 5.}
+\end{frame}
+
+\begin{frame}{Más de 14\,000 mediciones, ninguna fallida}
+  \fuente{EXPLICACION.md, Parte 0; datos/ultra9/correccion y datos/i5\_10400}
+  \grafica[49mm]{tandas.pdf}
+  \begin{idea}Todas las ejecuciones terminaron con código 0. Cada punto se midió en un proceso nuevo y en orden aleatorio.\end{idea}
+  \note{Este es el volumen de trabajo. Las dos tandas más grandes son las de los binarios oficiales, con y sin Docker, con unas cuatro mil mediciones cada una.
+
+  Los controles son pruebas pequeñas diseñadas para aislar una causa. Por ejemplo, el mismo código dentro y fuera de Docker. Las veremos cuando toque.
+
+  Dos detalles de método: cada punto se midió en un proceso nuevo, y el orden de los puntos se sorteó. Así, si la máquina se calienta o algo la interrumpe, el efecto se reparte entre todos los algoritmos y no perjudica siempre al mismo.}
+\end{frame}
+
+\begin{frame}{El flujo de trabajo, de principio a fin}
+  \fuente{replica/completa: correr\_docker.sh, preparar.sh, correr\_nativo.sh, baterias.py, analizar.py; codigo/ejecutar\_pruebas.sh}
+  \vspace{2mm}
+  \centering
+  \begin{tikzpicture}[
+      caja/.style={draw=linea,fill=suave,rounded corners=1.5pt,align=center,text width=23.5mm,minimum height=13mm,font=\scriptsize,inner sep=1.5pt},
+      clave/.style={caja,draw=marino,line width=0.6pt},
+      flecha/.style={-{Stealth[length=2mm]},color=marino,line width=0.6pt},
+      rot/.style={font=\fontsize{6}{7}\selectfont\bfseries\color{marino},anchor=west}]
+    \node[rot] at (-1.3,1.35) {BINARIOS OFICIALES DE LOS AUTORES};
+    \node[clave] (z) at (0,0) {\textbf{Zenodo}\\artefacto oficial\\MD5 comprobado};
+    \node[caja,right=2.6mm of z] (c) {\textbf{Compilar}\\Docker: Ubuntu 22.04, g++-12\\Sin Docker: \codp{preparar.sh}};
+    \node[caja,right=2.6mm of c] (m) {\textbf{Medir}\\\codp{baterias.py}: orden al azar, un proceso por punto};
+    \node[caja,right=2.6mm of m] (v) {\textbf{CSV}\\\codp{resultados/}\\\codp{david-ultra9-285}};
+    \node[clave,right=2.6mm of v] (a) {\textbf{Analizar}\\\codp{analizar.py}: figuras y \codp{tablas.md}};
+    \draw[flecha] (z) -- (c); \draw[flecha] (c) -- (m); \draw[flecha] (m) -- (v); \draw[flecha] (v) -- (a);
+    \node[rot] at (-1.3,-1.25) {PROGRAMA DEL EQUIPO};
+    \node[clave] (b) at (0,-2.55) {\textbf{\codp{bench.cpp}}\\4 algoritmos,\\incluido Mutex};
+    \node[caja,right=2.6mm of b] (e) {\textbf{Pasada rápida}\\\codp{ejecutar\_pruebas.sh}\\en el i5 y en el Ultra 9};
+    \node[caja,right=2.6mm of e] (n) {\textbf{Batería completa}\\\codp{correr\_nativo.sh}\\\codp{equipo} y \codp{alineado}};
+    \node[caja,right=2.6mm of n] (k) {\textbf{Controles}\\Docker, alineación, Williams, RAM};
+    \node[caja,right=2.6mm of k] (d) {\textbf{Documentar}\\\codp{EXPLICACION.md}\\y esta presentación};
+    \draw[flecha] (b) -- (e); \draw[flecha] (e) -- (n); \draw[flecha] (n) -- (k); \draw[flecha] (k) -- (d);
+    \draw[flecha] (a.south) -- (d.north);
+    \draw[flecha,dashed] (n.north) -- (v.south);
+  \end{tikzpicture}
+  \vspace{3mm}
+  \begin{idea}Todo se reanuda solo: si una medición se corta, se vuelve a lanzar la misma orden y salta lo ya medido.\end{idea}
+  \note{Este es el flujo completo, en dos carriles.
+
+  Arriba, los binarios oficiales. Se bajan de Zenodo, se comprueba que el archivo no cambió con su MD5, se compilan, se miden con un guion propio, baterias.py, que sortea el orden y lanza un proceso por punto, y todo acaba en archivos CSV. De ahí, analizar.py saca las gráficas y las tablas.
+
+  Abajo, el programa del equipo, bench.cpp. Se corrió primero en una pasada rápida en las dos máquinas, después en una batería completa en el Ultra 9, y luego vinieron los controles.
+
+  Todo es reanudable: si algo se corta, se relanza la misma orden y continúa donde se quedó.}
+\end{frame}
+
+\begin{frame}{Paso 1 · El artefacto oficial, descargado de Zenodo}
+  \fuente{EXPLICACION.md, Partes 4.2 y Referencias; replica/completa/correr\_docker.sh}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.55\textwidth}
+    \small
+    \textbf{\color{marino}Qué es}\par
+    El paquete que publicaron los autores junto al paper: el código de los cinco algoritmos y los dos programas de medida.\par\vspace{2mm}
+    \footnotesize
+    \begin{tabular}{@{}G{17mm}p{50mm}@{}}
+      DOI & \cod{10.5281/zenodo.11775182}\\
+      MD5 & \codp{e7e03425dfd426385a769788e5460fcd}\\
+      Programas & \cod{bench\_stack} (rendimiento) y el de latencia\\
+      Rivales & Folly en el commit que fija el paper; Anderson en ParlayLib; Williams con \cod{boost::atomic}\\
+      Fijado por nosotros & Google Benchmark v1.8.3 y Google Test v1.14.0
+    \end{tabular}
+    \column{0.41\textwidth}
+    \begin{idea}\textbf{Por qué así:} se mide el mismo código que midieron los autores. Una reimplementación propia podría ganar o perder por cómo está escrita, no por el algoritmo.\end{idea}
+    \begin{ojo}El artefacto pide la rama \cod{main} del día de Google Benchmark y Google Test, que ya no es la misma. Por eso se fijaron dos versiones concretas.\end{ojo}
+  \end{columns}
+  \note{El primer paso fue conseguir el código exacto de los autores. Lo publicaron en Zenodo, un repositorio científico, con un identificador permanente.
+
+  Lo bajamos y comprobamos su MD5, una huella del archivo. Si coincide, sabemos que es exactamente lo que publicaron, sin un byte cambiado.
+
+  ¿Por qué no programarlo nosotros? Porque entonces mediríamos nuestra forma de programarlo. Usando su artefacto, medimos su código, el de Folly y el de Anderson tal como ellos los usaron.
+
+  Un detalle práctico: el artefacto pide la versión del día de dos bibliotecas de pruebas. Esa versión ya cambió, así que fijamos dos versiones concretas para que se pueda repetir.}
+\end{frame}
+
+\begin{frame}{Paso 2 · Compilar y medir dentro de Docker}
+  \fuente{replica/completa/correr\_docker.sh y Dockerfile; EXPLICACION.md, Parte 9}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \small
+    \textbf{\color{marino}Qué hace \cod{correr\_docker.sh}}
+    \begin{enumerate}\footnotesize
+      \item Baja el artefacto y comprueba el MD5.
+      \item Construye una imagen con Ubuntu 22.04 y g++-12, la misma base que usa el artefacto.
+      \item Compila los binarios oficiales dentro.
+      \item Lanza las baterías: unas 3 horas.
+    \end{enumerate}
+    \vspace{1mm}
+    \begin{tcolorbox}[colback=tinta,colupper=white,boxrule=0pt,arc=1.5pt,left=4pt,top=2pt,bottom=2pt,fontupper=\scriptsize\ttfamily]
+      cd replica/completa\\
+      bash correr\_docker.sh
+    \end{tcolorbox}
+    \column{0.46\textwidth}
+    \begin{porque}[: Docker]
+      Docker no es una máquina virtual. El programa corre sobre el mismo núcleo de Linux y en la misma CPU; solo cambia lo que ve a su alrededor: bibliotecas, compilador y archivos. Sirve para tener el entorno de los autores sin tocar el sistema.
+    \end{porque}
+    \begin{ojo}Que Docker no altera los números había que demostrarlo. Se hizo en la parte 4.\end{ojo}
+  \end{columns}
+  \note{El segundo paso fue compilar y medir dentro de Docker. Un solo guion lo hace todo: baja, comprueba, construye la imagen, compila y mide. Tarda unas tres horas.
+
+  ¿Por qué Docker? Porque nos da el mismo entorno que usaron los autores, Ubuntu 22.04 con g++-12, sin instalar nada en el sistema.
+
+  Docker no es una máquina virtual: no hay un procesador simulado. El programa corre en la misma CPU y con el mismo núcleo de Linux. Es como correr en la misma pista con un dorsal puesto.
+
+  Aun así, que Docker no cambie los números no se puede suponer. Lo comprobamos midiendo, y lo veremos en la parte 4.}
+\end{frame}
+
+\begin{frame}{La receta oficial, sacada del artefacto}
+  \fuente{EXPLICACION.md, Parte 4.2; artefacto de Zenodo}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \column{0.6\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}G{20mm}p{62mm}@{}}
+      \toprule
+      Orden & \cod{bench\_stack -r 10 -s n -u u -i 7 --peek=true --threads=T --alg=A}\\
+      Algoritmos & \cod{ivo} (Autores), \cod{mine} (Anderson), \cod{folly}, \cod{jss-free} (Williams), \cod{gnu} (Libstdc++)\\
+      Asignador & \cod{jemalloc}, cargado con \cod{LD\_PRELOAD}\\
+      Memoria & \cod{numactl -i all}: repartida entre los nodos\\
+      Hilos & 1, 18, 36, 54, 72, 108, 144, 180, 216\\
+      Tamaño de pila & 20 elementos + T/n\\
+      Resultado & Mediana de 7 ejecuciones de 10 s\\
+      \bottomrule
+    \end{tabular}
+    \column{0.36\textwidth}
+    \textbf{\color{marino}Qué se mide}\par\vspace{1mm}
+    \footnotesize
+    \textbf{n} pilas concurrentes. En cada operación se elige una pila al azar: con probabilidad \textbf{u}\,\% se saca un elemento y se mete en otra; si no, se lee la cima.\par\vspace{2mm}
+    \begin{idea}\footnotesize \textbf{n} pequeño = mucha gente en poco sitio.\\ \textbf{u} grande = mucha escritura.\end{idea}
+  \end{columns}
+  \note{Esta receta no aparece en el paper: la sacamos del propio artefacto, leyendo cómo lanzaban las pruebas.
+
+  El programa crea n pilas. En cada operación elige una al azar; con probabilidad u por ciento mueve un elemento de una pila a otra, y si no, solo lee la cima.
+
+  Para leer todo lo que viene, basta recordar dos cosas. Con n pequeño, todos los hilos se pelean por las mismas pilas: eso es contención. Con u grande, hay muchas escrituras. Con n igual a un millón, casi nunca coinciden dos hilos.
+
+  Cada punto del paper es la mediana de siete ejecuciones de diez segundos.}
+\end{frame}
+
+\begin{frame}{Adaptaciones a una máquina de 24 núcleos, y por qué}
+  \fuente{EXPLICACION.md, Parte 4.3}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}p{30mm}p{38mm}X@{}}
+    \toprule
+    \textbf{Paper} & \textbf{Réplica} & \textbf{Por qué}\\
+    \midrule
+    Hilos 1 a 216 & 1, 3, 6, 9, 12, 18, 24, 30, 36 & La lista del paper dividida entre 6: 24 es «toda la máquina», como 144; 36 es 1,5 veces, como 216\\
+    7 × 10 s en un proceso & 5 rondas de 2 s, un proceso nuevo por punto, en orden aleatorio & La figura 5 pasa de unas 5 h a poco más de 1 h, y el calor o una interrupción afectan a todos por igual\\
+    p = 56 en latencia & p = 1, 24 y 56 & 24 son todos los núcleos reales; con 56 hay más hilos que núcleos\\
+    Williams fuera de la latencia & Williams medido, compilado con \cod{-mcx16} & El paper lo omite «porque su latencia casi siempre era mayor»: se comprobó en vez de creerlo\\
+    \bottomrule
+  \end{tabularx}
+  \vspace{2mm}
+  \begin{ojo}Recortar puede sesgar. Por eso se repitieron 30 puntos con la receta exacta de 10 s × 7: lo veremos en la parte 10.\end{ojo}
+  \note{Hubo que adaptar la receta a una máquina más pequeña. Cuatro cambios, cada uno con su razón.
+
+  Los hilos: dividimos la lista del paper entre seis. Así se conserva la proporción: 24 hilos es toda la máquina, como 144 allí.
+
+  La duración: cinco rondas de dos segundos en vez de siete de diez. Cada punto en un proceso nuevo y en orden aleatorio. Pasamos de cinco horas a una.
+
+  La latencia: medimos con 1, 24 y 56 hilos. Y medimos también a Williams, que el paper deja fuera. Al hacerlo encontramos un problema de compilación que veremos en la parte 7.
+
+  Recortar tiene un precio, y lo medimos: está en la parte 10.}
+\end{frame}
+
+\begin{frame}{Fijar cada hilo a un núcleo sin tocar el binario}
+  \fuente{replica/completa/herramientas/fijar\_hilos.c; EXPLICACION.md, Parte 5.4}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+    \small
+    \textbf{\color{marino}Cómo funciona}\par\vspace{1mm}
+    \footnotesize
+    \cod{fijar\_hilos.c} es una librería pequeña que se carga delante del programa con \cod{LD\_PRELOAD}. Intercepta la creación de cada hilo y lo ata al núcleo que le toca.\par\vspace{2mm}
+    \begin{itemize}
+      \item El binario oficial \textbf{no se modifica}.
+      \item Se comprobó leyendo el sistema: cada hilo estaba en su núcleo.
+    \end{itemize}
+    \vspace{2mm}
+    \begin{idea}\footnotesize El experimento limpio: \textbf{los mismos 4 hilos}, del mismo tipo de núcleo, cada vez más lejos. Solo cambia la distancia.\end{idea}
+    \column{0.49\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}p{20mm}p{44mm}@{}}
+      \toprule
+      \textbf{Colocación} & \textbf{Qué imita}\\
+      \midrule
+      \cod{E4-compacto} & 4 hilos en un clúster: todos en el mismo «socket»\\
+      \cod{E4-disperso} & uno en cada clúster: repartidos por los 4 «sockets»\\
+      \cod{P4} & 4 núcleos P: la máxima distancia\\
+      \cod{todos24} & toda la máquina, con los hilos fijados\\
+      \cod{sistema} & sin fijar: lo decide Linux, como en el paper\\
+      \bottomrule
+    \end{tabular}
+  \end{columns}
+  \note{Para simular cuatro sockets necesitamos decidir en qué núcleo exacto corre cada hilo. A eso se le llama afinidad.
+
+  Lo hicimos sin tocar el binario oficial. Una librería pequeña se carga delante del programa, intercepta el momento en que se crea cada hilo y lo ata a un núcleo. Comprobamos después que cada hilo estaba donde debía.
+
+  El experimento más limpio es con cuatro hilos: compacto, todos en un mismo grupo; disperso, uno en cada grupo; y en núcleos P, lo más lejos posible. Mismo número de hilos y mismo tipo de núcleo: lo único que cambia es la distancia. Es un experimento de dosis y respuesta.}
+\end{frame}
+
+\begin{frame}{Antes de simular sockets, medir la distancia real entre núcleos}
+  \fuente{datos/ultra9/topologia/matriz\_nucleos.csv (herramientas/latencia\_nucleos.cpp); EXPLICACION.md, Partes 5.2 y 5.3}
+  \grafica[47mm]{topologia.pdf}
+  \begin{idea}Los 4 clústeres E se comportan como sockets en miniatura: cerca dentro y más lejos fuera. Pero el castigo es de 1,35×, frente a unas 3× entre sockets Xeon (dato indirecto, de máquinas parecidas).\end{idea}
+  \note{Antes de suponer que los grupos de núcleos se parecen a sockets, lo medimos. Un pequeño programa lanza una pelota entre cada par de núcleos y cronometra cuánto tarda en volver.
+
+  A la izquierda, el mapa: más oscuro es más lento. Los cuadros claros de la diagonal son los cuatro clústeres de núcleos E: dentro de cada uno, los viajes son rápidos.
+
+  A la derecha, las medianas. Dentro del clúster, 35 nanosegundos; entre clústeres, 47. La sorpresa: los núcleos P, los más rápidos calculando, son los más lejanos entre sí, con 86 nanosegundos.
+
+  En los Xeon de esa generación, salir del socket cuesta unas tres veces más. Aquí, 1,35. La miniatura tiene la forma correcta, pero el castigo es más suave.}
+\end{frame}
+
+\begin{frame}{Paso 3 · Sin Docker, primero con el programa del equipo}
+  \fuente{EXPLICACION.md, Partes 6.6 y 8; replica/completa/correr\_nativo.sh}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.52\textwidth}
+    \small
+    \textbf{\color{marino}Por qué medir sin Docker}\par\vspace{1mm}
+    \footnotesize Para descartar que el contenedor cambiara los resultados. Si dentro y fuera dan lo mismo, Docker queda absuelto.\par\vspace{2mm}
+    \small\textbf{\color{marino}Por qué se empezó por \cod{bench.cpp}}\par\vspace{1mm}
+    \footnotesize Los binarios oficiales necesitan compilar Folly y ParlayLib fuera del contenedor. Al principio no compilaban: el sistema de permisos del asistente bloqueó \cod{preparar.sh}, y lanzado a mano se paraba al configurar \cod{bench\_stack}.
+    \column{0.44\textwidth}
+    \begin{tcolorbox}[colback=tinta,colupper=white,boxrule=0pt,arc=1.5pt,left=4pt,top=2pt,bottom=2pt,fontupper=\scriptsize\ttfamily]
+      cd replica/completa\\
+      SOLO\_DESCARGA=1 bash preparar.sh\\
+      bash correr\_nativo.sh equipo
+    \end{tcolorbox}
+    \footnotesize
+    \begin{itemize}
+      \item Autores, Libstdc++, Williams y Mutex; \textbf{Folly y Anderson no están}.
+      \item Se le añadió jemalloc con \cod{LD\_PRELOAD} y n = 10⁶, sin tocar su código.
+      \item 2\,976 mediciones, unas 1,5 horas.
+    \end{itemize}
+  \end{columns}
+  \vspace{2mm}
+  \begin{ojo}Aquí cambian dos cosas a la vez, el entorno y el programa. Separarlas exigió los controles de las partes 4 y 6.\end{ojo}
+  \note{El tercer paso fue medir sin Docker. La idea era sencilla: si dentro y fuera da lo mismo, el contenedor no influye.
+
+  Empezamos con el programa del equipo, bench.cpp, porque los binarios oficiales no compilaban fuera del contenedor. Necesitan compilar Folly y ParlayLib, y el sistema de permisos del asistente bloqueó ese paso por tratarse de código descargado. Lanzado a mano, se paraba a mitad.
+
+  bench.cpp tiene cuatro algoritmos: le faltan Folly y Anderson. Le añadimos jemalloc y el escenario de un millón de pilas, sin tocar su código.
+
+  Ojo: aquí cambiaban a la vez el entorno y el programa. Si salía distinto, no sabíamos a quién culpar. Por eso hicieron falta controles.}
+\end{frame}
+
+\begin{frame}{Paso 4 · Sin Docker con los binarios oficiales: la tanda nocturna}
+  \fuente{EXPLICACION.md, Partes 8 y 9; replica/completa/pendientes.sh}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \small
+    \textbf{\color{marino}El fallo, y su arreglo}\par\vspace{1mm}
+    \footnotesize El archivo de CMake de \cod{fmt} sube 4 carpetas para hallar su raíz, pero el enlace de \cod{preparar.sh} estaba a 3 carpetas de \cod{install/fmt}: buscaba \cod{install/lib/...} y no existía. Se arregló con dos enlaces.\par\vspace{2.5mm}
+    \small\textbf{\color{marino}Qué hizo \cod{pendientes.sh}}
+    \begin{enumerate}\footnotesize
+      \item Compilar los binarios oficiales fuera de Docker.
+      \item Medir los 5 algoritmos: figura 5, afinidad y pares (10 rondas).
+      \item Latencia con 15 rondas en vez de 5.
+      \item Repetir \cod{bench.cpp} con las pilas alineadas.
+      \item Regenerar tablas y gráficas.
+    \end{enumerate}
+    \column{0.46\textwidth}
+    \vspace{1mm}
+    \cifra{4 h 44 min}{noche del 6 al 7 de noviembre de 2026,\\de 23:07 a 03:51}\par\vspace{4mm}
+    \cifra{0}{fallos; \cod{comprobar\_final.py} confirmó\\que no faltaba ninguna fila}
+  \end{columns}
+  \note{El cuarto paso fue repetir con los binarios oficiales, ya fuera de Docker. Primero hubo que entender por qué no compilaban.
+
+  El culpable era fmt, una biblioteca de formato que usa Folly. Su archivo de configuración sube cuatro carpetas para encontrar su raíz, y nuestro enlace estaba a tres. Buscaba una carpeta que no existía. Dos enlaces más y compiló.
+
+  Después, un solo guion, pendientes.sh, hizo todo de un tirón durante la noche: compilar, medir los cinco algoritmos, repetir la latencia con quince rondas y medir la versión alineada del programa del equipo. Tardó 4 horas y 44 minutos, sin un solo fallo. Otro guion comprobó al final que no faltaba nada.}
+\end{frame}
+
+\begin{frame}{Dentro y fuera de Docker cambia más que Docker}
+  \fuente{EXPLICACION.md, Parte 6.6}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}lll@{}}
+      \toprule
+      & \textbf{Con Docker} & \textbf{Sin Docker}\\
+      \midrule
+      g++-12 & 12.3.0 & 12.4.0\\
+      glibc & 2.35 & 2.39\\
+      Boost & 1.74 & 1.83\\
+      jemalloc & 5.2.1 & 5.3.0\\
+      Folly & \cod{getdeps.py} & CMake directo\\
+      \bottomrule
+    \end{tabular}
+    \column{0.46\textwidth}
+    \begin{idea}\footnotesize Si un resultado cambia al salir de Docker, no se puede culpar a Docker sin más: cambian cinco piezas a la vez.\end{idea}
+    \begin{idea}\footnotesize Y si nada cambia, es que esas cinco piezas juntas tampoco importan aquí.\end{idea}
+  \end{columns}
+  \vspace{3mm}
+  \begin{porque}[: por qué importa Boost]
+    El Williams del artefacto usa \cod{boost::atomic}. Un cambio de versión de Boost es el primer sospechoso de la única diferencia grande entre las dos tandas, Williams entre clústeres (parte 9). Es una sospecha: no se midió.
+  \end{porque}
+  \note{Un detalle que es fácil pasar por alto. Salir de Docker no cambia solo Docker. Cambian el compilador, la biblioteca de C, Boost, jemalloc y la forma de compilar Folly.
+
+  Esto tiene dos lecturas. Si algo cambia, no podemos culpar a Docker sin más, porque hay cinco sospechosos. Y si nada cambia, sabemos que esas cinco piezas tampoco importan.
+
+  Lo de Boost lo retomaremos: el Williams del artefacto usa Boost, y es el único algoritmo con una diferencia grande entre las dos tandas. Pero es una sospecha que no medimos.}
+\end{frame}
+
+\begin{frame}{El programa del equipo no es el programa oficial}
+  \fuente{EXPLICACION.md, Parte 6.6}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}G{30mm}LL@{}}
+    \toprule
+    & \textbf{\cod{bench\_stack}, oficial} & \textbf{\cod{codigo/bench.cpp}, del equipo}\\
+    \midrule
+    Algoritmos & Los 5 del paper & Autores, Libstdc++, Williams y Mutex\\
+    Pilas en memoria & Cada una en su sitio: \cod{alignas(128)} & Seguidas, sin alinear\\
+    Nodos por pila & 20 + T/n & 16, o 2 si n > 10\\
+    Generador de azar & Uno rápido & \cod{mt19937\_64}, más lento\\
+    Compilación & \cod{-O3} & \cod{-O2}\\
+    Williams & Con \cod{boost::atomic} & Con \cod{std::atomic}\\
+    Autores & Versión del artefacto: la cuenta sube & Versión publicada: la cuenta baja\\
+    \bottomrule
+  \end{tabularx}
+  \vspace{2mm}
+  \begin{idea}Son dos programas escritos por personas distintas. Cuando coinciden, el resultado es sólido. Cuando no, la diferencia está en el programa, y hay que encontrarla.\end{idea}
+  \note{bench.cpp lo escribió el equipo como comprobación independiente. No es el programa oficial, y conviene saber en qué se diferencian.
+
+  La diferencia que más importará es la segunda fila: el oficial coloca cada pila en su propio hueco de memoria, y el nuestro las pone seguidas. Parece un detalle y nos costó un factor tres. Lo veremos en la parte 6.
+
+  También cambian el número de nodos, el generador de azar, el nivel de optimización y la versión de Williams y de Autores.
+
+  La idea de fondo: dos programas distintos que cuentan la misma historia dan mucha confianza. Y donde no coinciden, hay algo que aprender.}
+\end{frame}
+
+\begin{frame}{El i5-10400: cómo se corrieron sus pruebas}
+  \fuente{codigo/ejecutar\_pruebas.sh y correr\_tsan.sh; datos/i5\_10400/00\_entorno.txt}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \small
+    \textbf{\color{marino}Entorno}\par\vspace{1mm}
+    \footnotesize
+    \begin{tabular}{@{}G{17mm}p{47mm}@{}}
+      Sistema & WSL2 sobre Windows (Linux 6.18), Ubuntu 24.04\\
+      Compilador & g++ 13.3\\
+      Hilos & 12 (6 núcleos con SMT)\\
+    \end{tabular}\par\vspace{2mm}
+    \small\textbf{\color{marino}Qué hace \cod{ejecutar\_pruebas.sh}}
+    \begin{enumerate}\footnotesize
+      \item Demo del código de los autores.
+      \item ASan con 8, 12 y 16 hilos; TSan con \cod{setarch -R}.
+      \item El boceto y dos variantes rotas.
+      \item \cod{bench.cpp}: rendimiento, 1 s por punto, hilos 1 a 18.
+      \item \cod{bench.cpp}: latencia, 100\,000 muestras, p = 1 y 12.
+    \end{enumerate}
+    \column{0.46\textwidth}
+    \begin{tcolorbox}[colback=tinta,colupper=white,boxrule=0pt,arc=1.5pt,left=4pt,top=2pt,bottom=2pt,fontupper=\scriptsize\ttfamily]
+      cd codigo\\
+      bash ejecutar\_pruebas.sh \textbackslash\\
+      \ \ ../replica/resultados/<nombre>-<cpu>
+    \end{tcolorbox}
+    \begin{idea}\footnotesize El mismo guion se corrió en el Ultra 9 (\cod{correccion/}): mismos parámetros, misma versión del compilador.\end{idea}
+    \begin{ojo}Una sola pasada de 1 s por punto: solo valen las diferencias grandes.\end{ojo}
+  \end{columns}
+  \note{Ahora el i5-10400. Corre Linux dentro de Windows, con WSL2, y el compilador g++ 13.3. Tiene 6 núcleos y cada uno ejecuta dos hilos a la vez, así que el sistema ve 12.
+
+  Todo se lanzó con un solo guion del equipo, ejecutar\_pruebas.sh. Hace cinco cosas: la demo del código de los autores, los detectores de errores ASan y TSan, el boceto con sus variantes rotas, y una pasada rápida de rendimiento y de latencia con bench.cpp.
+
+  TSan necesitó un truco: desactivar la aleatorización de direcciones con setarch, porque en estos núcleos de Linux fallaba al arrancar.
+
+  Lo importante: el mismo guion se corrió en el Ultra 9. Por eso podemos compararlas. Pero es una sola pasada de un segundo por punto: solo nos fiaremos de las diferencias grandes.}
+\end{frame}
+
+\begin{frame}{Controles: un experimento pequeño para cada duda}
+  \fuente{replica/completa: controles.sh, control\_williams.sh, herramientas/; EXPLICACION.md, Partes 6.1 a 6.7}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}p{38mm}Xp{17mm}@{}}
+    \toprule
+    \textbf{Control} & \textbf{Qué aísla} & \textbf{Dónde se ve}\\
+    \midrule
+    Mismo código dentro y fuera de Docker & Docker por sí solo: 48 puntos alternados, 3 rondas & Parte 4\\
+    \cod{alignas(128)} en una copia de \cod{bench.cpp} & La colocación de las pilas en memoria & Parte 6\\
+    Williams con \cod{std::atomic} y con \cod{boost::atomic} & La biblioteca atómica de Williams & Parte 9\\
+    Contadores de la controladora de memoria & El tráfico real de RAM: \cod{medir\_memoria.py}, \cod{alinear\_memoria.py} & Partes 3 y 6\\
+    Detectores en los rivales & Que ningún rival gane usando memoria liberada & Parte 2\\
+    Contador en una copia del código de los autores & Los intentos reales de la recarga & Parte 2\\
+    Receta exacta, 10 s × 7 & El efecto de recortar la duración & Parte 10\\
+    Valores del paper sacados del PDF vectorial & Comparar número contra número (\cod{extraer\_fig5.py}) & Partes 3 y 7\\
+    \bottomrule
+  \end{tabularx}
+  \note{Cada vez que un resultado no cuadraba, diseñamos un control: un experimento pequeño que cambia una sola cosa.
+
+  Por ejemplo, para saber si Docker influye, compilamos el mismo código dentro y fuera y lo medimos alternando. Para saber si la colocación de las pilas en memoria importaba, añadimos una sola palabra en una copia del programa.
+
+  Una mención especial a la última fila. Los valores del paper no los leímos a ojo de la gráfica. Las figuras del PDF son vectoriales, así que un guion saca la posición exacta de cada marcador y la convierte a Mop/s. Así comparamos número contra número.}
+\end{frame}
+
+\begin{frame}{Calidad de las mediciones y tres reglas para leerlas}
+  \fuente{EXPLICACION.md, Partes 6 y 8}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+    \small\textbf{\color{marino}Calidad}\par\vspace{1mm}
+    \footnotesize
+    \begin{itemize}
+      \item 0 ejecuciones fallidas en todas las tandas.
+      \item Con Docker: temperatura mediana de 75\,°C; solo 5 de 3\,720 llegaron a 90\,°C o más.
+      \item Sin Docker: 26 de 9\,796 a 90\,°C o más; máximo, 99\,°C. Repartidas, no se descartaron.
+      \item Dispersión típica entre rondas: 1\,\%; en los puntos más ruidosos, 8\,\%.
+      \item PC de escritorio sin aislar y con la frecuencia sin fijar: el orden aleatorio reparte las interferencias.
+    \end{itemize}
+    \column{0.49\textwidth}
+    \small\textbf{\color{marino}Tres reglas de lectura}\par\vspace{1mm}
+    \footnotesize
+    \begin{enumerate}
+      \item \textbf{Se comparan algoritmos, no máquinas.} La CPU es casi diez años más moderna que los Xeon del paper.
+      \item \textbf{«0,50×» es «rinde la mitad que Autores».} Así se compara sin que importe la máquina.
+      \item \textbf{Una diferencia pequeña es un empate.} Recortar la duración movió algunos puntos hasta un 21\,\%: solo cuentan las diferencias de 2 o 3 veces.
+    \end{enumerate}
+  \end{columns}
+  \note{Antes de entrar en los resultados, la calidad de los datos y tres reglas para leerlos.
+
+  Calidad: ninguna ejecución falló. El procesador se calentó, como es normal, pero muy pocas mediciones pasaron de 90 grados, y estaban repartidas entre escenarios, así que no se descartaron. La variación típica entre rondas fue del uno por ciento.
+
+  Las reglas. Primera: comparamos algoritmos, no máquinas. Segunda: casi todo lo expresamos respecto a Autores, el algoritmo del paper; 0,50 significa que rinde la mitad. Tercera, la más importante: una diferencia pequeña no es una victoria. Lo justificaremos en la parte 10.}
+\end{frame}

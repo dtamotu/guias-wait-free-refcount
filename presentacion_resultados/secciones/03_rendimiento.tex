@@ -1,0 +1,381 @@
+% ---------- Parte 3: rendimiento frente al paper ----------
+\section{Rendimiento}
+\portadilla{3}{Rendimiento: la figura 5, frente al paper}{Los binarios oficiales en el Core Ultra 9, escenario por escenario: qué se repite, qué no, y qué lo explica.}{Tercera parte: rendimiento. Es la figura 5 del paper: cuántas operaciones por segundo hace cada algoritmo según el número de hilos.
+
+Aquí usamos los binarios oficiales en el Ultra 9, con Docker. Primero miramos las dos figuras, la del paper y la nuestra; después, el marcador; y luego cada diferencia con su explicación.}
+
+\begin{frame}{El paper: cuatro Xeon, hasta 216 hilos}
+  \fuente{datos/paper/paper\_fig5.csv, extraído del PDF vectorial con herramientas/extraer\_fig5.py}
+  \grafica[60mm]{fig5_paper.pdf}
+  \note{Esta es la figura 5 del paper, redibujada con los valores exactos que sacamos del PDF. Cada recuadro es un escenario: n pilas y u por ciento de escrituras. La raya punteada marca los 144 hilos, toda la máquina.
+
+  Tres cosas para retener. En el recuadro n igual a 10, u igual a 1 por ciento, Autores, en rojo, gana con claridad. En los escenarios de una sola pila con escrituras, Anderson, en morado, va por delante. Y con un millón de pilas, Autores lidera con unos 129 Mop/s.
+
+  Ahora veamos la nuestra.}
+\end{frame}
+
+\begin{frame}{La réplica: Core Ultra 9, binarios oficiales, con Docker}
+  \fuente{datos/ultra9/docker/rendimiento.csv; mediana de 5 rondas de 2 s, la sombra va de la peor ronda a la mejor}
+  \grafica[60mm]{fig5_docker.pdf}
+  \note{Esta es la nuestra, con los mismos programas y la misma escala de hilos dividida entre seis. La línea es la mediana de cinco rondas y la sombra, de la peor a la mejor. La sombra casi no se ve: las rondas coinciden mucho.
+
+  A primera vista, la forma se parece: con una pila todo se hunde al añadir hilos, con diez pilas Autores gana con claridad, y con un millón todas las curvas suben.
+
+  Pero hay diferencias, y las veremos una a una. Antes, una que salta a la vista: el desplome de 1 a 3 hilos.}
+\end{frame}
+
+\begin{frame}{De 1 a 3 hilos casi todo se desploma, salvo con un millón de pilas}
+  \fuente{datos/ultra9/docker/rendimiento.csv, Autores, mediana de 5 rondas}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.44\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}lrrr@{}}
+      \toprule
+      \textbf{Autores} & \textbf{1 hilo} & \textbf{3 hilos} & \textbf{Cambio}\\
+      \midrule
+      n = 1 · u = 1\,\% & 94,2 & 23,7 & −75\,\%\\
+      n = 1 · u = 10\,\% & 53,4 & 10,1 & −81\,\%\\
+      n = 1 · u = 50\,\% & 18,3 & 2,5 & −86\,\%\\
+      n = 10 · u = 1\,\% & 94,6 & 55,5 & −41\,\%\\
+      n = 10 · u = 10\,\% & 54,7 & 36,6 & −33\,\%\\
+      n = 10⁶ · u = 50\,\% & 3,3 & 9,9 & \textbf{+200\,\%}\\
+      \bottomrule
+    \end{tabular}\par\vspace{1mm}
+    \scriptsize Mop/s.
+    \column{0.52\textwidth}
+    \begin{porque}[: contención por una línea de caché]
+      Los datos viajan entre núcleos en líneas de 64 bytes, y para escribir en una línea un núcleo tiene que tenerla en exclusiva. Si todos escriben en la misma, la línea pasa de mano en mano: el trabajo dura un instante y lo que cuesta es el viaje. Más hilos no aceleran nada: añaden viajes.\par\vspace{1mm}
+      Con un millón de pilas, dos hilos casi nunca tocan la misma línea, y el rendimiento sube con los hilos, como uno esperaría.
+    \end{porque}
+  \end{columns}
+  \vspace{1mm}
+  \begin{idea}Esta es la teoría que explica casi todas las gráficas: lo caro no es calcular, es mover la línea compartida.\end{idea}
+  \note{Esto parece un fallo y no lo es. Con una sola pila, Autores pasa de 94 a 24 millones de operaciones por segundo al pasar de uno a tres hilos.
+
+  La explicación es la idea más importante de toda la presentación. La memoria se mueve entre núcleos en bloques de 64 bytes. Para escribir en un bloque, un núcleo tiene que tenerlo en exclusiva. Imaginad un cuaderno que no se puede fotocopiar: para escribir hay que tenerlo en la mano. Con un hilo, el cuaderno nunca sale de tu mano. Con tres, se pasa el tiempo viajando.
+
+  Con un millón de pilas, cada hilo trabaja en su rincón y casi nunca coincide con otro. Ahí más hilos sí es más trabajo: de 3,3 a 9,9. Esa diferencia entre recuadros tiene un nombre: contención.}
+\end{frame}
+
+\begin{frame}{El marcador con toda la máquina: coincide quién gana en 4 de 6}
+  \fuente{datos/ultra9/docker/rendimiento.csv y datos/paper/paper\_fig5.csv; EXPLICACION.md, Parte 6.1}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}p{23mm}p{36mm}p{27mm}Xp{19mm}@{}}
+    \toprule
+    \textbf{Escenario} & \textbf{En palabras} & \textbf{Paper, 144 hilos} & \textbf{Réplica, 24 hilos} & \textbf{¿Coincide?}\\
+    \midrule
+    n = 1 · u = 1\,\% & 1 pila, casi solo lecturas & Anderson (1,70×) & Autores, por poco (Anderson 0,94×) & \textcolor{mal}{\textbf{No}}\\
+    n = 1 · u = 10\,\% & 1 pila, algunas escrituras & Anderson (1,66×) & Anderson (1,99×) & \textcolor{bien}{\textbf{Sí}}\\
+    n = 1 · u = 50\,\% & 1 pila, muchas escrituras & Anderson (1,82×) & Anderson (1,87×) & \textcolor{bien}{\textbf{Sí}}\\
+    n = 10 · u = 1\,\% & 10 pilas, casi solo lecturas & Autores (Anderson 0,66×) & Autores (Anderson 0,61×) & \textcolor{bien}{\textbf{Sí}}, casi igual\\
+    n = 10 · u = 10\,\% & 10 pilas, algunas escrituras & Anderson (1,54×) & Anderson (1,13×) & \textcolor{bien}{\textbf{Sí}}, por menos\\
+    n = 10⁶ · u = 50\,\% & un millón de pilas & Autores & Empate a cuatro, unos 55 Mop/s & \textcolor{mal}{\textbf{No}}\\
+    \bottomrule
+  \end{tabularx}
+  \vspace{2mm}
+  \begin{idea}\footnotesize El mejor caso de Autores se reproduce casi exacto: con n = 10 y u = 1\,\%, Autores 122 Mop/s, Anderson 74, Folly 46, Williams 35 y Libstdc++ 11.\end{idea}
+  \note{Este es el marcador con toda la máquina en marcha: 144 hilos en el paper y 24 aquí. Entre paréntesis, cuánto rinde el ganador respecto a Autores, o Anderson respecto a Autores cuando gana Autores.
+
+  Coincide quién gana en cuatro de seis escenarios. Los tres de escrituras sobre pocas pilas los gana Anderson, como en el paper. Y el escenario estrella del paper, diez pilas con pocas escrituras, sale casi idéntico: Autores 122, Anderson 74.
+
+  No coinciden dos. Con una pila y pocas escrituras, aquí gana Autores por poco. Y con un millón de pilas, aquí hay un empate a cuatro. Los dos tienen explicación, y la veremos en las próximas diapositivas.}
+\end{frame}
+
+\begin{frame}{Cada rival respecto a Autores: paper frente a réplica}
+  \fuente{datos/paper/paper\_fig5.csv, datos/ultra9/docker y nativo\_oficial/rendimiento.csv; 144 hilos en el paper, 24 en la réplica}
+  \grafica[58mm]{relativo_paper_replica.pdf}
+  \note{Esta gráfica resume toda la comparación en una imagen. Cada fila es un rival. El círculo hueco es el paper; el relleno, la réplica con Docker; la rayita, la réplica sin Docker. La raya vertical es Autores: a la izquierda, el rival pierde; a la derecha, gana. La escala es logarítmica.
+
+  Si hueco y relleno están juntos, la réplica clavó al paper. Pasa con Libstdc++, con Williams y con Anderson en casi todos los escenarios.
+
+  La excepción salta a la vista: Folly, en amarillo. En el paper está muy a la izquierda, rindiendo un 5 por ciento de Autores. Aquí está cerca de la raya, o incluso a la derecha. Es la mayor discrepancia de la réplica.
+
+  Y fijaos en la rayita sin Docker: cae casi siempre sobre el círculo relleno. Docker no cambia nada, lo veremos en la parte 4.}
+\end{frame}
+
+\begin{frame}{Lo que se repite, y la teoría que lo explica}
+  \fuente{datos/ultra9/docker/rendimiento.csv; EXPLICACION.md, Partes 3 y 6.1}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \textbf{\algLib\ se hunde al crecer los hilos}\par
+    De 58,5 a 1,2 Mop/s con n = 1 y u = 1\,\%: unas 49 veces menos. En el paper, de 7 a 0,11: unas 64 veces.\par
+    {\color{tinta2}\textit{Por qué:} un candado forma una cola. Cada lectura escribe dos veces en la línea más disputada, y quien no entra se queda dando vueltas.}\par\vspace{2.5mm}
+    \textbf{\algWil\ queda por debajo en los 6 escenarios}\par
+    Entre 0,24× y 0,73× de Autores.\par
+    {\color{tinta2}\textit{Por qué:} cada lectura necesita dos bucles de CAS de 16 bytes (\cod{cmpxchg16b}) que pueden fallar y repetirse. Autores hace una sola resta que nunca falla.}
+    \column{0.48\textwidth}
+    \textbf{\algAnd\ gana con escrituras sobre pocas pilas}\par
+    1,87× a 1,99× con n = 1 y u ≥ 10\,\%.\par
+    {\color{tinta2}\textit{Por qué:} en Autores cada lectura modifica la palabra compartida, así que el CAS de quien escribe falla por culpa de los lectores. En Anderson leer no escribe en esa palabra.}\par\vspace{2.5mm}
+    \textbf{\algAut\ brilla con lecturas y algo de reparto}\par
+    n = 10, u = 1\,\%: 122 Mop/s, 1,65× Anderson.\par
+    {\color{tinta2}\textit{Por qué:} con pocas escrituras casi no hay CAS que fallen, y su lectura es la más barata: una instrucción, sin bucle.}
+  \end{columns}
+  \vspace{2mm}
+  \begin{idea}La diferencia que lo explica casi todo es una sola instrucción: \cod{fetch\_sub} no puede fallar; un CAS sí, y con contención falla una y otra vez.\end{idea}
+  \note{Cuatro resultados que se repiten, cada uno con su explicación.
+
+  Libstdc++ se hunde: de 58 a poco más de uno. En el paper también, en proporción parecida. Es lo que hace un candado: formar una cola.
+
+  Williams pierde siempre, porque cada lectura necesita dos bucles de compare-and-swap de 16 bytes. Cada bucle puede fallar y repetirse.
+
+  Anderson gana cuando hay escrituras sobre una pila. La razón es fina: en Autores cada lectura cambia la palabra compartida, así que el compare-and-swap de quien escribe falla por culpa de un simple lector. En Anderson, leer no cambia esa palabra.
+
+  Y Autores brilla con pocas escrituras, porque su lectura es una sola instrucción que no puede fallar. En resumen: compare-and-swap puede fallar; fetch\_sub, no.}
+\end{frame}
+
+\begin{frame}{Por qué Anderson gana con escrituras sobre una sola pila}
+  \fuente{EXPLICACION.md, Partes 3.5, 3.6 y 3.7}
+  \centering
+  \begin{tikzpicture}[font=\scriptsize,
+      celdaAut/.style={draw=cAutores,fill=cAutores!12,line width=0.7pt,minimum width=26mm,minimum height=8mm,align=center,rounded corners=1pt},
+      celdaAnd/.style={draw=cAnderson,fill=cAnderson!12,line width=0.7pt,minimum width=26mm,minimum height=8mm,align=center,rounded corners=1pt},
+      hilo/.style={circle,draw=tinta2,fill=white,minimum size=5.5mm,inner sep=0pt,font=\tiny},
+      lee/.style={-{Stealth[length=1.6mm]},color=cAutores,line width=0.6pt},
+      soloee/.style={-{Stealth[length=1.6mm]},color=cAnderson,line width=0.6pt,dashed},
+      esc/.style={-{Stealth[length=1.6mm]},color=tinta,line width=0.8pt}]
+    % Autores
+    \node[font=\footnotesize\bfseries,color=cAutores] at (0,2.25) {Autores};
+    \node[celdaAut] (pa) at (0,1.1) {palabra compartida\\(puntero + peso)};
+    \node[celdaAut] (la) at (0,-0.6) {contador del objeto};
+    \node[hilo] (h1) at (-2.4,2.2) {L}; \draw[lee] (h1) -- (pa);
+    \node[hilo] (h2) at (-1.6,2.2) {L}; \draw[lee] (h2) -- (pa);
+    \node[hilo] (h3) at (1.6,2.2) {L}; \draw[lee] (h3) -- (pa);
+    \node[hilo] (e1) at (2.4,2.2) {E}; \draw[esc] (e1) -- node[right,font=\tiny,align=left,xshift=1mm]{CAS\\falla} (pa);
+    \draw[lee] (pa) -- node[right,font=\tiny]{al terminar, −1} (la);
+    \node[font=\tiny,color=tinta2,align=center] at (0,-1.55) {cada lectura \textbf{escribe} en la palabra:\\dos líneas calientes};
+    % Anderson
+    \begin{scope}[xshift=7.2cm]
+    \node[font=\footnotesize\bfseries,color=cAnderson] at (0,2.25) {Anderson};
+    \node[celdaAnd] (pb) at (0,1.1) {palabra compartida\\(puntero)};
+    \node[celdaAnd] (lb) at (0,-0.6) {contador del objeto};
+    \node[hilo] (k1) at (-2.4,2.2) {L}; \draw[soloee] (k1) -- (pb);
+    \node[hilo] (k2) at (-1.6,2.2) {L}; \draw[soloee] (k2) -- (pb);
+    \node[hilo] (k3) at (1.6,2.2) {L}; \draw[soloee] (k3) -- (pb);
+    \node[hilo] (e2) at (2.4,2.2) {E}; \draw[esc] (e2) -- node[right,font=\tiny,align=left,xshift=1mm]{acierta} (pb);
+    \draw[soloee] (pb) -- node[right,font=\tiny]{+1 y −1} (lb);
+    \node[font=\tiny,color=tinta2,align=center] at (0,-1.55) {leer solo \textbf{lee} la palabra y anuncia\\un hazard pointer en su propia mesa};
+    \end{scope}
+  \end{tikzpicture}
+  \vspace{2mm}
+  \begin{idea}Precio de Anderson: no puede liberar en el acto. Guarda los bloques de control en una caja de pendientes (parte 8) y paga picos de latencia al vaciarla (parte 7).\end{idea}
+  \note{Este dibujo explica por qué Anderson gana con escrituras sobre una sola pila. L son lectores; E, un escritor.
+
+  En Autores, cada lector resta un vale de la palabra compartida. Eso es una escritura. Cuando el escritor intenta su compare-and-swap, lo más probable es que un lector haya cambiado la palabra justo antes: el CAS falla y tiene que repetir. Además, al terminar, cada lector resta uno en el contador del objeto: hay dos líneas calientes.
+
+  En Anderson, el lector solo lee la palabra y anuncia en su propia mesa qué objeto está usando. La palabra no cambia por leerla, así que el escritor acierta a la primera.
+
+  Nada es gratis: Anderson no puede liberar al instante. Lo veremos en memoria y en latencia.}
+\end{frame}
+
+\begin{frame}{Lo que no se repite (1): Folly rinde muchísimo mejor que en el paper}
+  \fuente{datos/ultra9/docker, nativo\_oficial/rendimiento.csv y paridad.csv; EXPLICACION.md, Parte 6.1}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}p{40mm}r@{}}
+      \toprule
+      \textbf{Folly ÷ Autores, con contención} & \\
+      \midrule
+      Paper, 144 hilos & 0,05× a 0,07×\\
+      Réplica con Docker, 24 hilos & 0,37× a 1,37×\\
+      Réplica sin Docker, 24 hilos & 0,37× a 1,40×\\
+      Receta exacta, 10 s × 7 & 0,36× a 1,26×\\
+      \bottomrule
+    \end{tabular}\par\vspace{2mm}
+    Con n = 1 y u = 50\,\% Folly incluso \textbf{gana}: 1,47 frente a 1,07 Mop/s, sin que los rangos de las rondas se toquen.
+    \column{0.46\textwidth}
+    \begin{idea}\footnotesize\textbf{Descartados:} ni Docker ni el recorte de duración explican la diferencia. Se midió sin Docker y con la receta exacta del paper, y sale lo mismo.\end{idea}
+    \begin{ojo}La explicación fácil, «el paper tiene 4 sockets y aquí hay uno», no se sostiene. La siguiente diapositiva muestra por qué.\end{ojo}
+  \end{columns}
+  \note{La mayor discrepancia: Folly. En el paper, con contención, rinde entre un 5 y un 7 por ciento de lo que rinde Autores. Aquí, entre un 37 y un 137 por ciento. Y con una pila y muchas escrituras incluso le gana.
+
+  Primero descartamos lo obvio. ¿Será Docker? Sin Docker sale igual. ¿Será que medimos dos segundos en vez de diez? Con la receta exacta del paper, siete ejecuciones de diez segundos, sale igual.
+
+  La tentación es decir: claro, el paper tenía cuatro chips. Pero hay una prueba muy limpia de que no es eso.}
+\end{frame}
+
+\begin{frame}{La brecha de Folly ya existe con un solo hilo}
+  \fuente{datos/paper/paper\_fig5.csv y datos/ultra9/docker/rendimiento.csv, con 1 hilo; EXPLICACION.md, Parte 6.1}
+  \grafica[37mm]{un_hilo.pdf}
+  \begin{porque}[: por qué un hilo descarta la contención]
+    Con un hilo no hay pelea ni líneas que viajen entre núcleos. Si la relación Folly ÷ Autores ya es de 3 a 7 veces peor en el paper que aquí, la causa no es la contención ni la distancia; Williams, en cambio, coincide. Y en la figura 6 del paper, el \cod{load} de Folly sin contención tarda 24 ns, como Autores (23 ns). \textbf{Pregunta abierta}: algo de la máquina de la figura 5, o de cómo se midió allí, penaliza a Folly.
+  \end{porque}
+  \note{Con un solo hilo no hay contención: no hay nadie con quien pelear y nada viaja entre núcleos. Si la brecha viniera de los cuatro sockets, con un hilo debería desaparecer.
+
+  Pues no desaparece. En el paper, Folly con un hilo rinde un 20 por ciento de Autores. Aquí, entre un 86 y un 129 por ciento. A la derecha está el control: Williams, que coincide bastante bien entre paper y réplica.
+
+  Hay otra pista en el propio paper: en la figura 6, medida en otra máquina, la lectura de Folly sin contención tarda casi lo mismo que la de Autores. Folly no es lento de nacimiento.
+
+  Así que algo de la máquina de la figura 5, o de cómo se midió, le penaliza. Con nuestro PC no se puede saber. Lo dejamos como pregunta abierta, y lo decimos así.}
+\end{frame}
+
+\begin{frame}{Lo que no se repite (2): con una pila y pocas escrituras, Anderson no llega a adelantar}
+  \fuente{datos/paper/paper\_fig5.csv y datos/ultra9/docker/rendimiento.csv; EXPLICACION.md, Parte 6.1}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}p{30mm}p{17mm}p{18mm}@{}}
+      \toprule
+      \textbf{Anderson ÷ Autores} & \textbf{Paper} & \textbf{Réplica}\\
+      \midrule
+      18 hilos & 0,72× & 0,94×\\
+      36 hilos & 0,89× & —\\
+      54 hilos o más & > 1: adelanta & no hay núcleos\\
+      24 hilos (toda la máquina) & — & 0,94×\\
+      \bottomrule
+    \end{tabular}\par\vspace{1mm}
+    \scriptsize n = 1 · u = 1\,\%.
+    \column{0.46\textwidth}
+    \begin{idea}\footnotesize En el paper, Anderson solo adelanta a Autores a partir de 54 hilos. Esta máquina tiene 24 núcleos: no llega a la zona donde ocurre el cruce. A igual número de hilos, los dos resultados no están lejos.\end{idea}
+  \end{columns}
+  \vspace{3mm}
+  \begin{porque}[: dos líneas calientes frente a una]
+    Con una sola pila y muchos lectores, Autores tiene dos líneas disputadas, la palabra y el contador del objeto; Anderson solo una, el contador. Con suficientes hilos, esa segunda línea acaba pesando más que la lectura barata de Autores. Aquí no hay hilos suficientes para verlo.
+  \end{porque}
+  \note{Segunda diferencia: con una pila y pocas escrituras, en el paper gana Anderson y aquí gana Autores, por poco.
+
+  Mirado con más cuidado, no es una contradicción. En el paper, Anderson solo adelanta a Autores a partir de 54 hilos. Con 18 hilos rinde un 72 por ciento, y con 36, un 89. Nosotros, con 18 hilos, tenemos un 94 por ciento. A igual número de hilos, los resultados son parecidos.
+
+  Lo que pasa es que nuestra máquina no llega a la zona del cruce. Es una diferencia de alcance, no de comportamiento.}
+\end{frame}
+
+\begin{frame}{Lo que no se repite (3): con un millón de pilas, cuatro algoritmos empatan}
+  \fuente{datos/ultra9/docker/rendimiento.csv, 24 hilos; datos/paper/paper\_fig5.csv, 144 hilos}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}lrr@{}}
+      \toprule
+      \textbf{n = 10⁶ · u = 50\,\%} & \textbf{Réplica} & \textbf{Paper}\\
+      \midrule
+      \algAnd & 56,5 & —\\
+      \algLib & 56,3 & —\\
+      \algAut & 55,4 & 129\\
+      \algFol & 53,4 & —\\
+      \algWil & 40,4 & —\\
+      \bottomrule
+    \end{tabular}\par\vspace{1mm}
+    \scriptsize Mop/s; en el paper, Autores lidera con claridad.
+    \column{0.46\textwidth}
+    \begin{idea}\footnotesize Que cuatro algoritmos tan distintos toquen el mismo techo sugiere que el límite no está en el algoritmo, sino en algo común a todos.\end{idea}
+    \begin{porque}[: sospecha]
+      Con un millón de pilas, casi cada operación tiene que ir a la RAM. Este PC tiene un solo módulo de memoria, un solo canal; el paper tenía 4 chips, cada uno con su memoria.
+    \end{porque}
+  \end{columns}
+  \note{Tercera diferencia: con un millón de pilas, en el paper Autores lidera con 129 millones de operaciones por segundo. Aquí, cuatro algoritmos se quedan entre 53 y 57. Un empate.
+
+  Cuando cuatro algoritmos tan distintos chocan contra el mismo techo, lo razonable es pensar que el techo no es de los algoritmos, sino de la máquina.
+
+  La sospecha: la memoria RAM. Con un millón de pilas, los datos no caben en la caché y casi cada operación va a la RAM. Este PC tiene un solo módulo, un único canal; el paper tenía cuatro chips con su memoria cada uno.
+
+  Una sospecha no basta. Lo medimos.}
+\end{frame}
+
+\begin{frame}{El techo era la RAM: lo dicen los contadores de la controladora de memoria}
+  \fuente{datos/ultra9/memoria\_ram.csv (herramientas/medir\_memoria.py), binarios oficiales, n = 10⁶, u = 50\,\%; 2 rondas}
+  \grafica[39mm]{memoria_ram.pdf}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}p{30mm}XXXXX@{}}
+    \toprule
+    \textbf{24 hilos} & \algAnd & \algLib & \algFol & \algWil & \algAut\\
+    \midrule
+    \% del techo al azar & 93\,\% & 92\,\% & 89\,\% & 81\,\% & 75\,\%\\
+    Bytes por operación & 615 & 603 & 613 & 755 & \textbf{515}\\
+    \bottomrule
+  \end{tabularx}
+  \note{La CPU tiene contadores en su controladora de memoria, la pieza por la que pasa todo lo que entra y sale de la RAM. Es como un cuentakilómetros en la única carretera que lleva al almacén: no hay que adivinar el tráfico, basta con leerlo.
+
+  Primero medimos el techo de la máquina: 43 gigas por segundo leyendo en orden y 37 saltando al azar, que es como acceden las pilas.
+
+  A la izquierda: Anderson, Libstdc++ y Folly llegan a 33 o 34 gigas por segundo, entre el 89 y el 93 por ciento del techo al azar, y dejan de crecer. A la derecha, los bytes que cada operación saca de la RAM: Autores es el que menos gasta, unos 515 bytes.
+
+  La explicación de la memoria sale reforzada, pero con matices.}
+\end{frame}
+
+\begin{frame}{Lo que dicen los contadores, y lo que no}
+  \fuente{datos/ultra9/memoria\_ram.csv; EXPLICACION.md, Partes 6.1 y 8}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \small\textbf{\color{bien}Refuerza la explicación}\par\vspace{1mm}
+    \footnotesize
+    \begin{itemize}
+      \item Anderson, Libstdc++ y Folly rozan el techo y casi dejan de crecer: Anderson pasa de 54,2 a 54,5 Mop/s de 18 a 24 hilos, mientras su tráfico sube de 27 a 34 GB/s.
+      \item Con 36 hilos, ninguno pasa de 57 Mop/s.
+      \item Autores mueve entre un 15 y un 32\,\% menos bytes por operación.
+    \end{itemize}
+    \column{0.48\textwidth}
+    \small\textbf{\color{mal}Pero no lo explica todo}\par\vspace{1mm}
+    \footnotesize
+    \begin{itemize}
+      \item Autores rinde igual con solo el 75\,\% del techo: algo más lo frena, quizá la espera de cada acceso. No se midió.
+      \item El techo al azar solo lee, y las pilas leen y escriben.
+      \item La prueba definitiva sería repetirlo con dos módulos de RAM: si el rendimiento sube, queda demostrado.
+    \end{itemize}
+  \end{columns}
+  \vspace{3mm}
+  \begin{ojo}La primera versión de la medida casi nos engaña: miraba los últimos segundos, cuando el programa ya liberaba memoria, y dio 14 GB/s. Lo delató que el tráfico no crecía con el rendimiento. La versión corregida mira solo la mitad central de cada ejecución.\end{ojo}
+  \note{Los contadores refuerzan la explicación: los que rozan el techo dejan de crecer aunque añadamos hilos.
+
+  Pero hay que ser honestos con lo que no explican. Autores se queda en el mismo rendimiento usando solo tres cuartos del techo, así que algo más lo frena. Y el techo que medimos solo lee, mientras que las pilas leen y escriben. La prueba definitiva sería poner un segundo módulo de memoria y ver si sube.
+
+  Una anécdota de método: la primera versión de esta medida decía lo contrario, 14 gigas por segundo, como si la RAM no fuera el freno. Lo que nos hizo sospechar fue que el tráfico no crecía cuando crecía el rendimiento. Estábamos midiendo el final de cada ejecución, cuando el programa ya estaba liberando memoria.}
+\end{frame}
+
+\begin{frame}{Por debajo del techo, Autores va por detrás con pocos hilos}
+  \fuente{datos/ultra9/docker y nativo\_oficial/rendimiento.csv; datos/ultra9/memoria\_ram.csv; EXPLICACION.md, Parte 6.1}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}lccc@{}}
+      \toprule
+      \textbf{n = 10⁶ · u = 50\,\%} & \textbf{1 hilo} & \textbf{12 hilos} & \textbf{Paper, 1 hilo}\\
+      \midrule
+      Anderson ÷ Autores & 1,46× & 1,24× & 1,03×\\
+      Libstdc++ ÷ Autores & 1,44× & 1,24× & 0,87×\\
+      \midrule
+      Sin Docker: Anderson & 1,33× & 1,19× & \\
+      Sin Docker: Libstdc++ & 1,40× & 1,19× & \\
+      \bottomrule
+    \end{tabular}
+    \column{0.46\textwidth}
+    \begin{idea}\footnotesize Mover más bytes no lo explica: con 6 hilos, Autores mueve 617 bytes por operación, Anderson 572 y Libstdc++ 666. Libstdc++ mueve más que Autores y aun así va 1,38× más rápido.\end{idea}
+    \begin{ojo}\textbf{Pregunta abierta.} No es Docker: sin Docker se repite. Afecta a la fila 5 del veredicto.\end{ojo}
+  \end{columns}
+  \note{Un detalle incómodo que no escondemos. Con un millón de pilas y pocos hilos, por debajo del techo de la RAM, Autores va por detrás: con un hilo, Anderson y Libstdc++ rinden casi un 50 por ciento más. En el paper, con un hilo, iban parejos.
+
+  ¿Será que Autores mueve más memoria? No: con seis hilos, Libstdc++ mueve más bytes por operación y aun así va más rápido.
+
+  Tampoco es Docker: sin Docker se repite.
+
+  No sabemos la causa. Lo marcamos como pregunta abierta, y por eso la quinta afirmación del paper, que Autores supera a Anderson cuando hay muchas pilas, no se reproduce aquí.}
+\end{frame}
+
+\begin{frame}{¿Se parece el orden? La τ de Kendall, escenario por escenario}
+  \fuente{resultados/david-ultra9-285/tablas.md, «Rendimiento: paper (144 hilos) frente a réplica (24 hilos)»}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}lc@{}}
+      \toprule
+      \textbf{Escenario} & \textbf{τ de Kendall}\\
+      \midrule
+      n = 1 · u = 1\,\% & +0,60\\
+      n = 1 · u = 10\,\% & +0,60\\
+      n = 1 · u = 50\,\% & +0,40\\
+      n = 10 · u = 1\,\% & +0,80\\
+      n = 10 · u = 10\,\% & +0,80\\
+      n = 10⁶ · u = 50\,\% & +0,20\\
+      \bottomrule
+    \end{tabular}
+    \column{0.46\textwidth}
+    \begin{porque}[: la tau de Kendall]
+      Compara dos clasificaciones pareja a pareja: +1 es el mismo orden, 0 sin relación y −1 al revés. Con 5 algoritmos hay 10 parejas; +0,60 significa 8 de acuerdo y 2 en desacuerdo.
+    \end{porque}
+    \begin{idea}\footnotesize Siempre positiva: el orden siempre se parece. En los cinco primeros escenarios, casi todo el desacuerdo viene de Folly. El +0,20 final es el empate: el orden entre iguales no significa nada.\end{idea}
+  \end{columns}
+  \note{Para resumir cuánto se parece el orden de los algoritmos entre paper y réplica usamos la tau de Kendall. Compara las dos clasificaciones pareja por pareja: más uno es idéntico, cero es sin relación, menos uno es al revés.
+
+  Sale siempre positiva: el orden siempre se parece. El desacuerdo de los cinco primeros escenarios viene casi todo de Folly, el caso que ya hemos visto. Y el valor bajo del último es el empate de la RAM: cuando cuatro van igualados, el orden entre ellos es casi azar.}
+\end{frame}

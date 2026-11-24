@@ -1,0 +1,92 @@
+% ---------- Parte 4: Docker frente a sin Docker ----------
+\section{Docker frente a sin Docker}
+\portadilla{4}{Docker frente a sin Docker}{Los mismos binarios oficiales, dentro y fuera del contenedor. ¿Cambia algo?}{Cuarta parte, corta pero importante: ¿influye Docker en los resultados?
+
+Si influyera, todo lo anterior estaría en duda. Por eso repetimos la batería entera fuera de Docker con los mismos programas, y además hicimos un control con el mismo código compilado dentro y fuera.}
+
+\begin{frame}{Los mismos binarios rinden igual dentro y fuera de Docker}
+  \fuente{datos/ultra9/docker y nativo\_oficial/rendimiento.csv; mediana de 5 rondas en cada punto de la figura 5}
+  \grafica[50mm]{docker_frente_a_nativo.pdf}
+  \begin{idea}De los 270 puntos de la figura 5, 236 cambian menos de un 5\,\% y 259 menos de un 10\,\%. La mediana del cociente va de 0,99× a 1,01× según el algoritmo.\end{idea}
+  \note{A la izquierda, cada punto es un algoritmo en un escenario y con un número de hilos: en horizontal, lo que dio con Docker; en vertical, sin Docker. Si dan lo mismo, el punto cae sobre la diagonal. Caen todos encima.
+
+  A la derecha, el cociente punto a punto, por algoritmo. La raya negra es la mediana: 1,00 para casi todos. Las bandas grises son más o menos un 5 y un 10 por ciento.
+
+  De 270 puntos, 259 cambian menos de un 10 por ciento. Los que más se mueven son puntos con contención, sobre todo de Libstdc++ y Williams, que es justo donde las rondas más varían de por sí.
+
+  Antes era una deducción; ahora está medido: Docker no cambia el rendimiento de los programas oficiales.}
+\end{frame}
+
+\begin{frame}{La figura 5 sin Docker: la misma historia}
+  \fuente{datos/ultra9/nativo\_oficial/rendimiento.csv; mediana de 5 rondas de 2 s}
+  \grafica[60mm]{fig5_nativo_oficial.pdf}
+  \note{Esta es la figura 5 medida fuera de Docker, con los mismos binarios oficiales compilados en el sistema. Si la ponéis al lado de la de Docker, son casi indistinguibles: Autores con 127 Mop/s en n igual a 10 y u igual a 1 por ciento, Anderson por delante con una pila y escrituras, y el empate con un millón de pilas.
+
+  Las filas del veredicto que dependen de Folly y de Anderson dan lo mismo con y sin Docker.}
+\end{frame}
+
+\begin{frame}{Por qué Docker no cambia nada, y un control que lo confirma}
+  \fuente{datos/ultra9/controles.csv, control «docker»; EXPLICACION.md, Parte 6.6}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \begin{porque}[: un contenedor no es una máquina virtual]
+      Un contenedor es un proceso normal de Linux con otra vista del sistema de archivos y sus propios espacios de nombres. Usa el mismo núcleo, la misma CPU y la misma memoria. No hay un procesador simulado ni una capa que traduzca instrucciones: el código atómico se ejecuta igual.
+    \end{porque}
+    \column{0.46\textwidth}
+    \small\textbf{\color{marino}Control: el mismo código dentro y fuera}\par\vspace{1mm}
+    \footnotesize Se compiló \cod{bench.cpp} dentro y fuera del contenedor y se midió alternando un punto fuera y el mismo dentro, en orden al azar: 48 puntos, 3 rondas.\par\vspace{2mm}
+    \begin{tabular}{@{}lccc@{}}
+      \toprule
+      \textbf{Dentro ÷ fuera} & \textbf{Mediana} & \textbf{Mín.} & \textbf{Máx.}\\
+      \midrule
+      48 puntos & \textbf{1,02×} & 0,91× & 1,13×\\
+      \bottomrule
+    \end{tabular}\par\vspace{1mm}
+    \scriptsize El máximo, +13\,\% con 1 hilo, tampoco es de Docker: dentro hay otro compilador, otra biblioteca C y otro jemalloc.
+  \end{columns}
+  \vspace{2mm}
+  \begin{idea}Conclusión: las diferencias entre tandas vienen del \textbf{programa}, no del contenedor. No se puede descartar del todo que dos efectos contrarios se anulen, pero tendrían que hacerlo en los 270 puntos a la vez.\end{idea}
+  \note{¿Por qué no cambia nada? Porque un contenedor no es una máquina virtual. Es un proceso normal de Linux que ve otro sistema de archivos. La CPU, la memoria y el núcleo del sistema son los mismos. Una instrucción atómica se ejecuta igual dentro que fuera.
+
+  Lo confirmamos con un control: compilamos el mismo código dentro y fuera y lo medimos alternando, un punto fuera y el mismo dentro. Mediana del cociente: 1,02. Es decir, igual.
+
+  La conclusión práctica: si dos tandas dan distinto, la culpa es del programa, no de Docker.}
+\end{frame}
+
+\begin{frame}{Las dos excepciones, y por qué no se pueden achacar a Docker}
+  \fuente{datos/ultra9/docker y nativo\_oficial: rendimiento.csv (pares) y latencia.csv; EXPLICACION.md, Parte 6.6}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \small\textbf{\color{marino}1. Williams con dos hilos en clústeres distintos}\par\vspace{1mm}
+    \footnotesize
+    \begin{tabular}{@{}lc@{}}
+      \toprule
+      & \textbf{Mop/s}\\
+      \midrule
+      Con Docker & 0,09\\
+      Sin Docker & 0,70\\
+      Mismo clúster, en ambos & unos 3\\
+      \bottomrule
+    \end{tabular}\par\vspace{1mm}
+    Se hunde en los dos casos, pero mucho más dentro. Williams usa \cod{boost::atomic}, y Boost cambia de 1.74 a 1.83. Es una sospecha: se ve en la parte 9.
+    \column{0.48\textwidth}
+    \small\textbf{\color{marino}2. La latencia con contención}\par\vspace{1mm}
+    \footnotesize
+    \begin{tabular}{@{}lc@{}}
+      \toprule
+      \textbf{Williams, \cod{load}, p = 24} & \textbf{Mediana}\\
+      \midrule
+      Con Docker, 5 rondas & 3\,104 ns\\
+      Sin Docker, 15 rondas & 6\,106 ns\\
+      \bottomrule
+    \end{tabular}\par\vspace{1mm}
+    Parece mucho, pero la misma medida cambia todavía más de una ronda a otra: la ronda más lenta llega a ser 37 veces la más rápida. Esta diferencia no sirve para juzgar a Docker (parte 7).
+  \end{columns}
+  \vspace{3mm}
+  \begin{idea}Todo lo demás sale casi calcado sin Docker: memoria retenida, efecto de separar los hilos y latencia sin contención.\end{idea}
+  \note{Hay dos excepciones, y ninguna permite culpar a Docker.
+
+  La primera es Williams cuando sus dos hilos están en clústeres distintos. Con Docker se hunde a 0,09; sin Docker, a 0,70. En el mismo clúster va a unos 3 en los dos casos. Se hunde siempre, pero más dentro de Docker. Recordad que fuera cambian cinco piezas, entre ellas Boost, que es justo la biblioteca que usa Williams. Lo investigamos en la parte 9.
+
+  La segunda es la latencia con muchos hilos, donde algunas medianas cambian el doble. Pero ahí una misma medida cambia todavía más de una ronda a otra. Con ese ruido no se puede juzgar a nadie.}
+\end{frame}

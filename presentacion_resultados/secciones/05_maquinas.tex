@@ -1,0 +1,217 @@
+% ---------- Parte 5: dos máquinas, el mismo programa ----------
+\section{Dos máquinas, el mismo programa}
+\portadilla{5}{Dos máquinas, el mismo programa: i5-10400 frente a Core Ultra 9}{El mismo guion, los mismos parámetros y el mismo compilador en las dos. ¿Se mantiene el orden de los algoritmos? ¿Y por qué una CPU el doble de rápida pierde con contención?}{Quinta parte: la comparación entre las dos máquinas.
+
+Aquí no usamos los binarios oficiales, sino el programa del equipo, bench.cpp, lanzado con el mismo guion en el i5 y en el Ultra 9. Mismos parámetros, mismo compilador. Es la comparación más directa que tenemos entre máquinas.
+
+Dos preguntas: ¿se mantiene el orden de los algoritmos? Y una sorpresa: el Ultra 9 es el doble de rápido con un hilo, pero con contención pierde contra el i5.}
+
+\begin{frame}{Cómo se comparan las dos máquinas}
+  \fuente{codigo/ejecutar\_pruebas.sh; datos/i5\_10400 y datos/ultra9/correccion}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.55\textwidth}
+    \footnotesize
+    \begin{tabularx}{\linewidth}{@{}G{24mm}LL@{}}
+      \toprule
+      & \textbf{Core i5-10400} & \textbf{Core Ultra 9 285}\\
+      \midrule
+      Núcleos & 6, con SMT: 12 hilos & 24 (8 P + 16 E), sin SMT\\
+      Sistema & WSL2 sobre Windows & Linux nativo\\
+      Compilador & g++ 13.3 & g++ 13.3\\
+      Programa & \multicolumn{2}{>{\raggedright\arraybackslash}p{52mm}}{\cod{bench.cpp}, sin alinear, sin jemalloc}\\
+      Rendimiento & \multicolumn{2}{>{\raggedright\arraybackslash}p{52mm}}{1 s por punto, 1 pasada; hilos 1, 2, 4, 8, 12 y 18}\\
+      Escenarios & \multicolumn{2}{>{\raggedright\arraybackslash}p{52mm}}{n = 1, 10 y 10⁵; u = 1, 10 y 50\,\%}\\
+      Latencia & p = 1 y p = 12 & p = 1 y p = 24\\
+      \bottomrule
+    \end{tabularx}
+    \column{0.41\textwidth}
+    \begin{idea}\footnotesize Mismo guion, mismos parámetros, mismo compilador: la diferencia está en la máquina.\end{idea}
+    \begin{ojo}Una sola pasada de 1 s: solo cuentan las diferencias grandes, de 2× o más, y el orden de los algoritmos. Los paneles n = 10 llevan el freno de la compartición falsa (parte 6) en las dos máquinas.\end{ojo}
+  \end{columns}
+  \note{Primero, las condiciones. Las dos máquinas corrieron el mismo guion, con los mismos parámetros y el mismo compilador. Lo único que cambia es la máquina, y que el i5 corre Linux dentro de Windows.
+
+  Dos salvedades. Es una sola pasada de un segundo por punto, así que no nos fiamos de diferencias pequeñas. Y el programa del equipo tiene un defecto que explicaremos en la parte 6, que frena los paneles de diez pilas. Ese defecto está igual en las dos máquinas, así que la comparación entre ellas sigue siendo justa.}
+\end{frame}
+
+\begin{frame}{Core i5-10400: pasada rápida de \texorpdfstring{\cod{bench.cpp}}{bench.cpp}}
+  \fuente{datos/i5\_10400/rendimiento.csv; 1 pasada de 1 s por punto; misma escala vertical que la siguiente diapositiva}
+  \grafica[60mm]{rapida_i5.pdf}
+  \note{Este es el i5. Líneas discontinuas y marcadores huecos, para distinguirlo del Ultra 9. La raya punteada marca los 12 hilos de hardware.
+
+  Fijaos en el primer recuadro: con una pila y pocas escrituras, Autores, en rojo, se mantiene entre 29 y 39 Mop/s al añadir hilos. Libstdc++, en azul, se hunde de 33 a poco más de uno.
+
+  Y en el último, con cien mil pilas, todos suben hasta los 12 hilos y luego se estancan.
+
+  La escala vertical es la misma que en la diapositiva siguiente, para poder comparar a simple vista.}
+\end{frame}
+
+\begin{frame}{Core Ultra 9 285: el mismo programa, la misma escala}
+  \fuente{datos/ultra9/correccion/rendimiento.csv; 1 pasada de 1 s por punto}
+  \grafica[60mm]{rapida_u9.pdf}
+  \note{Y este es el Ultra 9 con el mismo programa y la misma escala.
+
+  Con un hilo, el Ultra 9 va mucho más rápido: Autores hace 97 Mop/s frente a 45 del i5. Pero mirad lo que pasa al añadir el segundo hilo: cae a 19. El i5, en el mismo punto, caía a 29.
+
+  Y en el último recuadro, sin contención, el Ultra 9 sube hasta casi cien, cuatro veces lo que alcanza el i5.
+
+  Dos máquinas, dos comportamientos opuestos según haya o no contención. Antes de explicarlo, veamos si el orden de los algoritmos se mantiene.}
+\end{frame}
+
+\begin{frame}{El orden de los algoritmos se mantiene en las dos máquinas}
+  \fuente{datos/i5\_10400/rendimiento.csv y datos/ultra9/correccion/rendimiento.csv, 12 hilos}
+  \grafica[46mm]{maquinas_orden.pdf}
+  \begin{idea}Con 12 hilos, \textbf{Autores gana a Williams y a Libstdc++ en los 6 escenarios y en las dos máquinas} (en el Ultra 9, con 10⁵ pilas, a Libstdc++ solo por un 4\,\%). La única diferencia es el Mutex con n = 1 y u = 50\,\%: en el Ultra 9 gana a Autores; en el i5, no.\end{idea}
+  \note{Esta es la pregunta principal: ¿el orden depende de la máquina? Cada punto es un rival dividido entre Autores, con 12 hilos. A la izquierda de la raya, gana Autores.
+
+  En las dos máquinas, Williams y Libstdc++ quedan a la izquierda en los seis escenarios. El algoritmo del paper gana a los dos rivales sin espacio extra en cualquiera de las dos máquinas, que es su afirmación principal frente a ellos.
+
+  Solo hay una diferencia: el Mutex, en gris, con una pila y muchas escrituras. En el Ultra 9 cruza la raya y gana a Autores; en el i5, no. Lo veremos en detalle enseguida.}
+\end{frame}
+
+\begin{frame}{Con un hilo el Ultra 9 es el doble de rápido; con contención pierde}
+  \fuente{datos/i5\_10400/rendimiento.csv y datos/ultra9/correccion/rendimiento.csv; Ultra 9 ÷ i5 en cada punto}
+  \grafica[50mm]{maquinas_cociente.pdf}
+  \begin{idea}\footnotesize Autores, una pila y u = 1\,\%: con 1 hilo, 44,8 Mop/s en el i5 y 96,9 en el Ultra 9 (2,2×); con 12 hilos, 39,1 frente a 21,8 (0,56×). Sin contención (10⁵ pilas), el Ultra 9 va 2,7× por delante con 12 hilos.\end{idea}
+  \note{Esta gráfica divide el Ultra 9 entre el i5, punto a punto. Por encima de uno, gana el Ultra 9; por debajo, en la zona gris, gana el i5.
+
+  Con un hilo, el Ultra 9 es el doble de rápido en todo: es un procesador varias generaciones más moderno.
+
+  Pero en los cinco escenarios con contención, en cuanto hay dos hilos, el cociente cae por debajo de uno: el i5 va más rápido. Con 12 hilos, una pila y pocas escrituras, el i5 hace 39 Mop/s y el Ultra 9, 22.
+
+  Sin contención, en el último recuadro, el Ultra 9 vuelve a ganar con claridad, casi tres veces. Así que no es que el Ultra 9 sea lento: es lento pasándose datos.}
+\end{frame}
+
+\begin{frame}{Por qué: con contención manda el viaje de la línea, no el núcleo}
+  \fuente{datos/ultra9/topologia/matriz\_nucleos.csv y docker/rendimiento.csv (pares); EXPLICACION.md, Partes 5.2 y 6.4}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \begin{porque}[: el coste de mover una línea]
+      Con contención, cada operación espera a que la línea compartida llegue desde otro núcleo. El rendimiento lo marca ese viaje, no la velocidad de cálculo.\par\vspace{1.5mm}
+      \textbf{Ultra 9:} sus núcleos están lejos entre sí: 47 ns entre clústeres E y 86 ns entre núcleos P, medido. Sin fijar los hilos, Linux los reparte entre P y E.\par\vspace{1.5mm}
+      \textbf{i5-10400:} un solo bloque de 6 núcleos, y con SMT dos hilos pueden compartir núcleo, con sus cachés L1 y L2: la línea a veces ni se mueve.
+    \end{porque}
+    \column{0.46\textwidth}
+    \small\textbf{\color{marino}La misma física, medida en el Ultra 9}\par\vspace{1mm}
+    \footnotesize Dos hilos que comparten L2 rinden casi el doble que cualquier otra pareja:\par\vspace{1mm}
+    \begin{tabular}{@{}lc@{}}
+      \toprule
+      \textbf{Autores, 2 hilos, n = 1, u = 50\,\%} & \textbf{Mop/s}\\
+      \midrule
+      Mismo clúster (L2 compartida) & 6,21\\
+      Clústeres distintos & 3,41\\
+      Dos núcleos P & 3,29\\
+      \bottomrule
+    \end{tabular}\par\vspace{2mm}
+    \begin{ojo}\textbf{Hipótesis}: no se midió la latencia entre núcleos del i5 ni dónde colocó Linux cada hilo. Para confirmarlo: fijar los hilos en el i5 a hermanos de SMT y a núcleos distintos.\end{ojo}
+  \end{columns}
+  \note{¿Cómo puede un procesador el doble de rápido perder? Por lo que vimos al principio: con contención, lo caro no es calcular, sino mover la línea compartida de un núcleo a otro.
+
+  En el Ultra 9 medimos esos viajes: entre 35 y 86 nanosegundos según dónde estén los núcleos. Y sin fijar los hilos, Linux los reparte entre núcleos P y E, que están lejos.
+
+  El i5 es un solo bloque de seis núcleos, y cada núcleo ejecuta dos hilos que comparten sus cachés. Si dos hilos caen en el mismo núcleo, la línea ni siquiera viaja.
+
+  Tenemos una pista fuerte en el propio Ultra 9: dos hilos que comparten caché L2 rinden casi el doble que cualquier otra pareja. Es la misma física.
+
+  Pero en el i5 no lo medimos, así que es una hipótesis. Lo decimos claro.}
+\end{frame}
+
+\begin{frame}{Sin contención, más núcleos y más caché sí cuentan}
+  \fuente{datos/i5\_10400/rendimiento.csv y datos/ultra9/correccion/rendimiento.csv, n = 10⁵, u = 50\,\%}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.52\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}lrrrr@{}}
+      \toprule
+      \textbf{n = 10⁵ · u = 50\,\%} & \multicolumn{2}{c}{\textbf{i5-10400}} & \multicolumn{2}{c}{\textbf{Ultra 9}}\\
+      \cmidrule(lr){2-3}\cmidrule(l){4-5}
+      Mop/s & 12 h & 18 h & 12 h & 18 h\\
+      \midrule
+      \algAut & 26,7 & 24,2 & 73,2 & 98,9\\
+      \algLib & 18,4 & 19,5 & 70,5 & 95,9\\
+      \algWil & 18,0 & 18,5 & 44,1 & 61,9\\
+      \algMut & 16,9 & 18,7 & 74,2 & 102,6\\
+      \bottomrule
+    \end{tabular}
+    \column{0.44\textwidth}
+    \begin{porque}[: ya no hay línea disputada]
+      Con cien mil pilas, dos hilos casi nunca coinciden. Cada uno trabaja en su rincón y el límite pasa a ser cuántos núcleos hay y cuánta memoria cabe cerca. El i5 se estanca al llegar a sus 12 hilos de hardware; el Ultra 9 sigue subiendo hasta 18.
+    \end{porque}
+  \end{columns}
+  \vspace{2mm}
+  \begin{idea}En el i5, Autores gana con claridad a los otros tres. En el Ultra 9, Autores, Libstdc++ y Mutex van juntos: la misma tendencia al empate que con 10⁶ pilas y los binarios oficiales.\end{idea}
+  \note{En el escenario sin contención, el Ultra 9 gana con mucha diferencia: casi cien millones de operaciones por segundo con 18 hilos, frente a unos 24 del i5.
+
+  Aquí no hay una línea disputada: cada hilo trabaja en su rincón. Lo que manda es cuántos núcleos hay. El i5 tiene 12 hilos de hardware y se estanca ahí; el Ultra 9 tiene 24 núcleos y sigue subiendo.
+
+  Fijaos también en el orden: en el i5, Autores gana claramente; en el Ultra 9, Autores, Libstdc++ y Mutex van juntos. Es la misma tendencia al empate que vimos con un millón de pilas, cuando el límite deja de ser el algoritmo.}
+\end{frame}
+
+\begin{frame}{Latencia: el mismo orden en las dos máquinas}
+  \fuente{datos/i5\_10400/latencia.csv y datos/ultra9/correccion/latencia.csv; 100\,000 muestras, sin el coste del reloj}
+  \grafica[45mm]{maquinas_latencia.pdf}
+  \begin{idea}Sin contención el orden es idéntico: Williams es siempre el más lento. Con contención, la mediana más baja es la del Mutex, pero la cola más corta es la de Autores en las dos: p99 de 0,93 µs en el i5 y 1,32 µs en el Ultra 9, frente a 21-26 µs del Mutex.\end{idea}
+  \note{Ahora la latencia, también con el programa del equipo. Barras huecas, el i5; rellenas, el Ultra 9. Arriba sin contención; abajo, con todos los hilos de cada máquina. La rayita sube hasta el percentil 99.
+
+  Sin contención, el orden es idéntico en las dos: Williams siempre el último, con su doble bucle de 16 bytes.
+
+  Con contención hay que mirar dos cosas. La mediana más baja es la del Mutex. Pero mirad sus rayitas: llegan a 21 o 26 microsegundos. La cola más corta es la de Autores en las dos máquinas, por debajo de 1,4 microsegundos.
+
+  La mediana dice cuánto tarda la operación típica; el percentil 99, cuánto puede llegar a tardar. Un algoritmo wait-free promete lo segundo, no lo primero.}
+\end{frame}
+
+\begin{frame}{El caso del Mutex: depende de la máquina y de la tanda}
+  \fuente{datos/ultra9/nativo/rendimiento.csv; datos/i5\_10400 y datos/ultra9/correccion/rendimiento.csv; replica/informe/03\_rendimiento.md}
+  \grafica[37mm]{mutex.pdf}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \begin{itemize}
+      \item \textbf{Ultra 9, batería de 5 rondas:} el Mutex gana desde 3 hasta 36 hilos. Con 24, 1,86 frente a 1,15 Mop/s.
+      \item \textbf{Ultra 9, pasada rápida:} gana desde 8 hilos.
+      \item \textbf{i5, pasada rápida:} gana Autores (2,32 frente a 1,51 con 12 hilos); una pasada anterior del equipo daba lo contrario: \textbf{no concluyente}.
+    \end{itemize}
+    \column{0.48\textwidth}
+    \begin{porque}[: el Mutex duerme a los que esperan]
+      Si casi todos duermen, la línea casi no viaja. En Autores todos siguen despiertos y sus CAS fallan una y otra vez. Razonable, pero no comprobado.
+    \end{porque}
+  \end{columns}
+  \note{El Mutex merece su propia diapositiva, porque es el resultado más contraintuitivo. Con una pila y muchas escrituras, el candado más simple gana al algoritmo del paper en el Ultra 9, tanto en la batería completa como en la pasada rápida.
+
+  En el i5, en cambio, gana Autores. Pero una pasada anterior del equipo en el i5 daba lo contrario, así que ahí no podemos concluir nada.
+
+  La explicación razonable: el Mutex duerme a los que esperan. Si casi todos duermen, la línea compartida casi no viaja. En Autores todos siguen intentándolo, y sus compare-and-swap fallan.
+
+  Esto no le quita valor al paper. Wait-free no significa el más rápido; significa que nadie se queda atascado. Si el hilo que tiene el candado se detiene, en el Mutex se paran todos; en Autores, no.}
+\end{frame}
+
+\begin{frame}{Qué se concluye de las dos máquinas}
+  \fuente{partes 5 y 6 de esta presentación}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \small\textbf{\color{bien}Lo que no depende de la máquina}\par\vspace{1mm}
+    \footnotesize
+    \begin{itemize}
+      \item Autores gana a Williams y a Libstdc++ en todos los escenarios con varios hilos.
+      \item Libstdc++ se hunde con contención: de 33 a 1,3 Mop/s en el i5; de 56 a 1,2 en el Ultra 9.
+      \item El orden de latencia sin contención, y la cola más corta para Autores con contención.
+      \item La corrección: los mismos 0 errores.
+    \end{itemize}
+    \column{0.48\textwidth}
+    \small\textbf{\color{mal}Lo que sí depende}\par\vspace{1mm}
+    \footnotesize
+    \begin{itemize}
+      \item Los Mop/s absolutos, y no en el sentido esperado: con contención gana la máquina «lenta».
+      \item Si el Mutex gana a Autores con n = 1 y u = 50\,\%.
+      \item Si los algoritmos empatan sin contención: en el Ultra 9 sí, en el i5 no.
+    \end{itemize}
+  \end{columns}
+  \vspace{3mm}
+  \begin{idea}Lección para leer cualquier benchmark concurrente: la velocidad de un núcleo no predice el rendimiento con contención. Importan la distancia entre núcleos y quién comparte caché.\end{idea}
+  \note{Resumen de la comparación entre máquinas.
+
+  Lo que no depende de la máquina es justo lo que afirma el paper frente a los rivales sin espacio extra: Autores gana a Williams y a Libstdc++, y Libstdc++ se hunde con contención. También se repiten el orden de latencia y la corrección.
+
+  Lo que sí depende es la velocidad absoluta, y de forma inesperada: con contención gana la máquina antigua. También depende el caso del Mutex y si los algoritmos empatan cuando no hay contención.
+
+  La lección general: no se puede predecir el rendimiento concurrente por la velocidad de un núcleo. Importa la geometría del chip.}
+\end{frame}

@@ -1,0 +1,171 @@
+% Réplica de «A Fast Wait-Free Solution to Read-Reclaim Races in Reference Counting» (Euro-Par 2024)
+% Presentación centrada en los experimentos y los resultados, con el Core Ultra 9 285 y el Core i5-10400.
+% Compilar con: latexmk -pdf presentacion.tex   (la versión con notas del orador es presentacion_con_notas.tex)
+% Las gráficas salen de herramientas/figuras.py; las diapositivas, de secciones/*.tex.
+\providecommand\connotas{0}
+\documentclass[aspectratio=169,10pt,t,xcolor={table}]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands,es-nolists]{babel}
+\usepackage{lmodern}
+\usepackage{tgheros}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{textcomp,amssymb}
+\usepackage{array,booktabs,tabularx,multirow,graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+\usepackage[most]{tcolorbox}
+
+% Caracteres que inputenc no conoce por sí solo
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{00F7}{\ensuremath{\div}}
+\DeclareUnicodeCharacter{03C4}{\ensuremath{\tau}}
+\DeclareUnicodeCharacter{0394}{\ensuremath{\Delta}}
+\DeclareUnicodeCharacter{2075}{\textsuperscript{5}}
+\DeclareUnicodeCharacter{2076}{\textsuperscript{6}}
+\DeclareUnicodeCharacter{2079}{\textsuperscript{9}}
+\DeclareUnicodeCharacter{2190}{\ensuremath{\leftarrow}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{2194}{\ensuremath{\leftrightarrow}}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+\DeclareUnicodeCharacter{2713}{\ensuremath{\checkmark}}
+\DeclareUnicodeCharacter{2009}{\,}
+
+% ---------- Colores ----------
+% Interfaz: tinta y azul marino. Los colores de los algoritmos solo se usan para datos (los mismos que las gráficas).
+\definecolor{tinta}{HTML}{1B2433}
+\definecolor{tinta2}{HTML}{5B6472}
+\definecolor{marino}{HTML}{1F4E79}
+\definecolor{marinoclaro}{HTML}{9DBFE0}
+\definecolor{linea}{HTML}{D5DBE2}
+\definecolor{suave}{HTML}{F3F5F8}
+\definecolor{cAutores}{HTML}{C8232C}
+\definecolor{cAnderson}{HTML}{8E44AD}
+\definecolor{cFolly}{HTML}{C98500}
+\definecolor{cWilliams}{HTML}{0F7F52}
+\definecolor{cLibstdcxx}{HTML}{2B8FD6}
+\definecolor{cMutex}{HTML}{4D4F54}
+% Estado de cada afirmación: siempre con su texto, nunca solo el color
+\definecolor{bien}{HTML}{1E7B4F}
+\definecolor{parte}{HTML}{9A6700}
+\definecolor{mal}{HTML}{B42318}
+\definecolor{abierto}{HTML}{5B6472}
+
+% ---------- Plantilla ----------
+\setbeamersize{text margin left=7mm,text margin right=7mm}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{normal text}{fg=tinta}
+\setbeamercolor{structure}{fg=marino}
+\setbeamercolor{alerted text}{fg=marino}
+\setbeamertemplate{itemize item}{\raisebox{0.18em}{\color{marino}\rule{0.32em}{0.32em}}}
+\setbeamertemplate{itemize subitem}{\color{tinta2}–}
+\setbeamertemplate{enumerate item}{\color{marino}\bfseries\insertenumlabel.}
+\setlength{\leftmargini}{1.1em}
+\hypersetup{
+  pdftitle={Réplica de «A Fast Wait-Free Solution to Read-Reclaim Races in Reference Counting»: experimentos y resultados},
+  pdfauthor={David Tamo Turpo, Jheremy Manuel Alvarez Astete, Diego Quispe Candelario},
+  pdfsubject={Euro-Par 2024}}
+
+% Título de cada diapositiva: sección en pequeño, el mensaje como título y una raya fina
+\setbeamertemplate{frametitle}{%
+  \vspace*{3.6mm}%
+  \ifx\insertsectionhead\empty\else
+    {\fontsize{6.3}{7.5}\selectfont\bfseries\color{marino}\MakeUppercase{\insertsectionhead}\par}\vspace{0.7mm}%
+  \fi
+  {\fontsize{12}{14.2}\selectfont\bfseries\color{tinta}\raggedright\hyphenpenalty=10000\insertframetitle\par}%
+  \vspace{1.3mm}{\color{linea}\rule{\linewidth}{0.5pt}}\vspace{-0.6mm}}
+
+% Pie: la fuente de los datos de esa diapositiva, el título corto y el número
+\gdef\lafuente{}
+\newcommand\fuente[1]{\gdef\lafuente{Fuente: #1}}
+\setbeamertemplate{footline}{%
+  \hbox to\paperwidth{\hspace{7mm}%
+    \parbox[b]{0.74\paperwidth}{\raggedright\fontsize{5.4}{6.5}\selectfont\color{tinta2}\lafuente}%
+    \hfill{\fontsize{5.4}{6.5}\selectfont\color{tinta2}Réplica · Euro-Par 2024\quad\textbf{\insertframenumber}}\hspace{7mm}}%
+  \vspace{2.6mm}\global\let\lafuente\empty}
+
+% Notas del orador (solo en presentacion_con_notas.pdf)
+\setbeamercolor{note page}{bg=white,fg=tinta}
+\setbeamertemplate{note page}{%
+  \vspace*{3mm}\hspace*{2mm}\begin{minipage}{0.96\paperwidth}
+  {\fontsize{8.5}{10}\selectfont\bfseries\color{marino}Diapositiva \insertframenumber\quad\insertframetitle\par}%
+  \vspace{2mm}{\color{linea}\rule{\linewidth}{0.5pt}}\par\vspace{1.5mm}
+  {\fontsize{8.4}{11}\selectfont\color{tinta}\setlength{\parskip}{4pt}\insertnote\par}
+  \end{minipage}}
+\ifnum\connotas=1
+  \setbeameroption{show notes}
+\fi
+
+% ---------- Piezas reutilizables ----------
+% Mensaje principal de una diapositiva
+\newtcolorbox{idea}{enhanced,colback=suave,colframe=marino,boxrule=0pt,leftrule=2pt,arc=0pt,
+  left=5pt,right=5pt,top=2.5pt,bottom=2.5pt,fontupper=\small,before skip=4pt,after skip=2pt}
+% La teoría que explica un resultado
+\newtcolorbox{porque}[1][]{enhanced,colback=white,colframe=linea,boxrule=0.5pt,arc=1.5pt,
+  left=5pt,right=5pt,top=3pt,bottom=3pt,fontupper=\footnotesize,before skip=3pt,after skip=3pt,
+  title={\fontsize{6.3}{7.5}\selectfont\bfseries\MakeUppercase{Por qué ocurre#1}},coltitle=marino,colbacktitle=white,
+  titlerule=0pt,toptitle=2pt,bottomtitle=0pt,attach title to upper={\par\vspace{1pt}}}
+% Aviso o salvedad
+\newtcolorbox{ojo}{enhanced,colback=white,colframe=parte,boxrule=0pt,leftrule=1.5pt,arc=0pt,
+  left=5pt,right=4pt,top=2pt,bottom=2pt,fontupper=\footnotesize,before skip=3pt,after skip=2pt}
+% Etiquetas de veredicto
+\newcommand\etiq[2]{{\setlength{\fboxsep}{1.4pt}\colorbox{#1}{\fontsize{6.2}{7}\selectfont\bfseries\color{white}\strut\,#2\,}}}
+\newcommand\vsi{\etiq{bien}{Se reproduce}}
+\newcommand\vparte{\etiq{parte}{En parte}}
+\newcommand\vno{\etiq{mal}{No se reproduce}}
+\newcommand\vnoconf{\etiq{abierto}{No se confirma}}
+% Cuadrito de color de un algoritmo, para leyendas dentro del texto
+\newcommand\cuadro[1]{\textcolor{#1}{\rule{0.62em}{0.62em}}}
+\newcommand\algAut{\cuadro{cAutores}\,Autores}
+\newcommand\algAnd{\cuadro{cAnderson}\,Anderson}
+\newcommand\algFol{\cuadro{cFolly}\,Folly}
+\newcommand\algWil{\cuadro{cWilliams}\,Williams}
+\newcommand\algLib{\cuadro{cLibstdcxx}\,Libstdc++}
+\newcommand\algMut{\cuadro{cMutex}\,Mutex}
+% Cifra destacada
+\newcommand\cifra[2]{\begin{minipage}[t]{\linewidth}\centering{\fontsize{22}{24}\selectfont\bfseries\color{marino}#1}\par\vspace{1mm}{\fontsize{7.2}{8.6}\selectfont\color{tinta2}#2}\end{minipage}}
+% Gráfica a todo el ancho, con un alto máximo
+\newcommand\grafica[2][63mm]{{\centering\includegraphics[width=\linewidth,height=#1,keepaspectratio]{figuras/#2}\par}}
+% Código en línea
+\newcommand\cod[1]{\texttt{\small #1}}
+\newcommand\codp[1]{\texttt{\fontsize{5.6}{6.6}\selectfont #1}}
+% Portadilla de cada parte: fondo marino, número, título y la pregunta que responde
+\newcommand\portadilla[4]{%
+  {\setbeamercolor{background canvas}{bg=marino}%
+  \begin{frame}[plain]
+    \vspace*{18mm}\hspace*{3mm}\begin{minipage}{0.86\paperwidth}
+    {\fontsize{9}{10}\selectfont\bfseries\color{marinoclaro}PARTE #1\par}\vspace{2mm}
+    {\fontsize{21}{24}\selectfont\bfseries\color{white}\raggedright\hyphenpenalty=10000 #2\par}\vspace{4mm}
+    {\fontsize{10}{13}\selectfont\color{marinoclaro}#3\par}
+    \end{minipage}
+    \note{#4}
+  \end{frame}}}
+% Tablas compactas
+\renewcommand{\arraystretch}{1.18}
+\setlength{\tabcolsep}{4pt}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+% Columna de rótulos en gris; \leavevmode evita que el color descuadre la fila
+\newcolumntype{G}[1]{>{\leavevmode\color{tinta2}\raggedright\arraybackslash}p{#1}}
+\newcolumntype{H}[1]{>{\leavevmode\bfseries\color{tinta2}\raggedright\arraybackslash}p{#1}}
+
+\begin{document}
+\InputIfFileExists{secciones/00_inicio}{}{}
+\InputIfFileExists{secciones/01_diseno}{}{}
+\InputIfFileExists{secciones/02_correccion}{}{}
+\InputIfFileExists{secciones/03_rendimiento}{}{}
+\InputIfFileExists{secciones/04_docker}{}{}
+\InputIfFileExists{secciones/05_maquinas}{}{}
+\InputIfFileExists{secciones/06_comparticion_falsa}{}{}
+\InputIfFileExists{secciones/07_latencia}{}{}
+\InputIfFileExists{secciones/08_memoria}{}{}
+\InputIfFileExists{secciones/09_afinidad}{}{}
+\InputIfFileExists{secciones/10_recortes}{}{}
+\InputIfFileExists{secciones/11_cierre}{}{}
+\appendix
+\InputIfFileExists{secciones/12_anexo}{}{}
+\end{document}

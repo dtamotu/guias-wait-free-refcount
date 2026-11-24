@@ -1,0 +1,208 @@
+% ---------- Parte 7: latencia ----------
+\section{Latencia}
+\portadilla{7}{Latencia: la figura 6}{Cuánto tarda cada operación, con y sin competencia. Qué se sostiene, un error de compilación que casi se cuela y por qué las medianas con contención bailan tanto.}{Séptima parte: latencia. Ya no medimos cuántas operaciones salen por segundo, sino cuánto tarda cada una.
+
+Veremos las medianas frente al paper, un error de compilación que casi nos hace confirmar una frase del paper por la razón equivocada, las colas de latencia y cuánto podemos fiarnos de una mediana cuando hay muchos hilos.}
+
+\begin{frame}{Cómo se mide la latencia}
+  \fuente{de Wolff et al., sección 6.2; EXPLICACION.md, Partes 4 y 6.2}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \small\textbf{\color{marino}El experimento}\par\vspace{1mm}
+    \footnotesize
+    \begin{itemize}
+      \item Corren \textbf{p} hilos a la vez. El primero se cronometra; los demás hacen \cod{store} sin parar, para crear contención.
+      \item Tres operaciones: \cod{load} (leer), \cod{store} (escribir sin liberar) y \cod{store \& reclaim} (escribir y liberar el objeto viejo).
+      \item p = 1 (sin contención), 24 (todos los núcleos) y 56 (más hilos que núcleos).
+      \item Binarios oficiales: 5 rondas con Docker y 15 sin Docker.
+    \end{itemize}
+    \column{0.46\textwidth}
+    \small\textbf{\color{marino}Cómo leer una caja}\par\vspace{2mm}
+    \centering
+    \begin{tikzpicture}[font=\tiny]
+      \draw[color=cAutores,line width=0.6pt] (0,0) -- (0,0.55); \draw[color=cAutores,line width=0.6pt] (0,1.75) -- (0,2.5);
+      \draw[color=cAutores,line width=0.6pt] (-0.15,0) -- (0.15,0); \draw[color=cAutores,line width=0.6pt] (-0.15,2.5) -- (0.15,2.5);
+      \draw[color=cAutores,fill=cAutores!22,line width=0.6pt] (-0.35,0.55) rectangle (0.35,1.75);
+      \draw[color=tinta,line width=1pt] (-0.35,1.05) -- (0.35,1.05);
+      \node[anchor=west] at (0.45,2.5) {p99: solo el 1\,\% tarda más};
+      \node[anchor=west] at (0.45,1.75) {p75};
+      \node[anchor=west] at (0.45,1.05) {\textbf{mediana}: la operación típica};
+      \node[anchor=west] at (0.45,0.55) {p25};
+      \node[anchor=west] at (0.45,0) {p1};
+    \end{tikzpicture}\par\vspace{2mm}
+    \raggedright\footnotesize La mediana es la experiencia típica; el p99, lo malo que puede ponerse.
+  \end{columns}
+  \note{Cómo se mide. Se lanzan p hilos. Solo el primero se cronometra; los demás escriben sin parar para crear competencia. Se miden tres operaciones: leer, escribir sin liberar, y escribir liberando el objeto viejo.
+
+  Cada caja resume muchísimas repeticiones. La raya gruesa es la mediana, la operación típica. La caja contiene la mitad central. Los bigotes llegan al 1 por ciento más rápido y al 1 por ciento más lento.
+
+  Recordad la diferencia: la mediana dice cómo va normalmente; el percentil 99, cuánto puede llegar a tardar. Para un algoritmo wait-free, lo segundo es lo que importa.}
+\end{frame}
+
+\begin{frame}{Latencia con los binarios oficiales, con Docker}
+  \fuente{datos/ultra9/docker/latencia.csv; mediana de 5 rondas de cada percentil}
+  \grafica[60mm]{fig6_docker.pdf}
+  \note{Esta es nuestra figura 6. Arriba, sin competencia, en escala normal: todos están entre 14 y 44 nanosegundos, y Williams es el más lento en las tres operaciones.
+
+  Abajo, con 24 hilos, en escala logarítmica, donde cada marca vale diez veces más. Autores, Anderson y Folly están juntos, alrededor de 450 nanosegundos en la lectura. Williams y Libstdc++, unas siete u ocho veces por encima.
+
+  Veamos ahora cómo se compara con el paper.}
+\end{frame}
+
+\begin{frame}{Medianas: réplica frente al paper}
+  \fuente{datos/ultra9/docker/latencia.csv; valores del paper leídos de las etiquetas de su figura 6}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}p{34mm}CCCCC@{}}
+    \toprule
+    \textbf{Mediana, ns} & \textbf{Autores} & \textbf{Anderson} & \textbf{Folly} & \textbf{Williams} & \textbf{Libstdc++}\\
+    \midrule
+    \cod{load}, p = 1 & \textbf{14} & 18 & 15 & 34 & 20\\
+    \quad paper & \textbf{23} & 28 & 24 & — & 29\\
+    \cod{load}, p = 56 & \textbf{1\,502} & 1\,540 & 2\,977 & 23\,738 & 61\,687\\
+    \quad paper & \textbf{1\,140} & 2\,580 & 11\,600 & — & 99\,700\\
+    \cod{store}, p = 1 & 22 & 18 & \textbf{17} & 32 & 20\\
+    \quad paper & 33 & \textbf{28} & 37 & — & 36\\
+    \cod{store}, p = 56 & 1\,516 & \textbf{1\,498} & 4\,813 & 4\,105 & 52\,832\\
+    \quad paper & \textbf{1\,470} & 2\,840 & 2\,620 & — & 111\,000\\
+    \cod{store \& reclaim}, p = 1 & 28 & 29 & \textbf{23} & 44 & 25\\
+    \quad paper & 44 & 44 & 49 & — & \textbf{41}\\
+    \cod{store \& reclaim}, p = 56 & \textbf{813} & 1\,499 & 6\,525 & 4\,439 & 47\,198\\
+    \quad paper & 1\,570 & \textbf{1\,250} & 5\,060 & — & 59\,300\\
+    \bottomrule
+  \end{tabularx}\par\vspace{1mm}
+  \scriptsize En negrita, la mejor de cada fila. El paper no publica la latencia de Williams. Con p = 24, ver la tabla del anexo.
+  \note{Las medianas, frente a las del paper. En cada fila, la mejor va en negrita.
+
+  En la lectura, Autores es el mejor en los dos, con y sin contención. Eso se repite.
+
+  En la escritura sin contención, el paper pone a Autores segundo, tras Anderson. Aquí queda cuarto, tras Folly, Anderson y Libstdc++. Son cinco nanosegundos, un puñado de ciclos, pero el orden es otro.
+
+  Los valores absolutos no se comparan: son máquinas distintas. Comparamos órdenes y proporciones. La gráfica siguiente lo hace de forma visual.}
+\end{frame}
+
+\begin{frame}{Cada rival respecto a Autores: paper frente a réplica}
+  \fuente{datos/ultra9/docker y nativo\_oficial/latencia.csv; figura 6 del paper; p = 56 en los dos}
+  \grafica[58mm]{latencia_relativa.pdf}
+  \note{Igual que hicimos con el rendimiento: cada rival dividido entre Autores. Aquí, a la derecha de la raya, Autores es más rápido.
+
+  Arriba, sin contención: todos están muy cerca de la raya. Pequeñas diferencias de nanosegundos, salvo Williams, que va el doble de lento.
+
+  Abajo, con 56 hilos: Libstdc++ está muy a la derecha en los dos, entre 30 y 90 veces más lento que Autores. Anderson, en cambio, en lectura y escritura está pegado a la raya en la réplica, mientras en el paper estaba a la derecha: aquí empatan.
+
+  Las rayitas, sin Docker y con 15 rondas, caen en general cerca de los círculos rellenos.}
+\end{frame}
+
+\begin{frame}{Lo que se sostiene en latencia, y lo que no}
+  \fuente{datos/ultra9/docker y nativo\_oficial/latencia.csv; EXPLICACION.md, Partes 6.2 y 7}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}p{56mm}Xp{22mm}@{}}
+    \toprule
+    \textbf{Lo que dice el paper} & \textbf{Lo que sale aquí, con y sin Docker} & \textbf{Veredicto}\\
+    \midrule
+    7. El \cod{load} de Autores es siempre el de menor latencia & El más bajo en los tres casos. Con contención, por un 8-12\,\% frente a Folly y Anderson; con p = 56, empate con Anderson & \vsi\ \scriptsize por poco\\
+    8. El \cod{store} de Autores es el segundo con p = 1 & Es el cuarto de cinco, por 5 ns & \vno\\
+    9. El \cod{store} de Autores es el mejor con contención & Empate con Anderson: 507 frente a 483 ns con p = 24; sin Docker, 461 frente a 470 & \vparte\\
+    10. \cod{store \& reclaim} es más lento que \cod{store} con p = 1 & Los cinco & \vsi\\
+    11. Con contención, algunos van más rápido en \cod{store \& reclaim} & Con Docker, Autores baja de 1\,516 a 813 ns con p = 56. Sin Docker y 15 rondas, solo un 1-4\,\%: dentro del ruido & \vnoconf\\
+    12. La latencia de Williams es casi siempre mayor & Sin contención, la mayor en las 3 operaciones. Con contención supera a Libstdc++ en 6 de 6 y a Folly en 3 de 6 (sin Docker, 5 y 2) & \vparte\\
+    \bottomrule
+  \end{tabularx}
+  \note{Seis afirmaciones del paper sobre latencia, una por fila.
+
+  La séptima, la más importante, se sostiene: la lectura de Autores es la más rápida en los tres casos. Pero con contención, por poco: entre un 8 y un 12 por ciento, y con 56 hilos empata con Anderson.
+
+  La octava no: en escritura sin contención, Autores es cuarto, no segundo. La novena queda a medias: con contención empata con Anderson.
+
+  La décima se cumple: liberar cuesta. La undécima, que con contención liberar acelera, la vimos con Docker, pero al repetir con 15 rondas el efecto desaparece en el ruido: no se confirma.
+
+  Y la duodécima, sobre Williams, solo en parte. Para medirla bien tuvimos que descubrir un error, que es la siguiente diapositiva.}
+\end{frame}
+
+\begin{frame}{Una trampa que casi se cuela: el candado escondido de Williams}
+  \fuente{datos/ultra9/docker/latencia\_williams\_con\_candado.csv y latencia.csv; EXPLICACION.md, Parte 6.2}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \grafica[54mm]{williams_candado.pdf}
+    \column{0.47\textwidth}
+    \footnotesize
+    \textbf{\color{marino}Qué pasó}\par
+    La primera medida decía que el \cod{load} de Williams con p = 24 tardaba 40,7 µs, 93 veces más que Autores. Parecía confirmar al paper. Era un error nuestro.\par\vspace{2mm}
+    \begin{porque}[: \texttt{-mcx16}]
+      Williams guarda 16 bytes y necesita la instrucción \cod{cmpxchg16b}. El compilador solo la usa con \cod{-mcx16}. El binario de latencia del artefacto se compila sin ella, y \cod{boost::atomic} recurre en silencio a un candado interno.
+    \end{porque}
+    \textbf{\color{marino}Cómo se confirmó}\par
+    Mirando el binario: llamadas a \cod{lock\_pool} y ni un \cod{cmpxchg16b}. Con \cod{-mcx16}: 0 llamadas y 10 instrucciones.
+  \end{columns}
+  \note{Esta diapositiva es una lección de método.
+
+  La primera vez que medimos a Williams en latencia, su lectura con 24 hilos tardaba 40 microsegundos, 93 veces más que Autores. Parecía confirmar la frase del paper. Pero era un error de medida, y era nuestro.
+
+  Williams guarda 16 bytes y necesita una instrucción especial, cmpxchg16b. El compilador solo la usa si se le pide con la bandera -mcx16. El programa de rendimiento la lleva; el de latencia, no, porque el paper deja a Williams fuera de esa prueba. Sin la bandera, la biblioteca Boost mete un candado interno sin avisar. Fue como cronometrar a un corredor con una mochila que nadie le vio poner.
+
+  Lo descubrimos comparando con el programa del equipo, y lo confirmamos mirando las instrucciones del binario.
+
+  Queda una duda: si los autores midieron a Williams así, su frase vendría en parte del candado. No podemos saberlo, porque no publican esos datos.}
+\end{frame}
+
+\begin{frame}{Las colas: lo que la mediana no cuenta}
+  \fuente{datos/ultra9/docker/latencia.csv; mediana de 5 rondas de cada percentil}
+  \grafica[34mm]{colas.pdf}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \begin{porque}[: la caja de pendientes de Anderson]
+      Anderson vacía su caja cada 2\,000 retiradas y recorre las mesas de todos. 1 de cada 2\,000 es el 0,05\,\%: justo lo que mira el p99,95, que salta de 32 a casi 8\,000 ns. No se midió directamente.
+    \end{porque}
+    \column{0.48\textwidth}
+    \begin{porque}[: lock-free no es wait-free]
+      Con 23 escritores, el \cod{load} de Williams necesita ganar dos bucles de CAS. El sistema avanza, pero el lector se queda atrás: 1 lectura de cada 2\,000 tarda 10 µs; en Autores, 1,6 µs.
+    \end{porque}
+  \end{columns}
+  \note{Las colas cuentan dos historias que la mediana esconde. Las tres barras de cada algoritmo son la mediana, el percentil 99 y el 99,95, que es lo que solo supera una operación de cada dos mil.
+
+  A la izquierda, sin contención, liberando: todos van finos hasta el 99,95, donde Anderson salta a casi 8 microsegundos. ¿Por qué justo ahí? Anderson vacía su caja de pendientes cada 2 000 retiradas, y uno de cada 2 000 es exactamente el 0,05 por ciento. La coincidencia es demasiado exacta para ser casualidad, aunque no lo medimos directamente.
+
+  A la derecha, con 24 hilos, leyendo: Williams y Libstdc++ tienen colas de 10 y 65 microsegundos. Es lo que significa de verdad lock-free: alguien avanza siempre, pero un hilo concreto puede quedarse atrás. Autores, wait-free, se queda en 1,6.}
+\end{frame}
+
+\begin{frame}{¿Cuánto fiarse de una mediana con contención? Poco}
+  \fuente{datos/ultra9/docker y nativo\_oficial/latencia.csv; ronda más lenta ÷ más rápida de cada punto}
+  \grafica[44mm]{variabilidad.pdf}
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}p{32mm}CCC@{}}
+    \toprule
+    \textbf{Ronda más lenta ÷ más rápida, mediana} & \textbf{Docker, 5 rondas} & \textbf{Sin Docker, 15 rondas} & \textbf{\cod{bench.cpp}, 5 rondas}\\
+    \midrule
+    p = 1 & 1,00× & 1,00× & 1,11×\\
+    p = 24 & 3,40× (peor, 13,6×) & 5,75× (peor, 36,9×) & 1,84× (peor, 10,4×)\\
+    \bottomrule
+  \end{tabularx}
+  \note{¿Cuánto podemos fiarnos de una mediana? Esta gráfica compara, para cada medida, la ronda más lenta con la más rápida. Uno significa que todas las rondas coinciden.
+
+  Sin contención, todo está en uno: el cronómetro marca siempre lo mismo. Con 24 hilos, la misma medida cambia típicamente entre 3 y 6 veces de una ronda a otra, y en el peor caso, 37 veces.
+
+  ¿Por qué con 15 rondas sale peor que con 5? Porque con más rondas hay más ocasiones de pillar una muy buena y una muy mala, como al tirar un dado más veces. Más rondas no hacen cada ronda más estable; hacen la mediana menos dependiente de la mala suerte.
+
+  Consecuencia: con contención, una diferencia del 20 por ciento entre dos algoritmos no significa nada. Solo valen las enormes, como la de Libstdc++.}
+\end{frame}
+
+\begin{frame}{Con p = 24, las rondas caen en dos grupos}
+  \fuente{datos/ultra9/nativo\_oficial/latencia.csv, 15 rondas; EXPLICACION.md, Parte 6.2}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \grafica[54mm]{bimodal.pdf}
+    \column{0.47\textwidth}
+    \footnotesize
+    \begin{itemize}
+      \item Unas rondas quedan por debajo de 520 ns y otras por encima de 1\,000 ns, sin nada en medio.
+      \item En el grupo rápido: Autores entre 399 y 445 ns, Folly entre 420 y 517 y Anderson entre 451 y 511.
+      \item Autores cae menos veces en el grupo lento: 2 de 15, frente a 6 de Folly y 7 de Anderson. Con 15 rondas no basta para llamarlo propiedad del algoritmo.
+    \end{itemize}
+    \begin{idea}\footnotesize Con los hilos fijados (\cod{todos24}) el grupo lento no apareció: 419-427 ns en Autores. Indicio de que depende de dónde coloca Linux al hilo medido, en un núcleo P o E.\end{idea}
+  \end{columns}
+  \note{Mirando las 15 rondas una por una aparece algo curioso: no se reparten de forma continua, sino en dos grupos. Unas por debajo de 520 nanosegundos y otras por encima de mil, sin nada en medio.
+
+  En el grupo rápido, Autores, Folly y Anderson están muy juntos. Autores cae menos veces en el grupo lento, 2 de 15, pero con tan pocas rondas no nos atrevemos a decir que sea una propiedad del algoritmo.
+
+  La pista: cuando fijamos los hilos a núcleos concretos, el grupo lento no aparece. Así que probablemente depende de dónde coloca Linux al hilo que se cronometra, en un núcleo rápido o en uno eficiente. Es un indicio, no una prueba.}
+\end{frame}

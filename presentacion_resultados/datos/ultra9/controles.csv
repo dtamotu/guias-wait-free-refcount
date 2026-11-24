@@ -1,0 +1,505 @@
+control,variante,impl,n,u,hilos,ronda,mops
+alineacion,alineado,Autores,1,1,12,1,22.295
+alineacion,sin alinear,Autores,1,1,12,1,22.038
+alineacion,sin alinear,Libstdc++,1,1,6,1,2.785
+alineacion,alineado,Libstdc++,1,1,6,1,2.732
+alineacion,alineado,Williams,1,1,6,1,5.338
+alineacion,sin alinear,Williams,1,1,6,1,5.357
+alineacion,alineado,Mutex,10,1,24,1,25.513
+alineacion,sin alinear,Mutex,10,1,24,1,19.091
+alineacion,alineado,Libstdc++,10,1,24,1,7.111
+alineacion,sin alinear,Libstdc++,10,1,24,1,6.755
+alineacion,alineado,Autores,10,1,12,1,94.378
+alineacion,sin alinear,Autores,10,1,12,1,36.059
+alineacion,alineado,Autores,10,10,12,1,53.556
+alineacion,sin alinear,Autores,10,10,12,1,21.947
+alineacion,alineado,Williams,1,1,24,1,3.717
+alineacion,sin alinear,Williams,1,1,24,1,3.660
+alineacion,alineado,Williams,10,10,24,1,8.864
+alineacion,sin alinear,Williams,10,10,24,1,5.639
+alineacion,alineado,Williams,10,1,12,1,29.170
+alineacion,sin alinear,Williams,10,1,12,1,13.659
+alineacion,alineado,Mutex,10,1,6,1,23.673
+alineacion,sin alinear,Mutex,10,1,6,1,19.671
+alineacion,sin alinear,Mutex,1,1,24,1,7.516
+alineacion,alineado,Mutex,1,1,24,1,7.359
+alineacion,sin alinear,Mutex,10,1,12,1,19.513
+alineacion,alineado,Mutex,10,1,12,1,26.284
+alineacion,sin alinear,Libstdc++,10,10,12,1,7.631
+alineacion,alineado,Libstdc++,10,10,12,1,9.103
+alineacion,sin alinear,Libstdc++,1,1,24,1,0.925
+alineacion,alineado,Libstdc++,1,1,24,1,0.944
+alineacion,alineado,Autores,1,1,6,1,20.388
+alineacion,sin alinear,Autores,1,1,6,1,20.087
+alineacion,sin alinear,Williams,10,1,6,1,13.658
+alineacion,alineado,Williams,10,1,6,1,24.607
+alineacion,sin alinear,Libstdc++,10,10,24,1,3.445
+alineacion,alineado,Libstdc++,10,10,24,1,3.765
+alineacion,sin alinear,Williams,10,10,12,1,7.837
+alineacion,alineado,Williams,10,10,12,1,12.888
+alineacion,sin alinear,Libstdc++,10,1,12,1,11.004
+alineacion,alineado,Libstdc++,10,1,12,1,19.699
+alineacion,alineado,Mutex,1,1,6,1,7.170
+alineacion,sin alinear,Mutex,1,1,6,1,7.410
+alineacion,sin alinear,Libstdc++,10,10,6,1,10.630
+alineacion,alineado,Libstdc++,10,10,6,1,21.299
+alineacion,sin alinear,Autores,10,10,6,1,22.709
+alineacion,alineado,Autores,10,10,6,1,41.851
+alineacion,alineado,Mutex,10,10,12,1,21.041
+alineacion,sin alinear,Mutex,10,10,12,1,15.720
+alineacion,alineado,Williams,10,10,6,1,16.284
+alineacion,sin alinear,Williams,10,10,6,1,9.464
+alineacion,alineado,Mutex,10,10,6,1,20.202
+alineacion,sin alinear,Mutex,10,10,6,1,16.091
+alineacion,alineado,Mutex,10,10,24,1,20.288
+alineacion,sin alinear,Mutex,10,10,24,1,14.138
+alineacion,alineado,Libstdc++,10,1,6,1,27.756
+alineacion,sin alinear,Libstdc++,10,1,6,1,13.621
+alineacion,sin alinear,Libstdc++,1,1,12,1,1.522
+alineacion,alineado,Libstdc++,1,1,12,1,1.597
+alineacion,alineado,Mutex,1,1,12,1,7.549
+alineacion,sin alinear,Mutex,1,1,12,1,7.990
+alineacion,sin alinear,Autores,10,10,24,1,18.244
+alineacion,alineado,Autores,10,10,24,1,60.412
+alineacion,sin alinear,Autores,1,1,24,1,21.611
+alineacion,alineado,Autores,1,1,24,1,21.156
+alineacion,alineado,Autores,10,1,24,1,119.539
+alineacion,sin alinear,Autores,10,1,24,1,32.478
+alineacion,sin alinear,Williams,10,1,24,1,10.486
+alineacion,alineado,Williams,10,1,24,1,28.707
+alineacion,alineado,Autores,10,1,6,1,68.934
+alineacion,sin alinear,Autores,10,1,6,1,32.424
+alineacion,sin alinear,Williams,1,1,12,1,4.998
+alineacion,alineado,Williams,1,1,12,1,5.027
+alineacion,alineado,Libstdc++,10,10,6,2,21.176
+alineacion,sin alinear,Libstdc++,10,10,6,2,10.758
+alineacion,alineado,Autores,1,1,6,2,21.055
+alineacion,sin alinear,Autores,1,1,6,2,20.884
+alineacion,alineado,Williams,10,10,6,2,16.017
+alineacion,sin alinear,Williams,10,10,6,2,9.416
+alineacion,sin alinear,Libstdc++,10,10,12,2,7.738
+alineacion,alineado,Libstdc++,10,10,12,2,9.165
+alineacion,alineado,Mutex,10,1,6,2,23.668
+alineacion,sin alinear,Mutex,10,1,6,2,19.727
+alineacion,sin alinear,Williams,10,1,6,2,13.582
+alineacion,alineado,Williams,10,1,6,2,25.286
+alineacion,alineado,Williams,10,10,12,2,12.952
+alineacion,sin alinear,Williams,10,10,12,2,7.590
+alineacion,alineado,Williams,1,1,24,2,3.729
+alineacion,sin alinear,Williams,1,1,24,2,3.329
+alineacion,sin alinear,Libstdc++,1,1,6,2,2.562
+alineacion,alineado,Libstdc++,1,1,6,2,2.770
+alineacion,alineado,Mutex,10,10,6,2,20.077
+alineacion,sin alinear,Mutex,10,10,6,2,16.100
+alineacion,alineado,Libstdc++,10,1,6,2,27.228
+alineacion,sin alinear,Libstdc++,10,1,6,2,13.641
+alineacion,alineado,Mutex,10,10,24,2,20.480
+alineacion,sin alinear,Mutex,10,10,24,2,12.956
+alineacion,alineado,Mutex,10,1,24,2,23.337
+alineacion,sin alinear,Mutex,10,1,24,2,17.286
+alineacion,sin alinear,Williams,10,1,12,2,12.952
+alineacion,alineado,Williams,10,1,12,2,26.614
+alineacion,alineado,Autores,10,10,24,2,56.213
+alineacion,sin alinear,Autores,10,10,24,2,17.876
+alineacion,alineado,Mutex,1,1,6,2,7.235
+alineacion,sin alinear,Mutex,1,1,6,2,7.444
+alineacion,sin alinear,Autores,1,1,24,2,20.810
+alineacion,alineado,Autores,1,1,24,2,21.565
+alineacion,sin alinear,Williams,1,1,12,2,4.668
+alineacion,alineado,Williams,1,1,12,2,4.508
+alineacion,sin alinear,Autores,1,1,12,2,21.531
+alineacion,alineado,Autores,1,1,12,2,22.133
+alineacion,sin alinear,Autores,10,1,6,2,32.206
+alineacion,alineado,Autores,10,1,6,2,69.622
+alineacion,alineado,Autores,10,10,6,2,42.223
+alineacion,sin alinear,Autores,10,10,6,2,22.592
+alineacion,sin alinear,Libstdc++,10,1,24,2,6.809
+alineacion,alineado,Libstdc++,10,1,24,2,8.356
+alineacion,alineado,Autores,10,1,24,2,114.149
+alineacion,sin alinear,Autores,10,1,24,2,34.129
+alineacion,sin alinear,Libstdc++,10,10,24,2,3.250
+alineacion,alineado,Libstdc++,10,10,24,2,3.663
+alineacion,sin alinear,Mutex,1,1,24,2,7.063
+alineacion,alineado,Mutex,1,1,24,2,7.265
+alineacion,sin alinear,Autores,10,10,12,2,21.132
+alineacion,alineado,Autores,10,10,12,2,50.608
+alineacion,sin alinear,Autores,10,1,12,2,30.756
+alineacion,alineado,Autores,10,1,12,2,88.375
+alineacion,sin alinear,Mutex,10,1,12,2,18.717
+alineacion,alineado,Mutex,10,1,12,2,24.484
+alineacion,alineado,Mutex,1,1,12,2,7.395
+alineacion,sin alinear,Mutex,1,1,12,2,7.441
+alineacion,sin alinear,Williams,1,1,6,2,5.475
+alineacion,alineado,Williams,1,1,6,2,5.400
+alineacion,sin alinear,Libstdc++,1,1,24,2,0.771
+alineacion,alineado,Libstdc++,1,1,24,2,0.871
+alineacion,sin alinear,Williams,10,1,24,2,10.652
+alineacion,alineado,Williams,10,1,24,2,26.199
+alineacion,sin alinear,Libstdc++,10,1,12,2,10.502
+alineacion,alineado,Libstdc++,10,1,12,2,18.935
+alineacion,sin alinear,Mutex,10,10,12,2,14.693
+alineacion,alineado,Mutex,10,10,12,2,20.211
+alineacion,sin alinear,Williams,10,10,24,2,5.633
+alineacion,alineado,Williams,10,10,24,2,8.483
+alineacion,sin alinear,Libstdc++,1,1,12,2,1.341
+alineacion,alineado,Libstdc++,1,1,12,2,1.523
+alineacion,sin alinear,Williams,1,1,24,3,4.077
+alineacion,alineado,Williams,1,1,24,3,3.857
+alineacion,alineado,Autores,1,1,24,3,20.424
+alineacion,sin alinear,Autores,1,1,24,3,20.451
+alineacion,alineado,Libstdc++,10,10,6,3,20.720
+alineacion,sin alinear,Libstdc++,10,10,6,3,10.848
+alineacion,alineado,Libstdc++,10,10,12,3,9.222
+alineacion,sin alinear,Libstdc++,10,10,12,3,7.690
+alineacion,alineado,Mutex,1,1,6,3,7.285
+alineacion,sin alinear,Mutex,1,1,6,3,7.139
+alineacion,alineado,Mutex,1,1,24,3,6.891
+alineacion,sin alinear,Mutex,1,1,24,3,6.788
+alineacion,alineado,Williams,10,10,12,3,12.183
+alineacion,sin alinear,Williams,10,10,12,3,7.705
+alineacion,alineado,Williams,1,1,12,3,4.723
+alineacion,sin alinear,Williams,1,1,12,3,4.951
+alineacion,alineado,Williams,10,10,6,3,16.049
+alineacion,sin alinear,Williams,10,10,6,3,9.291
+alineacion,sin alinear,Mutex,10,10,12,3,14.765
+alineacion,alineado,Mutex,10,10,12,3,20.453
+alineacion,sin alinear,Williams,10,10,24,3,5.642
+alineacion,alineado,Williams,10,10,24,3,8.111
+alineacion,alineado,Williams,10,1,24,3,25.905
+alineacion,sin alinear,Williams,10,1,24,3,10.604
+alineacion,alineado,Mutex,1,1,12,3,7.203
+alineacion,sin alinear,Mutex,1,1,12,3,7.396
+alineacion,alineado,Libstdc++,1,1,6,3,2.758
+alineacion,sin alinear,Libstdc++,1,1,6,3,2.707
+alineacion,sin alinear,Libstdc++,10,1,12,3,11.117
+alineacion,alineado,Libstdc++,10,1,12,3,19.712
+alineacion,sin alinear,Autores,1,1,12,3,22.123
+alineacion,alineado,Autores,1,1,12,3,22.501
+alineacion,alineado,Autores,10,1,12,3,88.058
+alineacion,sin alinear,Autores,10,1,12,3,30.545
+alineacion,alineado,Libstdc++,1,1,12,3,1.655
+alineacion,sin alinear,Libstdc++,1,1,12,3,1.554
+alineacion,sin alinear,Libstdc++,10,10,24,3,3.724
+alineacion,alineado,Libstdc++,10,10,24,3,3.569
+alineacion,alineado,Libstdc++,10,1,24,3,8.179
+alineacion,sin alinear,Libstdc++,10,1,24,3,6.565
+alineacion,alineado,Autores,1,1,6,3,19.986
+alineacion,sin alinear,Autores,1,1,6,3,20.945
+alineacion,alineado,Autores,10,1,6,3,68.549
+alineacion,sin alinear,Autores,10,1,6,3,30.653
+alineacion,alineado,Autores,10,10,6,3,42.194
+alineacion,sin alinear,Autores,10,10,6,3,22.883
+alineacion,alineado,Williams,10,1,12,3,28.760
+alineacion,sin alinear,Williams,10,1,12,3,13.860
+alineacion,alineado,Mutex,10,10,24,3,18.813
+alineacion,sin alinear,Mutex,10,10,24,3,12.549
+alineacion,alineado,Williams,10,1,6,3,24.041
+alineacion,sin alinear,Williams,10,1,6,3,13.919
+alineacion,alineado,Mutex,10,1,12,3,24.664
+alineacion,sin alinear,Mutex,10,1,12,3,18.865
+alineacion,alineado,Mutex,10,1,6,3,23.907
+alineacion,sin alinear,Mutex,10,1,6,3,19.901
+alineacion,sin alinear,Mutex,10,1,24,3,17.732
+alineacion,alineado,Mutex,10,1,24,3,23.337
+alineacion,sin alinear,Autores,10,10,24,3,17.596
+alineacion,alineado,Autores,10,10,24,3,56.162
+alineacion,alineado,Autores,10,10,12,3,49.736
+alineacion,sin alinear,Autores,10,10,12,3,21.600
+alineacion,alineado,Libstdc++,1,1,24,3,0.961
+alineacion,sin alinear,Libstdc++,1,1,24,3,1.072
+alineacion,sin alinear,Mutex,10,10,6,3,15.996
+alineacion,alineado,Mutex,10,10,6,3,20.123
+alineacion,sin alinear,Williams,1,1,6,3,5.435
+alineacion,alineado,Williams,1,1,6,3,5.378
+alineacion,alineado,Autores,10,1,24,3,118.565
+alineacion,sin alinear,Autores,10,1,24,3,30.665
+alineacion,alineado,Libstdc++,10,1,6,3,27.851
+alineacion,sin alinear,Libstdc++,10,1,6,3,13.416
+docker,fuera,Mutex,10,1,1,1,37.779
+docker,dentro,Mutex,10,1,1,1,38.494
+docker,dentro,Autores,1,50,1,1,19.472
+docker,fuera,Autores,1,50,1,1,18.023
+docker,dentro,Autores,1000000,50,24,1,79.192
+docker,fuera,Autores,1000000,50,24,1,78.788
+docker,fuera,Mutex,1,1,24,1,7.428
+docker,dentro,Mutex,1,1,24,1,7.347
+docker,dentro,Libstdc++,1000000,50,24,1,80.847
+docker,fuera,Libstdc++,1000000,50,24,1,85.952
+docker,dentro,Mutex,1,10,1,1,31.035
+docker,fuera,Mutex,1,10,1,1,27.862
+docker,fuera,Mutex,1,50,24,1,1.929
+docker,dentro,Mutex,1,50,24,1,2.185
+docker,fuera,Mutex,1,1,1,1,33.966
+docker,dentro,Mutex,1,1,1,1,38.428
+docker,fuera,Libstdc++,1000000,50,1,1,5.937
+docker,dentro,Libstdc++,1000000,50,1,1,5.712
+docker,dentro,Williams,1,10,1,1,17.589
+docker,fuera,Williams,1,10,1,1,16.672
+docker,dentro,Williams,1,10,24,1,0.894
+docker,fuera,Williams,1,10,24,1,0.902
+docker,dentro,Mutex,10,1,24,1,18.666
+docker,fuera,Mutex,10,1,24,1,19.012
+docker,fuera,Mutex,10,10,24,1,13.943
+docker,dentro,Mutex,10,10,24,1,13.970
+docker,dentro,Mutex,1,50,1,1,16.725
+docker,fuera,Mutex,1,50,1,1,15.586
+docker,fuera,Autores,10,1,24,1,32.328
+docker,dentro,Autores,10,1,24,1,31.813
+docker,fuera,Williams,10,10,1,1,17.254
+docker,dentro,Williams,10,10,1,1,17.357
+docker,dentro,Libstdc++,1,1,24,1,0.950
+docker,fuera,Libstdc++,1,1,24,1,1.071
+docker,dentro,Autores,1,10,24,1,5.114
+docker,fuera,Autores,1,10,24,1,4.847
+docker,dentro,Autores,10,10,24,1,18.415
+docker,fuera,Autores,10,10,24,1,18.443
+docker,fuera,Williams,1000000,50,24,1,52.180
+docker,dentro,Williams,1000000,50,24,1,52.244
+docker,fuera,Mutex,1000000,50,24,1,66.407
+docker,dentro,Mutex,1000000,50,24,1,64.356
+docker,fuera,Williams,1,50,1,1,5.909
+docker,dentro,Williams,1,50,1,1,6.269
+docker,fuera,Libstdc++,1,50,24,1,0.101
+docker,dentro,Libstdc++,1,50,24,1,0.102
+docker,dentro,Libstdc++,1,50,1,1,14.260
+docker,fuera,Libstdc++,1,50,1,1,13.869
+docker,fuera,Williams,10,1,1,1,28.995
+docker,dentro,Williams,10,1,1,1,29.403
+docker,dentro,Autores,1,50,24,1,1.145
+docker,fuera,Autores,1,50,24,1,1.129
+docker,fuera,Libstdc++,10,10,24,1,2.996
+docker,dentro,Libstdc++,10,10,24,1,3.436
+docker,dentro,Libstdc++,1,10,24,1,0.412
+docker,fuera,Libstdc++,1,10,24,1,0.402
+docker,dentro,Mutex,10,10,1,1,31.062
+docker,fuera,Mutex,10,10,1,1,30.693
+docker,fuera,Libstdc++,10,1,1,1,42.540
+docker,dentro,Libstdc++,10,1,1,1,42.886
+docker,fuera,Williams,1,1,1,1,28.176
+docker,dentro,Williams,1,1,1,1,29.461
+docker,dentro,Libstdc++,10,10,1,1,31.160
+docker,fuera,Libstdc++,10,10,1,1,31.174
+docker,fuera,Autores,1,10,1,1,40.822
+docker,dentro,Autores,1,10,1,1,45.144
+docker,fuera,Libstdc++,1,1,1,1,41.345
+docker,dentro,Libstdc++,1,1,1,1,42.917
+docker,dentro,Mutex,1000000,50,1,1,4.842
+docker,fuera,Mutex,1000000,50,1,1,5.009
+docker,fuera,Autores,10,1,1,1,63.464
+docker,dentro,Autores,10,1,1,1,63.314
+docker,dentro,Williams,1000000,50,1,1,2.857
+docker,fuera,Williams,1000000,50,1,1,2.894
+docker,dentro,Williams,10,10,24,1,5.978
+docker,fuera,Williams,10,10,24,1,5.682
+docker,dentro,Williams,1,1,24,1,4.241
+docker,fuera,Williams,1,1,24,1,4.073
+docker,fuera,Autores,1000000,50,1,1,5.965
+docker,dentro,Autores,1000000,50,1,1,5.816
+docker,dentro,Autores,1,1,1,1,64.182
+docker,fuera,Autores,1,1,1,1,57.090
+docker,fuera,Williams,10,1,24,1,10.738
+docker,dentro,Williams,10,1,24,1,12.602
+docker,dentro,Autores,1,1,24,1,20.680
+docker,fuera,Autores,1,1,24,1,20.668
+docker,fuera,Autores,10,10,1,1,44.973
+docker,dentro,Autores,10,10,1,1,43.646
+docker,dentro,Libstdc++,1,10,1,1,31.330
+docker,fuera,Libstdc++,1,10,1,1,27.999
+docker,dentro,Williams,1,50,24,1,0.185
+docker,fuera,Williams,1,50,24,1,0.197
+docker,dentro,Libstdc++,10,1,24,1,6.671
+docker,fuera,Libstdc++,10,1,24,1,6.326
+docker,fuera,Mutex,1,10,24,1,4.837
+docker,dentro,Mutex,1,10,24,1,5.002
+docker,dentro,Libstdc++,1,50,24,2,0.105
+docker,fuera,Libstdc++,1,50,24,2,0.107
+docker,fuera,Autores,1,10,1,2,40.972
+docker,dentro,Autores,1,10,1,2,45.249
+docker,dentro,Williams,1,1,24,2,4.089
+docker,fuera,Williams,1,1,24,2,3.985
+docker,dentro,Autores,1000000,50,1,2,5.897
+docker,fuera,Autores,1000000,50,1,2,5.906
+docker,fuera,Autores,1,10,24,2,5.155
+docker,dentro,Autores,1,10,24,2,4.871
+docker,dentro,Mutex,1,1,24,2,7.555
+docker,fuera,Mutex,1,1,24,2,7.510
+docker,dentro,Williams,1,50,24,2,0.187
+docker,fuera,Williams,1,50,24,2,0.179
+docker,dentro,Libstdc++,10,1,1,2,42.927
+docker,fuera,Libstdc++,10,1,1,2,42.231
+docker,dentro,Williams,10,1,24,2,12.518
+docker,fuera,Williams,10,1,24,2,11.911
+docker,dentro,Autores,10,1,1,2,63.400
+docker,fuera,Autores,10,1,1,2,63.590
+docker,fuera,Mutex,1000000,50,24,2,66.853
+docker,dentro,Mutex,1000000,50,24,2,64.693
+docker,fuera,Autores,1,50,1,2,17.920
+docker,dentro,Autores,1,50,1,2,19.478
+docker,dentro,Williams,1,10,24,2,0.877
+docker,fuera,Williams,1,10,24,2,0.893
+docker,dentro,Williams,10,10,1,2,17.399
+docker,fuera,Williams,10,10,1,2,17.200
+docker,fuera,Mutex,1,1,1,2,34.004
+docker,dentro,Mutex,1,1,1,2,38.375
+docker,fuera,Libstdc++,1000000,50,24,2,86.229
+docker,dentro,Libstdc++,1000000,50,24,2,84.654
+docker,dentro,Libstdc++,1,10,1,2,31.382
+docker,fuera,Libstdc++,1,10,1,2,30.286
+docker,dentro,Autores,10,10,24,2,18.271
+docker,fuera,Autores,10,10,24,2,18.255
+docker,fuera,Autores,1,50,24,2,1.163
+docker,dentro,Autores,1,50,24,2,1.179
+docker,dentro,Libstdc++,10,1,24,2,6.994
+docker,fuera,Libstdc++,10,1,24,2,6.795
+docker,dentro,Williams,1,10,1,2,17.537
+docker,fuera,Williams,1,10,1,2,16.693
+docker,fuera,Mutex,1000000,50,1,2,4.981
+docker,dentro,Mutex,1000000,50,1,2,4.826
+docker,dentro,Autores,1000000,50,24,2,79.042
+docker,fuera,Autores,1000000,50,24,2,79.236
+docker,fuera,Libstdc++,1,1,24,2,0.802
+docker,dentro,Libstdc++,1,1,24,2,0.813
+docker,dentro,Libstdc++,1000000,50,1,2,5.727
+docker,fuera,Libstdc++,1000000,50,1,2,5.939
+docker,fuera,Libstdc++,1,1,1,2,41.431
+docker,dentro,Libstdc++,1,1,1,2,42.977
+docker,fuera,Mutex,1,10,1,2,27.860
+docker,dentro,Mutex,1,10,1,2,31.058
+docker,dentro,Mutex,10,1,1,2,38.471
+docker,fuera,Mutex,10,1,1,2,37.829
+docker,fuera,Libstdc++,1,10,24,2,0.321
+docker,dentro,Libstdc++,1,10,24,2,0.357
+docker,dentro,Mutex,1,50,24,2,1.876
+docker,fuera,Mutex,1,50,24,2,2.000
+docker,fuera,Williams,1000000,50,1,2,2.871
+docker,dentro,Williams,1000000,50,1,2,2.865
+docker,fuera,Libstdc++,10,10,1,2,31.106
+docker,dentro,Libstdc++,10,10,1,2,31.159
+docker,fuera,Williams,10,10,24,2,5.594
+docker,dentro,Williams,10,10,24,2,6.384
+docker,fuera,Williams,1,50,1,2,5.923
+docker,dentro,Williams,1,50,1,2,6.272
+docker,fuera,Autores,1,1,1,2,57.112
+docker,dentro,Autores,1,1,1,2,64.228
+docker,dentro,Mutex,10,1,24,2,18.716
+docker,fuera,Mutex,10,1,24,2,18.942
+docker,dentro,Autores,10,10,1,2,44.660
+docker,fuera,Autores,10,10,1,2,45.047
+docker,dentro,Williams,1000000,50,24,2,52.401
+docker,fuera,Williams,1000000,50,24,2,52.688
+docker,fuera,Mutex,1,50,1,2,15.238
+docker,dentro,Mutex,1,50,1,2,16.841
+docker,dentro,Libstdc++,10,10,24,2,3.460
+docker,fuera,Libstdc++,10,10,24,2,3.357
+docker,fuera,Autores,10,1,24,2,34.551
+docker,dentro,Autores,10,1,24,2,31.409
+docker,fuera,Mutex,10,10,24,2,14.068
+docker,dentro,Mutex,10,10,24,2,13.885
+docker,dentro,Williams,10,1,1,2,29.419
+docker,fuera,Williams,10,1,1,2,28.953
+docker,fuera,Mutex,10,10,1,2,30.742
+docker,dentro,Mutex,10,10,1,2,31.090
+docker,fuera,Williams,1,1,1,2,28.209
+docker,dentro,Williams,1,1,1,2,29.042
+docker,dentro,Libstdc++,1,50,1,2,14.259
+docker,fuera,Libstdc++,1,50,1,2,13.840
+docker,dentro,Mutex,1,10,24,2,5.212
+docker,fuera,Mutex,1,10,24,2,4.957
+docker,fuera,Autores,1,1,24,2,20.974
+docker,dentro,Autores,1,1,24,2,21.951
+docker,dentro,Libstdc++,1,10,24,3,0.399
+docker,fuera,Libstdc++,1,10,24,3,0.379
+docker,fuera,Williams,1,50,1,3,5.903
+docker,dentro,Williams,1,50,1,3,6.271
+docker,dentro,Mutex,1,1,1,3,38.414
+docker,fuera,Mutex,1,1,1,3,33.574
+docker,dentro,Autores,1000000,50,24,3,78.522
+docker,fuera,Autores,1000000,50,24,3,78.834
+docker,fuera,Autores,1,1,1,3,57.092
+docker,dentro,Autores,1,1,1,3,64.415
+docker,fuera,Libstdc++,1000000,50,1,3,5.939
+docker,dentro,Libstdc++,1000000,50,1,3,5.690
+docker,fuera,Williams,10,10,24,3,5.612
+docker,dentro,Williams,10,10,24,3,5.874
+docker,fuera,Williams,1,10,1,3,16.682
+docker,dentro,Williams,1,10,1,3,17.577
+docker,fuera,Mutex,10,10,1,3,30.718
+docker,dentro,Mutex,10,10,1,3,31.078
+docker,dentro,Autores,10,10,24,3,18.392
+docker,fuera,Autores,10,10,24,3,19.304
+docker,dentro,Williams,10,10,1,3,17.428
+docker,fuera,Williams,10,10,1,3,17.278
+docker,fuera,Mutex,1,1,24,3,7.499
+docker,dentro,Mutex,1,1,24,3,7.832
+docker,dentro,Williams,1000000,50,24,3,52.478
+docker,fuera,Williams,1000000,50,24,3,52.331
+docker,dentro,Libstdc++,1,10,1,3,31.388
+docker,fuera,Libstdc++,1,10,1,3,30.347
+docker,dentro,Libstdc++,1,50,24,3,0.098
+docker,fuera,Libstdc++,1,50,24,3,0.098
+docker,dentro,Mutex,1000000,50,1,3,4.859
+docker,fuera,Mutex,1000000,50,1,3,5.007
+docker,fuera,Autores,1,1,24,3,20.587
+docker,dentro,Autores,1,1,24,3,20.433
+docker,dentro,Autores,10,10,1,3,44.410
+docker,fuera,Autores,10,10,1,3,44.966
+docker,dentro,Libstdc++,10,10,24,3,3.203
+docker,fuera,Libstdc++,10,10,24,3,3.069
+docker,dentro,Libstdc++,10,10,1,3,31.071
+docker,fuera,Libstdc++,10,10,1,3,31.193
+docker,dentro,Williams,1,10,24,3,0.870
+docker,fuera,Williams,1,10,24,3,0.835
+docker,fuera,Autores,1,50,24,3,1.166
+docker,dentro,Autores,1,50,24,3,1.119
+docker,dentro,Mutex,1,50,24,3,2.092
+docker,fuera,Mutex,1,50,24,3,2.133
+docker,dentro,Mutex,1,10,24,3,4.854
+docker,fuera,Mutex,1,10,24,3,4.730
+docker,fuera,Mutex,1,50,1,3,14.712
+docker,dentro,Mutex,1,50,1,3,16.822
+docker,fuera,Autores,10,1,24,3,35.093
+docker,dentro,Autores,10,1,24,3,31.268
+docker,fuera,Mutex,10,10,24,3,13.948
+docker,dentro,Mutex,10,10,24,3,13.950
+docker,dentro,Williams,1,1,1,3,29.494
+docker,fuera,Williams,1,1,1,3,28.172
+docker,fuera,Mutex,1000000,50,24,3,67.086
+docker,dentro,Mutex,1000000,50,24,3,64.279
+docker,fuera,Mutex,10,1,1,3,37.809
+docker,dentro,Mutex,10,1,1,3,38.508
+docker,dentro,Libstdc++,1,1,1,3,43.014
+docker,fuera,Libstdc++,1,1,1,3,41.412
+docker,dentro,Autores,1,10,24,3,5.022
+docker,fuera,Autores,1,10,24,3,4.936
+docker,fuera,Mutex,1,10,1,3,27.825
+docker,dentro,Mutex,1,10,1,3,30.991
+docker,dentro,Libstdc++,1000000,50,24,3,85.089
+docker,fuera,Libstdc++,1000000,50,24,3,84.239
+docker,dentro,Williams,10,1,24,3,12.041
+docker,fuera,Williams,10,1,24,3,11.263
+docker,fuera,Mutex,10,1,24,3,19.175
+docker,dentro,Mutex,10,1,24,3,18.509
+docker,dentro,Williams,10,1,1,3,29.466
+docker,fuera,Williams,10,1,1,3,29.031
+docker,dentro,Libstdc++,1,1,24,3,0.841
+docker,fuera,Libstdc++,1,1,24,3,0.771
+docker,fuera,Autores,1,10,1,3,40.811
+docker,dentro,Autores,1,10,1,3,45.212
+docker,fuera,Libstdc++,10,1,24,3,6.444
+docker,dentro,Libstdc++,10,1,24,3,5.974
+docker,fuera,Williams,1000000,50,1,3,2.872
+docker,dentro,Williams,1000000,50,1,3,2.785
+docker,fuera,Autores,1,50,1,3,18.314
+docker,dentro,Autores,1,50,1,3,19.495
+docker,dentro,Williams,1,1,24,3,4.372
+docker,fuera,Williams,1,1,24,3,4.224
+docker,fuera,Libstdc++,1,50,1,3,13.843
+docker,dentro,Libstdc++,1,50,1,3,14.244
+docker,fuera,Williams,1,50,24,3,0.182
+docker,dentro,Williams,1,50,24,3,0.194
+docker,dentro,Libstdc++,10,1,1,3,42.846
+docker,fuera,Libstdc++,10,1,1,3,42.507
+docker,fuera,Autores,10,1,1,3,63.602
+docker,dentro,Autores,10,1,1,3,63.444
+docker,fuera,Autores,1000000,50,1,3,6.058
+docker,dentro,Autores,1000000,50,1,3,5.826

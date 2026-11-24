@@ -1,0 +1,7 @@
+Equipo:  Intel(R) Core(TM) Ultra 9 285
+Núcleos: 24 (8 P: CPUs 0-7; 16 E en 4 clústeres: 8-11, 12-15, 16-19, 20-23), sin SMT, 1 socket, 1 nodo NUMA
+Caché: L2 3 MB por P, 4 MB por clúster E; L3 36 MB compartida
+RAM: 30Gi
+Sistema: Linux nativo 6.17.0-1033-oem, Ubuntu 24.04.5 LTS
+Regulador: powersave / EPP performance
+Docker: imagen Ubuntu 22.04, g++-12 12.3 (artefacto oficial). Nativo: Ubuntu 24.04, g++-12 12.4.0 (baterías) y g++ 13.3 (pruebas de corrección)
